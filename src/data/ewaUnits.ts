@@ -31,24 +31,31 @@ export const ewaUnitNETP301: Unit = {
       title: "Be able to assess the work environment for hazards",
       performanceCriteria: [
         { code: "2.1", description: "Identify unsafe situations and conditions and take remedial actions" },
-        { code: "2.2", description: "Assess work environment & revise practices for hazards from:" },
+        { code: "2.2", description: "Assess work environment & revise practices taking account of hazards:" },
         { code: "2.2a", description: "Materials" },
         { code: "2.2b", description: "Tools" },
         { code: "2.2c", description: "Equipment" },
-        { code: "2.3", description: "Report high risk hazards to relevant persons" },
+        { code: "2.3", description: "Identify any hazards which may present a high risk and report their presence to relevant persons" },
         { code: "2.4", description: "Apply measures to control health and safety hazards" },
         { code: "2.5", description: "Select and use correct personal protective equipment" }
       ]
     },
     {
       number: "3",
-      title: "Apply methods and procedures for safe work",
+      title: "Be able to apply methods and procedures to ensure work on site is in accordance with health and safety legislation",
       performanceCriteria: [
-        { code: "3.1", description: "Demonstrate personal conduct and behaviour around the workplace" },
-        { code: "3.2", description: "Apply procedures for safe use, maintenance & storage as per:" },
+        { code: "3.1", description: "Demonstrate personal conduct and behaviour within the workplace" },
+        { code: "3.2", description: "Apply procedures to ensure safe use, maintenance & storage of equipment:" },
         { code: "3.2a", description: "Workplace policies (company and site)" },
-        { code: "3.2b", description: "Manufacturer's instructions" },
-        { code: "3.2c", description: "Supplier information" }
+        { code: "3.2b", description: "Supplier information" },
+        { code: "3.2c", description: "Manufacturer's instructions" },
+        { code: "3.3", description: "Comply with hazard warning, mandatory instruction and prohibition notices" },
+        { code: "3.4", description: "Apply procedures to ensure safety through correct use of guards and notices" },
+        { code: "3.5", description: "Use access equipment correctly:" },
+        { code: "3.5a", description: "Ladder" },
+        { code: "3.5b", description: "Tower scaffold or MEWP" },
+        { code: "3.5c", description: "Stepladder" },
+        { code: "3.5d", description: "Platform" }
       ]
     },
     {
@@ -75,7 +82,7 @@ export const ewaUnits: Unit[] = [
     code: "NETP3-03",
     displayCode: "NETP3-03",
     reference: "NETP3-03",
-    title: "Apply Environmental Legislation and Working Practices",
+    title: "Organise and Oversee the Electrical Work Environment",
     description: "Organizing and overseeing electrical work activities",
     type: UnitType.EWA,
     creditValue: 3,
