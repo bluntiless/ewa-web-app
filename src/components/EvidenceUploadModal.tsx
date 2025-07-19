@@ -17,8 +17,7 @@ export const EvidenceUploadModal: React.FC<EvidenceUploadModalProps> = ({
   criteriaCodes,
   siteUrl
 }) => {
-  // Add debug logging
-  console.log('EvidenceUploadModal props:', { isOpen, unitCode, criteriaCodes, siteUrl });
+
 
   const [selectedFiles, setSelectedFiles] = useState<{ [key: string]: File }>({});
   const [uploadProgress, setUploadProgress] = useState<{ [key: string]: number }>({});
@@ -33,7 +32,6 @@ export const EvidenceUploadModal: React.FC<EvidenceUploadModalProps> = ({
   });
 
   const handleFileSelect = useCallback((criteriaCode: string, file: File) => {
-    console.log('File selected for criteria:', criteriaCode, file.name, 'size:', file.size, 'bytes, type:', file.type);
     setSelectedFiles(prev => ({ ...prev, [criteriaCode]: file }));
     setUploadProgress(prev => ({ ...prev, [criteriaCode]: 0 }));
   }, []);
@@ -49,12 +47,9 @@ export const EvidenceUploadModal: React.FC<EvidenceUploadModalProps> = ({
   const handleUpload = useCallback(async () => {
     try {
       setError(null);
-      console.log('EvidenceUploadModal: Starting upload process with selected files:', Object.keys(selectedFiles).length);
       
       const uploadPromises = Object.entries(selectedFiles).map(async ([criteriaCodeFromFile, file]) => {
         try {
-          console.log(`EvidenceUploadModal: Processing file for criteria ${criteriaCodeFromFile}:`, file.name, 'size:', file.size, 'bytes');
-          
           // Optionally, rename the file to include the title
           let uploadFile = file;
           if (titles[criteriaCodeFromFile]) {
@@ -64,8 +59,6 @@ export const EvidenceUploadModal: React.FC<EvidenceUploadModalProps> = ({
             // Create a proper File object - important to preserve the content!
             const blob = file.slice(0, file.size, file.type);
             uploadFile = new File([blob], newName, { type: file.type });
-            
-            console.log(`EvidenceUploadModal: Renamed file to: ${newName}, new size: ${uploadFile.size} bytes`);
           }
 
           // Use the hook's upload function
@@ -76,14 +69,12 @@ export const EvidenceUploadModal: React.FC<EvidenceUploadModalProps> = ({
             titles[criteriaCodeFromFile],
             narratives[criteriaCodeFromFile]
           );
-          console.log(`EvidenceUploadModal: Upload completed for criteria ${criteriaCodeFromFile}`);
           
           setUploadProgress(prev => ({
             ...prev,
             [criteriaCodeFromFile]: 100
           }));
         } catch (err) {
-          console.error(`EvidenceUploadModal: Upload failed for criteria ${criteriaCodeFromFile}:`, err);
           setError(`Error uploading ${file.name}: ${err instanceof Error ? err.message : 'Unknown error'}`);
           return false;
         }
@@ -91,14 +82,12 @@ export const EvidenceUploadModal: React.FC<EvidenceUploadModalProps> = ({
       });
 
       const results = await Promise.all(uploadPromises);
-      console.log('EvidenceUploadModal: All uploads completed with results:', results);
       
       if (results.every(Boolean)) {
         // All uploads successful
         onClose();
       }
     } catch (err) {
-      console.error('EvidenceUploadModal: Upload process failed:', err);
       setError(`Upload failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
     }
   }, [selectedFiles, titles, narratives, uploadEvidence, unitCode, onClose]);

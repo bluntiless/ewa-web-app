@@ -25,15 +25,10 @@ export const UnitProgress: React.FC<UnitProgressProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [expandedOutcome, setExpandedOutcome] = useState<number | null>(null);
   
-  console.log('UnitProgress rendered with unitCode:', unitCode);
-  console.log('UnitProgress has learningOutcomes:', learningOutcomes.length);
-  
   const { evidence, isLoading, refreshEvidence } = useEvidence({
     unitCode,
     criteriaCode: selectedCriteria[0] || ''
   });
-
-  console.log('UnitProgress evidence from hook:', evidence.length);
 
   const getCriteriaStatus = useCallback((criteriaCode: string): AssessmentStatus => {
     // Get evidence for this criteria
@@ -41,16 +36,7 @@ export const UnitProgress: React.FC<UnitProgressProps> = ({
       e.criteriaCode === criteriaCode || e.webUrl?.includes(criteriaCode.replace(/\./g, '_'))
     );
 
-    // Log evidence only when there's something to report
-    if (criteriaEvidence.length > 0) {
-      console.log(`Found ${criteriaEvidence.length} evidence items for criteria ${criteriaCode}:`, 
-        criteriaEvidence.map(e => ({
-          status: e.assessmentStatus,
-          assessor: e.assessorName,
-          date: e.assessmentDate
-        }))
-      );
-    }
+
 
     if (criteriaEvidence.length === 0) {
       return AssessmentStatus.NotStarted;
@@ -103,14 +89,11 @@ export const UnitProgress: React.FC<UnitProgressProps> = ({
   }, [evidence, unitCode]);
 
   const handleCriteriaSelect = useCallback((criteriaCode: string) => {
-    console.log('Criteria selected:', criteriaCode);
-    
     // Check if criteria already has evidence
     const status = getCriteriaStatus(criteriaCode);
     
     // If criteria has any type of evidence and a click handler is provided, use that
     if ((status !== AssessmentStatus.NotStarted) && onCriteriaClick) {
-      console.log('Criteria has evidence, calling onCriteriaClick');
       onCriteriaClick(criteriaCode);
       return;
     }
@@ -118,24 +101,19 @@ export const UnitProgress: React.FC<UnitProgressProps> = ({
     // Otherwise handle selection for uploading
     setSelectedCriteria(prev => {
       if (prev.includes(criteriaCode)) {
-        console.log('Removing criteria from selection:', criteriaCode);
         return prev.filter(code => code !== criteriaCode);
       }
-      console.log('Adding criteria to selection:', criteriaCode);
       return [...prev, criteriaCode];
     });
   }, [onCriteriaClick, getCriteriaStatus]);
 
   const handleUploadClick = useCallback(() => {
-    console.log('Upload button clicked, selected criteria:', selectedCriteria);
     if (selectedCriteria.length > 0) {
       setIsModalOpen(true);
-      console.log('Modal should be open now:', true);
     }
   }, [selectedCriteria]);
 
   const handleModalClose = useCallback(() => {
-    console.log('Modal closed');
     setIsModalOpen(false);
     refreshEvidence();
   }, [refreshEvidence]);

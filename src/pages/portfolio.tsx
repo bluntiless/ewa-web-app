@@ -494,20 +494,8 @@ export default function PortfolioPage() {
                 // Case-insensitive unit code comparison
                 if (!e.unitCode || !selectedUnit.code) return false;
                 
-                // Log for debugging
-                console.log(`Comparing unit codes: "${e.unitCode.toLowerCase()}" vs "${selectedUnit.code.toLowerCase()}"`);
-                
                 // Do case-insensitive comparison of unit codes
                 const unitMatches = e.unitCode.toLowerCase() === selectedUnit.code.toLowerCase();
-                
-                if (unitMatches) {
-                  console.log("Found matching evidence:", {
-                    id: e.id.substring(0, 8),
-                    title: e.title,
-                    status: e.assessmentStatus,
-                    criteriaCode: e.criteriaCode
-                  });
-                }
                 
                 return unitMatches;
               })}
