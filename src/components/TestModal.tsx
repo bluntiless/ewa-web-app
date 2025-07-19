@@ -5,6 +5,20 @@ export default function TestModal() {
   const [testStatus, setTestStatus] = useState('Pending');
   const [testFeedback, setTestFeedback] = useState('');
 
+  const loadTestData = () => {
+    const savedData = localStorage.getItem('test_assessment');
+    if (savedData) {
+      try {
+        const data = JSON.parse(savedData);
+        setTestStatus(data.status || 'Pending');
+        setTestFeedback(data.feedback || '');
+        console.log('Loaded test data:', data);
+      } catch (e) {
+        console.warn('Failed to load test data:', e);
+      }
+    }
+  };
+
   const testEvidenceItem = {
     id: 'test-123',
     name: 'test-document.pdf',
@@ -15,13 +29,28 @@ export default function TestModal() {
 
   const handleSave = () => {
     console.log('Test save:', { status: testStatus, feedback: testFeedback });
+    
+    // Store in localStorage
+    const testData = {
+      status: testStatus,
+      feedback: testFeedback,
+      assessor: 'Wayne Wright',
+      date: new Date().toISOString()
+    };
+    
+    localStorage.setItem('test_assessment', JSON.stringify(testData));
+    console.log('Test assessment saved to localStorage');
+    
     setIsOpen(false);
   };
 
   return (
     <div className="p-4">
       <button
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          loadTestData();
+          setIsOpen(true);
+        }}
         className="px-4 py-2 bg-blue-600 text-white rounded"
       >
         Test Modal

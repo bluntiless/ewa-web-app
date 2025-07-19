@@ -294,38 +294,27 @@ export default function CandidateEvidencePage() {
         const listItemResponse = await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem`).expand('fields').get();
         console.log('Available fields:', listItemResponse?.fields);
         
-        // Try different field name variations
+        // Use the exact field names from SharePoint
         const updateData = {
           fields: {
-            // Try multiple field name variations
-            Assessment: status,
             AssessmentStatus: status,
-            assessment: status,
-            'Assessment Status': status,
-            Assessment_x0020_Status: status,
-            
             AssessorFeedback: feedback,
-            Assessor_x0020_Feedback: feedback,
-            'Assessor Feedback': feedback,
-            assessorFeedback: feedback,
-            
             AssessorName: 'Wayne Wright',
-            Assessor_x0020_Name: 'Wayne Wright',
-            'Assessor Name': 'Wayne Wright',
-            assessorName: 'Wayne Wright',
-            
-            AssessmentDate: new Date().toISOString(),
-            Assessment_x0020_Date: new Date().toISOString(),
-            'Assessment Date': new Date().toISOString(),
-            assessmentDate: new Date().toISOString()
+            AssessmentDate: new Date().toISOString()
           }
         };
 
         console.log(`Updating assessment for ${selectedEvidenceItem.name}:`, updateData);
 
         // Try updating the list item
-        const updateResponse = await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem/fields`).patch(updateData);
-        console.log('Update response:', updateResponse);
+        try {
+          const updateResponse = await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem/fields`).patch(updateData);
+          console.log('Update response:', updateResponse);
+          console.log('✅ SharePoint update successful');
+        } catch (updateError) {
+          console.error('SharePoint update failed:', updateError);
+          throw updateError;
+        }
 
         // Update the local state immediately
         setItems(prevItems => 
