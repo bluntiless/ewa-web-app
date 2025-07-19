@@ -4,7 +4,7 @@ import { SharePointService, Evidence as SharePointServiceEvidence, EvidenceMetad
 import { PortfolioCompilationService } from '../services/PortfolioCompilationService';
 import BottomNavigation from '../components/BottomNavigation';
 import { Evidence as ModelEvidence, AssessmentStatus } from '../models/Evidence';
-import { PendingEvidenceView } from '../components/PendingEvidenceView';
+import { EvidenceDisplay } from '../components/EvidenceDisplay';
 import { useEvidence } from '../hooks/useEvidence';
 import { UnitProgress } from '../components/UnitProgress';
 import React from 'react';
@@ -158,7 +158,7 @@ export default function PortfolioPage() {
   
   const siteUrl = typeof window !== 'undefined' ? localStorage.getItem('sharepointSiteUrl') || undefined : undefined;
 
-  const { evidence, isLoading: evidenceLoading, error: evidenceError, uploadEvidence, updateAssessment, refreshEvidence, deleteEvidence } = useEvidence({
+  const { evidence, isLoading: evidenceLoading, error: evidenceError, uploadEvidence, refreshEvidence, deleteEvidence } = useEvidence({
     unitCode: 'ALL',
     criteriaCode: 'ALL',
     siteUrl
@@ -262,20 +262,7 @@ export default function PortfolioPage() {
     );
   }
 
-  const handleAssessmentUpdate = async (evidenceId: string, status: AssessmentStatus, feedback?: string) => {
-    try {
-      setError(null); // Clear previous errors
-      const assessorName = localStorage.getItem('userName') || "Assessor";
-      await updateAssessment(evidenceId, { 
-        status: status, 
-        assessorName: assessorName,
-        feedback: feedback || "" // Use the feedback if provided
-      });
-      await refreshEvidence(); // Re-fetch evidence for this page after update
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update assessment');
-    }
-  };
+
 
   return (
     <div className="min-h-screen bg-neutral-950 text-white">
@@ -390,10 +377,9 @@ export default function PortfolioPage() {
                 No evidence found. Upload evidence for your qualifications through the Progress tab or Criteria page.
               </div>
             ) : (
-              <PendingEvidenceView
+              <EvidenceDisplay
                 evidence={evidenceItems}
-                onAssessmentUpdate={handleAssessmentUpdate}
-                onDeleteEvidence={async (evidenceId) => {
+                onDeleteEvidence={async (evidenceId: string) => {
                   try {
                     // Use the deleteEvidence function from the useEvidence hook
                     await deleteEvidence(evidenceId);
