@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { SharePointService } from '../../services/SharePointService';
 import EvidenceAssessmentModal from '../../components/EvidenceAssessmentModal';
+import TestModal from '../../components/TestModal';
 
 interface EvidenceItem {
   id: string;
@@ -341,12 +342,15 @@ export default function CandidateEvidencePage() {
     <div className="p-4">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">{candidateName}'s Evidence</h1>
-        <button
-          onClick={navigateToDashboard}
-          className="px-4 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200"
-        >
-          Back to Dashboard
-        </button>
+        <div className="flex space-x-2">
+          <TestModal />
+          <button
+            onClick={navigateToDashboard}
+            className="px-4 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200"
+          >
+            Back to Dashboard
+          </button>
+        </div>
       </div>
 
       {/* Breadcrumb */}
