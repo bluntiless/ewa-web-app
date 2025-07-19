@@ -1,3 +1,4 @@
+// FORCE VERCEL DEPLOYMENT - Latest commit: 8fd431d - Fixed PortfolioCompilationService and added evidence status refresh
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { SharePointService, Evidence as SharePointServiceEvidence, EvidenceMetadata } from '../services/SharePointService';
