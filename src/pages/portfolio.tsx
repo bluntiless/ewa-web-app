@@ -155,6 +155,7 @@ export default function PortfolioPage() {
   const [isCompiling, setIsCompiling] = useState(false);
   const [portfolioUrl, setPortfolioUrl] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'evidence' | 'progress'>('evidence');
+  const [isRefreshing, setIsRefreshing] = useState(false);
   
   const siteUrl = typeof window !== 'undefined' ? localStorage.getItem('sharepointSiteUrl') || undefined : undefined;
 
@@ -187,6 +188,30 @@ export default function PortfolioPage() {
 
   // Add state for viewing evidence details
   const [selectedEvidenceForView, setSelectedEvidenceForView] = useState<ModelEvidence | null>(null);
+
+  // Function to refresh evidence with latest assessment status from SharePoint
+  const refreshEvidenceWithStatus = async () => {
+    try {
+      setIsRefreshing(true);
+      setError(null);
+      
+      console.log('Portfolio: Refreshing evidence with latest assessment status...');
+      
+      // Use the refreshEvidence function from useEvidence hook
+      await refreshEvidence();
+      
+      // Convert evidence from hook to ModelEvidence format
+      const modelEvidence = evidence.map(metadataToModelEvidence);
+      setEvidenceItems(modelEvidence);
+      
+      console.log('Portfolio: Evidence refreshed successfully');
+    } catch (err) {
+      console.error('Portfolio: Error refreshing evidence:', err);
+      setError(err instanceof Error ? err.message : 'Failed to refresh evidence');
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   useEffect(() => {
     const loadEvidence = async () => {
@@ -262,8 +287,6 @@ export default function PortfolioPage() {
     );
   }
 
-
-
   return (
     <div className="min-h-screen bg-neutral-950 text-white">
       <div className="max-w-4xl mx-auto px-4 py-8 pb-safe"> {/* Using pb-safe utility class */}
@@ -280,7 +303,7 @@ export default function PortfolioPage() {
             onClick={() => {
               setActiveTab('evidence');
               // Refresh evidence data when switching to Evidence tab
-              refreshEvidence();
+              refreshEvidenceWithStatus();
             }}
           >
             Evidence
@@ -314,7 +337,7 @@ export default function PortfolioPage() {
                 <p className="text-sm text-gray-400">Unit: {selectedEvidenceForView.unitCode}</p>
                 <p className="text-sm text-gray-400">Criteria: {selectedEvidenceForView.criteriaCode}</p>
                 
-                {selectedEvidenceForView.assessmentStatus !== 'not-started' && (
+                {selectedEvidenceForView.assessmentStatus !== AssessmentStatus.NotStarted && (
                   <p className="text-sm text-gray-400 mt-2">
                     Status: {selectedEvidenceForView.assessmentStatus.charAt(0).toUpperCase() + selectedEvidenceForView.assessmentStatus.slice(1)}
                   </p>
@@ -367,7 +390,28 @@ export default function PortfolioPage() {
               <div className="bg-neutral-900 rounded-2xl shadow-lg p-6">
         {activeTab === 'evidence' ? (
           <div>
-            <h2 className="text-xl font-semibold mb-4">Evidence</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">Evidence</h2>
+              <button
+                onClick={refreshEvidenceWithStatus}
+                disabled={isRefreshing}
+                className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 flex items-center space-x-2"
+              >
+                {isRefreshing ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+                    <span>Refreshing...</span>
+                  </>
+                ) : (
+                  <>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    <span>Refresh Status</span>
+                  </>
+                )}
+              </button>
+            </div>
             {evidenceLoading ? (
               <div className="text-center py-8 text-gray-500">Loading evidence...</div>
             ) : evidenceError ? (
