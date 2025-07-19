@@ -8,6 +8,7 @@ import BottomNavigation from '../components/BottomNavigation';
 import { useMsalAuth } from '../lib/useMsalAuth';
 import { useEvidence } from '../hooks/useEvidence';
 import { SharePointService } from '../services/SharePointService';
+import { UploadDiagnostic } from '../components/UploadDiagnostic';
 
 function EvidenceModal({
   open,
@@ -364,6 +365,14 @@ export default function Criteria() {
             {uploadError}
           </div>
         )}
+        
+        {/* Upload Diagnostic Component */}
+        <div className="mb-6">
+          <UploadDiagnostic 
+            unitCode={unit.code} 
+            criteriaCode={learningOutcomes[0]?.performanceCriteria[0]?.code || '1.1'} 
+          />
+        </div>
         
         {selectedCriteria.length > 0 && (
           <div className="mb-6 flex justify-start">
