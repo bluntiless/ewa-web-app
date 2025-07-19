@@ -457,53 +457,47 @@ export const ealNVQ1605PerformanceUnits = [
         number: "1",
         title: "Apply relevant health and safety legislation",
         performanceCriteria: [
-          { code: "1.1", description: "Identify which workplace health and safety procedures are relevant to the working environment", status: "not-started" },
-          { code: "1.2", description: "Carry out safe working practices in accordance with health and safety legislation", status: "not-started" },
-          { code: "1.3", description: "Identify and apply appropriate procedures to ensure the health and safety of themselves and others in the work location", status: "not-started" },
-          { code: "1.4", description: "Produce risk assessments and method statements in accordance with organizational procedures", status: "not-started" },
-          { code: "1.5", description: "Work within the requirements of:", status: "not-started" },
-          { code: "1.5a", description: "Risk assessments", status: "not-started" },
-          { code: "1.5b", description: "Method statements", status: "not-started" },
-          { code: "1.5c", description: "Safe systems of work", status: "not-started" }
+          { code: "1.1", description: "Identify which workplace health and safety procedures are relevant", status: "not-started" },
+          { code: "1.2", description: "Produce risk assessment and method statement in accordance with procedures", status: "not-started" },
+          { code: "1.3", description: "Work within the requirements of:", status: "not-started" },
+          { code: "1.3a", description: "Risk assessments", status: "not-started" },
+          { code: "1.3b", description: "Method statements", status: "not-started" },
+          { code: "1.3c", description: "Safe systems of work", status: "not-started" }
         ]
       },
       {
         number: "2",
         title: "Assess the work environment for hazards",
         performanceCriteria: [
-          { code: "2.1", description: "Identify unsafe situations and conditions", status: "not-started" },
-          { code: "2.2", description: "Take remedial actions to make the work environment safe", status: "not-started" },
-          { code: "2.3", description: "Assess the work environment and revise work practices accordingly to take account of hazards and environmental conditions from:", status: "not-started" },
-          { code: "2.3a", description: "The use of materials, tools and equipment", status: "not-started" },
-          { code: "2.3b", description: "Electrical equipment, power tools and hand tools", status: "not-started" },
-          { code: "2.3c", description: "Materials handling equipment", status: "not-started" },
-          { code: "2.3d", description: "Other equipment such as ladders, tower scaffolds", status: "not-started" },
-          { code: "2.3e", description: "Work activities of themselves and others in the vicinity", status: "not-started" },
-          { code: "2.4", description: "Report high risk hazards which require a control measure that is outside of their responsibility", status: "not-started" },
-          { code: "2.5", description: "Apply appropriate measures to control workplace health and safety hazards", status: "not-started" },
-          { code: "2.6", description: "Select and use appropriate personal protective equipment (PPE)", status: "not-started" }
+          { code: "2.1", description: "Identify unsafe situations and conditions and take remedial actions", status: "not-started" },
+          { code: "2.2", description: "Assess work environment & revise practices for hazards from:", status: "not-started" },
+          { code: "2.2a", description: "Materials", status: "not-started" },
+          { code: "2.2b", description: "Tools", status: "not-started" },
+          { code: "2.2c", description: "Equipment", status: "not-started" },
+          { code: "2.3", description: "Report high risk hazards to relevant persons", status: "not-started" },
+          { code: "2.4", description: "Apply measures to control health and safety hazards", status: "not-started" },
+          { code: "2.5", description: "Select and use correct personal protective equipment", status: "not-started" }
         ]
       },
       {
         number: "3",
-        title: "Apply methods and procedures for safe working",
+        title: "Apply methods and procedures for safe work",
         performanceCriteria: [
-          { code: "3.1", description: "Demonstrate the application of appropriate behaviour in the work environment", status: "not-started" },
-          { code: "3.2", description: "Apply appropriate procedures for the use, maintenance and storage of tools, equipment and personal protective equipment (PPE)", status: "not-started" },
-          { code: "3.3", description: "Apply appropriate procedures for the use, handling and storage of materials and substances hazardous to health", status: "not-started" },
-          { code: "3.4", description: "Comply with hazard, warning, mandatory instruction and prohibition notices", status: "not-started" },
-          { code: "3.5", description: "Apply procedures to ensure the safety of the work location through the correct use of guards and notices", status: "not-started" },
-          { code: "3.6", description: "Use access equipment correctly", status: "not-started" }
+          { code: "3.1", description: "Demonstrate personal conduct and behaviour around the workplace", status: "not-started" },
+          { code: "3.2", description: "Apply procedures for safe use, maintenance & storage as per:", status: "not-started" },
+          { code: "3.2a", description: "Workplace policies (company and site)", status: "not-started" },
+          { code: "3.2b", description: "Manufacturer's instructions", status: "not-started" },
+          { code: "3.2c", description: "Supplier information", status: "not-started" }
         ]
       },
       {
         number: "4",
         title: "Apply procedures for accidents and emergencies",
         performanceCriteria: [
-          { code: "4.1", description: "Follow correct procedures in the event of injury to themselves or others", status: "not-started" },
-          { code: "4.2", description: "Follow correct procedures for the evacuation of premises if required", status: "not-started" },
-          { code: "4.3", description: "Ensure responsible persons are informed of accidents and emergencies", status: "not-started" },
-          { code: "4.4", description: "Complete accurate documentation as required", status: "not-started" }
+          { code: "4.1", description: "Follow correct procedures in event of injury to self or others:", status: "not-started" },
+          { code: "4.1a", description: "Basic first aid procedures", status: "not-started" },
+          { code: "4.1b", description: "Notification of emergency services", status: "not-started" },
+          { code: "4.1c", description: "Reporting of incidents", status: "not-started" }
         ]
       }
     ]
@@ -605,15 +599,63 @@ export const ealNVQ1605PerformanceUnits = [
         performanceCriteria: [
           { code: "1.1", description: "Ensure the health and safety of themselves and others within the work location" },
           { code: "1.2", description: "Identify and use suitable personal protective equipment throughout the completion of work activities" },
-          { code: "1.3", description: "Complete preparatory work for the installation of electrical systems, enclosures and associated equipment" }
+          { code: "1.3", description: "Complete preparatory work for the installation of electrical systems, enclosures and associated equipment, to include:" },
+          { code: "1.3a", description: "Interpretation of installation specifications to produce material and equipment requisites" },
+          { code: "1.3b", description: "Identification and selection of material, equipment and components which are compatible with the installation specification" },
+          { code: "1.3c", description: "Identification of suitable methods, procedures and practices" },
+          { code: "1.3d", description: "Confirmation of site readiness for installation work to begin" },
+          { code: "1.3e", description: "Confirmation of secure site storage facilities for tools, equipment, materials and components" },
+          { code: "1.3f", description: "Confirmation that safe isolation has been carried out (if appropriate) in accordance with regulatory requirements" },
+          { code: "1.3g", description: "Completion of a risk assessment" }
         ]
       },
       {
         number: "2",
         title: "Documentation and Materials",
         performanceCriteria: [
-          { code: "2.1", description: "Use information and documentation that is current and relevant to the work required" },
-          { code: "2.2", description: "Use documentation to confirm that materials and equipment is of the correct quantity and is free from damage" }
+          { code: "2.1", description: "Use information and documentation that is current and relevant to the work required, including:" },
+          { code: "2.1a", description: "Installation specifications" },
+          { code: "2.1b", description: "Work schedules" },
+          { code: "2.1c", description: "Work programmes" },
+          { code: "2.1d", description: "Method statements" },
+          { code: "2.1e", description: "Manufacturer's instructions" },
+          { code: "2.1f", description: "Regulatory documents (including current version of BS 7671 and relevant Guidance Notes)" },
+          { code: "2.2", description: "Use documentation to confirm that materials and equipment is of the correct quantity and is free from damage, including:" },
+          { code: "2.2a", description: "Materials schedules" },
+          { code: "2.2b", description: "Plant and equipment schedules" },
+          { code: "2.2c", description: "Operating instructions" },
+          { code: "2.2d", description: "Tools and instruments" }
+        ]
+      },
+      {
+        number: "3",
+        title: "Documentation and Authorization",
+        performanceCriteria: [
+          { code: "3.1", description: "Use appropriate procedures to record:" },
+          { code: "3.1a", description: "Contract variations" },
+          { code: "3.1b", description: "Site instructions" },
+          { code: "3.1c", description: "Site events/diary" },
+          { code: "3.2", description: "Demonstrate that authorisation has been obtained from the relevant person(s) prior to commencement of the work, including:" },
+          { code: "3.2a", description: "Other workers" },
+          { code: "3.2b", description: "Customers/clients" },
+          { code: "3.2c", description: "Public (If appropriate)" },
+          { code: "3.3", description: "Produce a record of any pre work damage or defects to existing equipment or building features, and report to the relevant person (Customer; Client; Site Manager; Line Manager)" }
+        ]
+      },
+      {
+        number: "4",
+        title: "Verify Installation Requirements",
+        performanceCriteria: [
+          { code: "4.1", description: "Verify the compatibility of the electrical supply to the requirements of the installation specification" },
+          { code: "4.2", description: "Identify the earthing arrangement for the electrical installation" }
+        ]
+      },
+      {
+        number: "5",
+        title: "Installation Planning and Layout",
+        performanceCriteria: [
+          { code: "5.1", description: "Ensure that the planned locations for the wiring system(s) and its associated equipment are compatible with other site services requirements" },
+          { code: "5.2", description: "Use different measuring and marking out techniques which are appropriate to the wiring system, wiring enclosure and/or associated equipment that is being installed" }
         ]
       }
     ]
