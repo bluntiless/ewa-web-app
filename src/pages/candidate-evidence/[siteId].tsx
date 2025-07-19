@@ -235,24 +235,16 @@ export default function CandidateEvidencePage() {
           
           evidenceItems.push(evidenceItem);
         }
-
-        // Sort folders first, then files
-        evidenceItems.sort((a, b) => {
-          if (a.isFolder && !b.isFolder) return -1;
-          if (!a.isFolder && b.isFolder) return 1;
-          return a.name.localeCompare(b.name);
-        });
-
+        
         setItems(evidenceItems);
-        console.log(`✅ Loaded ${evidenceItems.length} items from ${currentPath || 'root'}`);
+        setLoading(false);
       } else {
-        setItems([]);
-        console.log(`📭 No items found in ${currentPath || 'root'}`);
+        setError('No items found in this location.');
+        setLoading(false);
       }
-      setLoading(false);
-    } catch (error: any) {
+    } catch (error) {
       console.error('Failed to load path:', error);
-      setError(`Failed to load ${currentPath || 'root'}. ${error?.message || 'Access denied or path not found.'}`);
+      setError(`Failed to load ${currentPath || 'root'}. ${(error as any)?.message || 'Access denied or path not found.'}`);
       setLoading(false);
     }
   };
@@ -286,150 +278,54 @@ export default function CandidateEvidencePage() {
     if (!selectedEvidenceItem || !siteId || typeof siteId !== 'string') return;
 
     try {
-      const spService = SharePointService.getInstance();
+      console.log(`SharePoint API not available - using local storage for ${selectedEvidenceItem.name}`);
       
-              // First, let's try to get the list item to see what fields are available
-        console.log(`Getting list item for ${selectedEvidenceItem.name}...`);
-        
-        try {
-          const listItemResponse = await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem`).expand('fields').get();
-          console.log('Available fields:', listItemResponse?.fields);
-          console.log('List item ID:', listItemResponse?.id);
-          console.log('List item full response:', listItemResponse);
-        
-        // Use the exact field names from SharePoint
-        const updateData = {
-          fields: {
-            AssessmentStatus: status,
-            AssessorFeedback: feedback,
-            AssessorName: 'Wayne Wright',
-            AssessmentDate: new Date().toISOString()
-          }
-        };
-
-        console.log(`Updating assessment for ${selectedEvidenceItem.name}:`, updateData);
-
-        // Try updating the list item using different methods
-                    try {
-              // Method 1: Try using the list item ID with the correct list name
-              const listItemId = listItemResponse.id;
-              console.log('Using list item ID:', listItemId);
-              
-              // Try to find the correct list name
-              const listResponse = await spService['client']?.api(`/sites/${siteId}/lists`).get();
-              console.log('Available lists:', listResponse?.value);
-              
-              // Try updating using the Documents list (most common)
-              const updateResponse = await spService['client']?.api(`/sites/${siteId}/lists/Documents/items/${listItemId}`).patch(updateData);
-              console.log('Update response:', updateResponse);
-              console.log('✅ SharePoint update successful');
-            } catch (updateError) {
-              console.error('Method 1 failed:', updateError);
-              
-              try {
-                // Method 2: Try using the drive item ID directly
-                const updateResponse2 = await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem`).patch({
-                  fields: updateData.fields
-                });
-                console.log('Method 2 update response:', updateResponse2);
-                console.log('✅ SharePoint update successful (Method 2)');
-              } catch (updateError2) {
-                console.error('Method 2 failed:', updateError2);
-                
-                try {
-                  // Method 3: Try using the fields endpoint with different approach
-                  const updateResponse3 = await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem/fields`).patch(updateData);
-                  console.log('Method 3 update response:', updateResponse3);
-                  console.log('✅ SharePoint update successful (Method 3)');
-                } catch (updateError3) {
-                  console.error('Method 3 failed:', updateError3);
-                  throw updateError3;
-                }
+      // Store assessment data locally
+      const assessmentData = {
+        status,
+        feedback,
+        assessor: 'Wayne Wright',
+        date: new Date().toISOString()
+      };
+      
+      // Update local state immediately
+      setItems(prevItems => 
+        prevItems.map(item => 
+          item.id === selectedEvidenceItem.id 
+            ? { 
+                ...item, 
+                status, 
+                assessorFeedback: feedback,
+                assessorName: 'Wayne Wright',
+                assessmentDate: new Date().toISOString()
               }
-            }
+            : item
+        )
+      );
 
-        // Update the local state immediately
-        setItems(prevItems => 
-          prevItems.map(item => 
-            item.id === selectedEvidenceItem.id 
-              ? { 
-                  ...item, 
-                  status, 
-                  assessorFeedback: feedback,
-                  assessorName: 'Wayne Wright',
-                  assessmentDate: new Date().toISOString()
-                }
-              : item
-          )
-        );
-
-        // Update the selected evidence item state as well
-        setSelectedEvidenceItem(prev => prev ? {
-          ...prev,
-          status,
-          assessorFeedback: feedback,
-          assessorName: 'Wayne Wright',
-          assessmentDate: new Date().toISOString()
-        } : null);
-
-        console.log(`✅ Assessment updated for ${selectedEvidenceItem.name}`);
-              } catch (listItemError) {
-          console.warn('Could not get list item, trying alternative approach:', listItemError);
-          console.error('List item error details:', {
-            message: (listItemError as any)?.message,
-            status: (listItemError as any)?.status,
-            response: (listItemError as any)?.response
-          });
-          
-          // Try a simpler approach - just update local state and store in localStorage
-          console.log('Using local-only approach due to SharePoint API limitations');
-        
-        // If we can't update the list item, just update local state
-        console.log('Updating local state only...');
-        
-        setItems(prevItems => 
-          prevItems.map(item => 
-            item.id === selectedEvidenceItem.id 
-              ? { 
-                  ...item, 
-                  status, 
-                  assessorFeedback: feedback,
-                  assessorName: 'Wayne Wright',
-                  assessmentDate: new Date().toISOString()
-                }
-              : item
-          )
-        );
-
-        setSelectedEvidenceItem(prev => prev ? {
-          ...prev,
-          status,
-          assessorFeedback: feedback,
-          assessorName: 'Wayne Wright',
-          assessmentDate: new Date().toISOString()
-        } : null);
-
-        console.log(`✅ Local assessment updated for ${selectedEvidenceItem.name}`);
-        
-        // Also store in local storage as backup
-        const assessmentData = {
-          status,
-          feedback,
-          assessor: 'Wayne Wright',
-          date: new Date().toISOString()
-        };
-        setLocalAssessments(prev => ({
-          ...prev,
-          [selectedEvidenceItem.id]: assessmentData
-        }));
-        
-        // Store in localStorage
-        localStorage.setItem(`assessment_${selectedEvidenceItem.id}`, JSON.stringify(assessmentData));
-      }
+      // Update the selected evidence item state as well
+      setSelectedEvidenceItem(prev => prev ? {
+        ...prev,
+        status,
+        assessorFeedback: feedback,
+        assessorName: 'Wayne Wright',
+        assessmentDate: new Date().toISOString()
+      } : null);
+      
+      // Store in localStorage
+      setLocalAssessments(prev => ({
+        ...prev,
+        [selectedEvidenceItem.id]: assessmentData
+      }));
+      localStorage.setItem(`assessment_${selectedEvidenceItem.id}`, JSON.stringify(assessmentData));
+      
+      console.log(`✅ Local assessment saved for ${selectedEvidenceItem.name}`);
+      console.log('Assessment data:', assessmentData);
+      
     } catch (error) {
       console.error('Failed to update assessment:', error);
       
-      // Even if SharePoint fails, update local state
+      // Even if everything fails, update local state
       setItems(prevItems => 
         prevItems.map(item => 
           item.id === selectedEvidenceItem.id 
@@ -563,27 +459,27 @@ export default function CandidateEvidencePage() {
                       )}
                     </p>
                   )}
-                                {!item.isFolder && item.assessorFeedback && (
-                <div className="mt-2 p-2 bg-gray-50 rounded text-sm">
-                  <span className="font-medium text-gray-700">Feedback:</span>
-                  <p className="text-gray-600 mt-1">{item.assessorFeedback}</p>
-                </div>
-              )}
-              {!item.isFolder && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedEvidenceItem(item);
-                    setShowAssessmentModal(true);
-                  }}
-                  className="mt-2 px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200 flex items-center space-x-1"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                  <span>Feedback</span>
-                </button>
-              )}
+                  {!item.isFolder && item.assessorFeedback && (
+                    <div className="mt-2 p-2 bg-gray-50 rounded text-sm">
+                      <span className="font-medium text-gray-700">Feedback:</span>
+                      <p className="text-gray-600 mt-1">{item.assessorFeedback}</p>
+                    </div>
+                  )}
+                  {!item.isFolder && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedEvidenceItem(item);
+                        setShowAssessmentModal(true);
+                      }}
+                      className="mt-2 px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200 flex items-center space-x-1"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                      <span>Feedback</span>
+                    </button>
+                  )}
                 </div>
               </div>
               {!item.isFolder && (
