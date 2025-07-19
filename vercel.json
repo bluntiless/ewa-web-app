@@ -3,6 +3,7 @@
   "outputDirectory": ".next",
   "framework": "nextjs",
   "installCommand": "npm install",
+  "buildTimestamp": "2025-01-27-21-30",
   "functions": {
     "app/api/**/*.ts": {
       "maxDuration": 30
