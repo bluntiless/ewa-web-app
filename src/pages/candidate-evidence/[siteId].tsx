@@ -29,6 +29,7 @@ export default function CandidateEvidencePage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedEvidenceItem, setSelectedEvidenceItem] = useState<EvidenceItem | null>(null);
   const [showAssessmentModal, setShowAssessmentModal] = useState(false);
+  const [localAssessments, setLocalAssessments] = useState<Record<string, { status: string; feedback: string; assessor: string; date: string }>>({});
 
   useEffect(() => {
     const loadItems = async () => {
@@ -43,6 +44,23 @@ export default function CandidateEvidencePage() {
         if (siteResponse) {
           setCandidateName(siteResponse.displayName);
         }
+
+        // Load local assessments from localStorage
+        const localAssessmentsData: Record<string, { status: string; feedback: string; assessor: string; date: string }> = {};
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key?.startsWith('assessment_')) {
+            try {
+              const data = JSON.parse(localStorage.getItem(key) || '{}');
+              const itemId = key.replace('assessment_', '');
+              localAssessmentsData[itemId] = data;
+            } catch (e) {
+              console.warn('Failed to parse local assessment:', e);
+            }
+          }
+        }
+        setLocalAssessments(localAssessmentsData);
+        console.log('Loaded local assessments:', localAssessmentsData);
 
         // Try to find the best starting path
         await findBestStartingPath();
@@ -190,6 +208,16 @@ export default function CandidateEvidencePage() {
             }
           }
           
+          // Check if we have a local assessment for this item
+          const localAssessment = localAssessments[item.id];
+          if (localAssessment) {
+            assessmentStatus = localAssessment.status;
+            assessorFeedback = localAssessment.feedback;
+            assessorName = localAssessment.assessor;
+            assessmentDate = localAssessment.date;
+            console.log(`Using local assessment for ${item.name}:`, localAssessment);
+          }
+
           const evidenceItem: EvidenceItem = {
             id: item.id,
             name: item.name,
@@ -259,22 +287,120 @@ export default function CandidateEvidencePage() {
     try {
       const spService = SharePointService.getInstance();
       
-      // Update the SharePoint list item with assessment data
-      const updateData = {
-        fields: {
-          Assessment: status,
-          AssessorFeedback: feedback,
-          AssessorName: 'Wayne Wright', // This should come from the authenticated user
-          AssessmentDate: new Date().toISOString()
-        }
-      };
+      // First, let's try to get the list item to see what fields are available
+      console.log(`Getting list item for ${selectedEvidenceItem.name}...`);
+      
+      try {
+        const listItemResponse = await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem`).expand('fields').get();
+        console.log('Available fields:', listItemResponse?.fields);
+        
+        // Try different field name variations
+        const updateData = {
+          fields: {
+            // Try multiple field name variations
+            Assessment: status,
+            AssessmentStatus: status,
+            assessment: status,
+            'Assessment Status': status,
+            Assessment_x0020_Status: status,
+            
+            AssessorFeedback: feedback,
+            Assessor_x0020_Feedback: feedback,
+            'Assessor Feedback': feedback,
+            assessorFeedback: feedback,
+            
+            AssessorName: 'Wayne Wright',
+            Assessor_x0020_Name: 'Wayne Wright',
+            'Assessor Name': 'Wayne Wright',
+            assessorName: 'Wayne Wright',
+            
+            AssessmentDate: new Date().toISOString(),
+            Assessment_x0020_Date: new Date().toISOString(),
+            'Assessment Date': new Date().toISOString(),
+            assessmentDate: new Date().toISOString()
+          }
+        };
 
-      console.log(`Updating assessment for ${selectedEvidenceItem.name}:`, updateData);
+        console.log(`Updating assessment for ${selectedEvidenceItem.name}:`, updateData);
 
-      // Update the list item
-      await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem/fields`).patch(updateData);
+        // Try updating the list item
+        const updateResponse = await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem/fields`).patch(updateData);
+        console.log('Update response:', updateResponse);
 
-      // Update the local state immediately
+        // Update the local state immediately
+        setItems(prevItems => 
+          prevItems.map(item => 
+            item.id === selectedEvidenceItem.id 
+              ? { 
+                  ...item, 
+                  status, 
+                  assessorFeedback: feedback,
+                  assessorName: 'Wayne Wright',
+                  assessmentDate: new Date().toISOString()
+                }
+              : item
+          )
+        );
+
+        // Update the selected evidence item state as well
+        setSelectedEvidenceItem(prev => prev ? {
+          ...prev,
+          status,
+          assessorFeedback: feedback,
+          assessorName: 'Wayne Wright',
+          assessmentDate: new Date().toISOString()
+        } : null);
+
+        console.log(`✅ Assessment updated for ${selectedEvidenceItem.name}`);
+      } catch (listItemError) {
+        console.warn('Could not get list item, trying alternative approach:', listItemError);
+        
+        // If we can't update the list item, just update local state
+        console.log('Updating local state only...');
+        
+        setItems(prevItems => 
+          prevItems.map(item => 
+            item.id === selectedEvidenceItem.id 
+              ? { 
+                  ...item, 
+                  status, 
+                  assessorFeedback: feedback,
+                  assessorName: 'Wayne Wright',
+                  assessmentDate: new Date().toISOString()
+                }
+              : item
+          )
+        );
+
+        setSelectedEvidenceItem(prev => prev ? {
+          ...prev,
+          status,
+          assessorFeedback: feedback,
+          assessorName: 'Wayne Wright',
+          assessmentDate: new Date().toISOString()
+        } : null);
+
+        console.log(`✅ Local assessment updated for ${selectedEvidenceItem.name}`);
+        
+        // Also store in local storage as backup
+        const assessmentData = {
+          status,
+          feedback,
+          assessor: 'Wayne Wright',
+          date: new Date().toISOString()
+        };
+        setLocalAssessments(prev => ({
+          ...prev,
+          [selectedEvidenceItem.id]: assessmentData
+        }));
+        
+        // Store in localStorage
+        localStorage.setItem(`assessment_${selectedEvidenceItem.id}`, JSON.stringify(assessmentData));
+      }
+    } catch (error) {
+      console.error('Failed to update assessment:', error);
+      
+      // Even if SharePoint fails, update local state
       setItems(prevItems => 
         prevItems.map(item => 
           item.id === selectedEvidenceItem.id 
@@ -289,7 +415,6 @@ export default function CandidateEvidencePage() {
         )
       );
 
-      // Update the selected evidence item state as well
       setSelectedEvidenceItem(prev => prev ? {
         ...prev,
         status,
@@ -297,11 +422,21 @@ export default function CandidateEvidencePage() {
         assessorName: 'Wayne Wright',
         assessmentDate: new Date().toISOString()
       } : null);
-
-      console.log(`✅ Assessment updated for ${selectedEvidenceItem.name}`);
-    } catch (error) {
-      console.error('Failed to update assessment:', error);
-      throw error;
+      
+      // Store in localStorage
+      const assessmentData = {
+        status,
+        feedback,
+        assessor: 'Wayne Wright',
+        date: new Date().toISOString()
+      };
+      setLocalAssessments(prev => ({
+        ...prev,
+        [selectedEvidenceItem.id]: assessmentData
+      }));
+      localStorage.setItem(`assessment_${selectedEvidenceItem.id}`, JSON.stringify(assessmentData));
+      
+      console.log(`✅ Local assessment saved for ${selectedEvidenceItem.name}`);
     }
   };
 
