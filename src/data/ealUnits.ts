@@ -64,9 +64,9 @@ export const ealNVQ1605Units = [
           { code: "3.1", description: "Understand emergency procedures" },
           { code: "3.2", description: "Understand first aid requirements" },
           { code: "3.3", description: "Understand accident reporting procedures" },
-          { code: "3.4", description: "Comply with hazard, warning, mandatory instruction and prohibition notices" },
-          { code: "3.5", description: "Apply procedures to ensure the safety of the work location through the correct use of guards and notices" },
-          { code: "3.6", description: "Use access equipment correctly" }
+          { code: "3.3", description: "Comply with hazard, warning, mandatory instruction and prohibition notices" },
+          { code: "3.4", description: "Apply procedures to ensure the safety of the work location through the correct use of guards and notices" },
+          { code: "3.5", description: "Use access equipment correctly" }
         ]
       }
     ]
@@ -96,9 +96,14 @@ export const ealNVQ1605Units = [
         number: "2",
         title: "Environmental Technology Systems",
         performanceCriteria: [
-          { code: "2.1", description: "Understand principles of environmental technology systems" },
-          { code: "2.2", description: "Understand renewable energy systems" },
-          { code: "2.3", description: "Understand energy efficiency measures" }
+          { code: "2.1", description: "Understand principles of environmental technology systems:" },
+          { code: "2.1a", description: "Solar photovoltaic" },
+          { code: "2.1b", description: "Wind energy" },
+          { code: "2.1c", description: "Micro hydro" },
+          { code: "2.1d", description: "Heat pumps" },
+          { code: "2.1e", description: "Grey water recycling" },
+          { code: "2.1f", description: "Rainwater harvesting" },
+          { code: "2.1g", description: "Biomass heating" }
         ]
       }
     ]
@@ -182,8 +187,8 @@ export const ealNVQ1605Units = [
     code: "ELTK3-005",
     displayCode: "ELTK3/005",
     reference: "ELTK3-005",
-    title: "Understanding the Requirements for Terminating and Connecting Conductors",
-    description: "Knowledge of termination and connection methods",
+    title: "Understanding the Practices and Procedures for the Termination and Connection of Conductors, Cables and Cords in Electrical Systems",
+    description: "Knowledge of electrical terminations and connections",
     type: UnitType.NVQ,
     creditValue: 4,
     glh: 35,
@@ -191,20 +196,36 @@ export const ealNVQ1605Units = [
     learningOutcomes: [
       {
         number: "1",
-        title: "Termination Methods",
+        title: "Cable and Conductor Types",
         performanceCriteria: [
-          { code: "1.1", description: "Understand different termination methods" },
-          { code: "1.2", description: "Understand requirements for different conductor types" },
-          { code: "1.3", description: "Understand importance of correct termination" }
+          { code: "1.1", description: "Understand different types of cables and conductors" },
+          { code: "1.2", description: "Understand cable sizing and selection criteria" },
+          { code: "1.3", description: "Understand cable ratings and current carrying capacity" }
         ]
       },
       {
         number: "2",
-        title: "Connection Requirements",
+        title: "Termination Methods",
         performanceCriteria: [
-          { code: "2.1", description: "Understand connection requirements for different equipment" },
-          { code: "2.2", description: "Understand importance of correct polarity" },
-          { code: "2.3", description: "Understand requirements for different connection types" }
+          { code: "2.1", description: "Understand termination techniques for:" },
+          { code: "2.1a", description: "Single core cables" },
+          { code: "2.1b", description: "Multicore cables" },
+          { code: "2.1c", description: "Steel wire armoured cables" },
+          { code: "2.1d", description: "Mineral insulated cables" },
+          { code: "2.2", description: "Understand gland types and selection" },
+          { code: "2.3", description: "Understand earthing requirements" }
+        ]
+      },
+      {
+        number: "3",
+        title: "Connection Methods",
+        performanceCriteria: [
+          { code: "3.1", description: "Understand connection methods for:" },
+          { code: "3.1a", description: "Distribution boards" },
+          { code: "3.1b", description: "Consumer units" },
+          { code: "3.1c", description: "Wiring accessories" },
+          { code: "3.2", description: "Understand torque settings" },
+          { code: "3.3", description: "Understand connection security requirements" }
         ]
       },
       {
@@ -235,27 +256,27 @@ export const ealNVQ1605Units = [
         number: "1",
         title: "Inspection Requirements",
         performanceCriteria: [
-          { code: "1.1", description: "Understand inspection requirements" },
-          { code: "1.2", description: "Understand importance of thorough inspection" },
-          { code: "1.3", description: "Understand documentation requirements" }
+          { code: "1.1", description: "Understand requirements for initial verification" },
+          { code: "1.2", description: "Understand inspection procedures and methods" },
+          { code: "1.3", description: "Understand documentation requirements for inspection" }
         ]
       },
       {
         number: "2",
         title: "Testing Procedures",
         performanceCriteria: [
-          { code: "2.1", description: "Understand testing requirements" },
-          { code: "2.2", description: "Understand test equipment requirements" },
-          { code: "2.3", description: "Understand test procedures" }
+          { code: "2.1", description: "Understand testing requirements and sequences" },
+          { code: "2.2", description: "Understand test instrument selection and use" },
+          { code: "2.3", description: "Understand interpretation of test results" }
         ]
       },
       {
         number: "3",
-        title: "Certification",
+        title: "Commissioning and Certification",
         performanceCriteria: [
-          { code: "3.1", description: "Understand certification requirements" },
-          { code: "3.2", description: "Understand documentation requirements" },
-          { code: "3.3", description: "Understand importance of accurate certification" }
+          { code: "3.1", description: "Understand commissioning procedures" },
+          { code: "3.2", description: "Understand certification requirements" },
+          { code: "3.3", description: "Understand handover procedures" }
         ]
       }
     ]
@@ -265,7 +286,7 @@ export const ealNVQ1605Units = [
     code: "ELTK3-007",
     displayCode: "ELTK3/007",
     reference: "ELTK3-007",
-    title: "Understanding the Requirements for Diagnosing and Correcting Electrical Faults",
+    title: "Understanding the principles, practices and legislation for diagnosing and correcting electrical faults",
     description: "Knowledge and understanding of electrical fault diagnosis and correction",
     type: UnitType.NVQ,
     creditValue: 6,
@@ -286,7 +307,21 @@ export const ealNVQ1605Units = [
           { code: "1.1g", description: "Use of correct warning notices" },
           { code: "1.1h", description: "Correct sequence for isolating circuits" },
           { code: "1.2", description: "State implications of carrying out safe isolations to:" },
-          { code: "1.2a", description: "Customers" }
+          { code: "1.2a", description: "Other personnel" },
+          { code: "1.2b", description: "Customers/clients" },
+          { code: "1.2c", description: "Public" },
+          { code: "1.2d", description: "Building systems (loss of supply)" },
+          { code: "1.3", description: "State implications of not carrying out safe isolations to:" },
+          { code: "1.3a", description: "Self" },
+          { code: "1.3b", description: "Other personnel" },
+          { code: "1.3c", description: "Customers/clients" },
+          { code: "1.3d", description: "Public" },
+          { code: "1.3e", description: "Building systems (Presence of supply)" },
+          { code: "1.4", description: "Identify Health and Safety requirements for:" },
+          { code: "1.4a", description: "Working in accordance with risk assessments/permits" },
+          { code: "1.4b", description: "Safe use of tools and equipment" },
+          { code: "1.4c", description: "Safe use of measuring instruments" },
+          { code: "1.4d", description: "Provision and use of PPE" }
         ]
       },
       {
