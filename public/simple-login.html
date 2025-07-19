@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Login</title>
+    <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.30.0/js/msal-browser.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .error {
+            color: #d83b01;
+            background-color: #fed9cc;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 20px;
+            border: 1px solid #d83b01;
+        }
+        .success {
+            color: #107c10;
+            background-color: #dff6dd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 20px;
+            border: 1px solid #107c10;
+        }
+        h1 {
+            margin-top: 0;
+            color: #201f1e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Microsoft Authentication</h1>
+        <p>This is a simplified login page for Microsoft authentication.</p>
+        
+        <div id="accountDetails" style="display: none;">
+            <h2>Signed In As:</h2>
+            <p><strong>Name:</strong> <span id="userName"></span></p>
+            <p><strong>Email:</strong> <span id="userEmail"></span></p>
+        </div>
+        
+        <button id="signInButton">Sign in with Microsoft</button>
+        <button id="signOutButton" style="display: none;">Sign out</button>
+        
+        <div id="errorMessage" class="error" style="display: none;"></div>
+        <div id="successMessage" class="success" style="display: none;"></div>
+        
+        <div id="manualRedirect" style="display: none; margin-top: 20px;">
+            <p>If you're not automatically redirected, please click the button below:</p>
+            <button onclick="window.location.href='/teams'" style="background-color: #107c10;">Go to Teams Page</button>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <h3>Browser Information</h3>
+            <p id="browserInfo"></p>
+            <p><strong>Cookies:</strong> <span id="cookieStatus"></span></p>
+        </div>
+    </div>
+    
+    <script>
+        // Update browser info
+        document.getElementById('browserInfo').textContent = navigator.userAgent;
+        
+        // Test cookies
+        try {
+            document.cookie = "testcookie=1";
+            const cookiesEnabled = document.cookie.indexOf("testcookie=") !== -1;
+            document.getElementById('cookieStatus').textContent = cookiesEnabled ? "Enabled" : "Disabled";
+        } catch (e) {
+            document.getElementById('cookieStatus').textContent = "Error: " + e.message;
+        }
+        
+        // Configure MSAL
+        const msalConfig = {
+            auth: {
+                clientId: '4dee2fb0-16a8-417e-99e0-182238406716',
+                authority: 'https://login.microsoftonline.com/f06bb1fd-4f8d-4dd6-bed9-8ae702c632b9',
+                redirectUri: window.location.origin, // Use root URL as redirect target
+                postLogoutRedirectUri: window.location.origin
+            },
+            cache: {
+                cacheLocation: 'localStorage',
+                storeAuthStateInCookie: false // Changed to false to avoid potential cookie issues
+            }
+        };
+        
+        // Initialize MSAL
+        let msalInstance = null;
+        let currentAccount = null;
+        
+        // Add a trigger to redirect to teams page after successful auth
+        function redirectToTeamsPage() {
+            try {
+                // Store auth success in localStorage to be picked up by the Teams page
+                localStorage.setItem('auth_success', 'true');
+                localStorage.setItem('auth_timestamp', Date.now().toString());
+                
+                // Give some time for the token to be properly stored
+                setTimeout(() => {
+                    // Add a clear message before redirecting
+                    console.log("Redirecting to teams page now...");
+                    // Try using window.location.href first, and if that fails, try window.open
+                    try {
+                        window.location.href = '/teams';
+                    } catch (redirectErr) {
+                        console.error("Standard redirect failed, trying window.open:", redirectErr);
+                        window.open('/teams', '_self');
+                    }
+                    
+                    // Show manual redirect button after a delay in case automatic redirect fails
+                    setTimeout(() => {
+                        document.getElementById('manualRedirect').style.display = 'block';
+                    }, 5000);
+                }, 1500); // Increased timeout to ensure token storage completes
+            } catch (error) {
+                console.error("Failed to redirect:", error);
+                showError("Authentication was successful, but redirect failed: " + error.message);
+                // Show manual redirect option immediately if there's an error
+                document.getElementById('manualRedirect').style.display = 'block';
+            }
+        }
+        
+        try {
+            msalInstance = new msal.PublicClientApplication(msalConfig);
+            
+            // Handle redirect
+            msalInstance.handleRedirectPromise()
+                .then(response => {
+                    if (response) {
+                        console.log("Auth successful with token response received");
+                        
+                        // Store token in session storage for other pages to access
+                        try {
+                            sessionStorage.setItem('msal.idtoken', response.idToken);
+                            console.log("ID token saved to session storage");
+                        } catch (storageErr) {
+                            console.error("Failed to store token:", storageErr);
+                        }
+                        
+                        showSuccess("Authentication successful! Redirecting to application...");
+                        
+                        // Update UI first, then redirect
+                        updateUI();
+                        redirectToTeamsPage();
+                    } else {
+                        console.log("No redirect response, checking accounts");
+                        updateUI();
+                        
+                        // Check if we already have a logged in account and redirect if so
+                        const accounts = msalInstance.getAllAccounts();
+                        if (accounts.length > 0) {
+                            showSuccess("Already authenticated! Redirecting to application...");
+                            redirectToTeamsPage();
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error("Error handling redirect:", error);
+                    showError("Error during authentication: " + error.message);
+                });
+        } catch (error) {
+            console.error("MSAL initialization error:", error);
+            showError("Failed to initialize authentication: " + error.message);
+        }
+        
+        // Show error message
+        function showError(message) {
+            console.log("Showing error:", message);
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            // Hide after 10 seconds
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 10000);
+        }
+        
+        // Show success message
+        function showSuccess(message) {
+            console.log("Showing success:", message);
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            
+            // No need to hide on success if we're redirecting
+        }
+        
+        // Update UI based on sign-in state
+        function updateUI() {
+            try {
+                console.log("Updating UI, msalInstance available:", !!msalInstance);
+                const accounts = msalInstance ? msalInstance.getAllAccounts() : [];
+                console.log("Found accounts:", accounts.length);
+                
+                currentAccount = accounts.length > 0 ? accounts[0] : null;
+                
+                if (currentAccount) {
+                    console.log("Current account:", currentAccount.username);
+                    // Signed in
+                    document.getElementById('signInButton').style.display = 'none';
+                    document.getElementById('signOutButton').style.display = 'block';
+                    document.getElementById('accountDetails').style.display = 'block';
+                    document.getElementById('userName').textContent = currentAccount.name || 'Unknown';
+                    document.getElementById('userEmail').textContent = currentAccount.username || 'Unknown';
+                    
+                    // Add a direct link to the teams page
+                    const teamsLink = document.createElement('a');
+                    teamsLink.href = '/teams';
+                    teamsLink.className = 'btn';
+                    teamsLink.style.display = 'inline-block';
+                    teamsLink.style.marginTop = '10px';
+                    teamsLink.style.backgroundColor = '#107c10';
+                    teamsLink.textContent = 'Go to Teams Page';
+                    
+                    const container = document.getElementById('accountDetails');
+                    if (!document.getElementById('teamsLink')) {
+                        teamsLink.id = 'teamsLink';
+                        container.appendChild(teamsLink);
+                    }
+                    
+                    console.log("UI updated for signed-in state");
+                } else {
+                    console.log("No current account");
+                    // Not signed in
+                    document.getElementById('signInButton').style.display = 'block';
+                    document.getElementById('signOutButton').style.display = 'none';
+                    document.getElementById('accountDetails').style.display = 'none';
+                    
+                    // Remove teams link if it exists
+                    const teamsLink = document.getElementById('teamsLink');
+                    if (teamsLink) {
+                        teamsLink.parentNode.removeChild(teamsLink);
+                    }
+                    
+                    console.log("UI updated for signed-out state");
+                }
+            } catch (error) {
+                console.error("Error in updateUI:", error);
+                showError("UI Update error: " + error.message);
+            }
+        }
+        
+        // Sign in
+        document.getElementById('signInButton').addEventListener('click', () => {
+            if (!msalInstance) {
+                showError("Authentication system not initialized");
+                return;
+            }
+            
+            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+            console.log("Starting login process, isSafari:", isSafari);
+            
+            try {
+                // Simple login parameters for better compatibility
+                const loginRequest = {
+                    scopes: ['Files.ReadWrite.All', 'Sites.ReadWrite.All']
+                };
+                
+                // Use redirect auth for all browsers for consistency
+                msalInstance.loginRedirect(loginRequest);
+                console.log("Login redirect initiated");
+            } catch (error) {
+                console.error("Login error:", error);
+                showError("Failed to start authentication: " + error.message);
+            }
+        });
+        
+        // Sign out
+        document.getElementById('signOutButton').addEventListener('click', () => {
+            if (!msalInstance || !currentAccount) {
+                showError("Not signed in or authentication system not initialized");
+                return;
+            }
+            
+            try {
+                console.log("Starting sign out process");
+                
+                // Clear any stored tokens/state first
+                try {
+                    sessionStorage.removeItem('msal.idtoken');
+                    localStorage.removeItem('auth_success');
+                    localStorage.removeItem('auth_timestamp');
+                } catch (clearErr) {
+                    console.error("Error clearing storage:", clearErr);
+                }
+                
+                // Simple logout parameters
+                const logoutRequest = {
+                    account: currentAccount
+                };
+                
+                msalInstance.logoutRedirect(logoutRequest);
+                console.log("Logout redirect initiated");
+            } catch (error) {
+                console.error("Logout error:", error);
+                showError("Failed to sign out: " + error.message);
+            }
+        });
+        
+        // Add an event to window onload to ensure everything is properly initialized
+        window.onload = function() {
+            console.log("Window loaded");
+            try {
+                document.getElementById('browserInfo').textContent = navigator.userAgent;
+                
+                // Test cookies
+                try {
+                    document.cookie = "testcookie=1";
+                    const cookiesEnabled = document.cookie.indexOf("testcookie=") !== -1;
+                    document.getElementById('cookieStatus').textContent = cookiesEnabled ? "Enabled" : "Disabled";
+                    console.log("Cookies enabled:", cookiesEnabled);
+                } catch (e) {
+                    document.getElementById('cookieStatus').textContent = "Error: " + e.message;
+                    console.error("Cookie test error:", e);
+                }
+                
+                // Check sign-in state on load
+                try {
+                    updateUI();
+                } catch (uiError) {
+                    console.error("Initial updateUI error:", uiError);
+                }
+            } catch (error) {
+                console.error("Window onload error:", error);
+            }
+        };
+        
+        // Add a fallback mechanism if the page seems stuck
+        setTimeout(() => {
+            const errorDiv = document.getElementById('errorMessage');
+            if (errorDiv.style.display === 'none') {
+                // No visible errors but UI might be stuck
+                try {
+                    console.log("Running fallback UI update");
+                    updateUI();
+                } catch (error) {
+                    console.error("Fallback update error:", error);
+                }
+            }
+        }, 3000);
+    </script>
+</body>
+</html> 

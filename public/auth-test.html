@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSAL Authentication Test</title>
+    <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.30.0/js/msal-browser.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #121212;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            margin: 50px auto;
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+        .status {
+            padding: 15px;
+            background-color: #2b2b2b;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .logs {
+            background-color: #2b2b2b;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .error {
+            color: #ff6b6b;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: rgba(255, 107, 107, 0.1);
+            border-radius: 5px;
+        }
+        .success {
+            color: #69db7c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MSAL Authentication Test</h1>
+        
+        <button id="loginButton">Sign in with Microsoft</button>
+        
+        <div class="status">
+            <h3>Status: <span id="status">Not Authenticated</span></h3>
+            <div id="error" class="error" style="display: none;"></div>
+            <div id="accountInfo" style="display: none;"></div>
+        </div>
+        
+        <h3>Logs:</h3>
+        <div id="logs" class="logs"></div>
+    </div>
+
+    <script>
+        // Log helper function
+        function log(message) {
+            const logsDiv = document.getElementById('logs');
+            const timestamp = new Date().toLocaleTimeString();
+            logsDiv.innerHTML += `[${timestamp}] ${message}\n`;
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+            console.log(message);
+        }
+
+        // MSAL configuration
+        const msalConfig = {
+            auth: {
+                clientId: '4dee2fb0-16a8-417e-99e0-182238406716',
+                authority: 'https://login.microsoftonline.com/f06bb1fd-4f8d-4dd6-bed9-8ae702c632b9',
+                redirectUri: window.location.origin + '/auth-test.html'
+            },
+            cache: {
+                cacheLocation: 'sessionStorage',
+                storeAuthStateInCookie: true
+            }
+        };
+
+        // Required scopes
+        const loginRequest = {
+            scopes: ['Files.ReadWrite.All', 'Sites.ReadWrite.All']
+        };
+
+        // Initialize MSAL
+        let msalInstance = null;
+
+        // DOM elements
+        const loginButton = document.getElementById('loginButton');
+        const statusSpan = document.getElementById('status');
+        const errorDiv = document.getElementById('error');
+        const accountInfoDiv = document.getElementById('accountInfo');
+
+        // Initialize MSAL
+        function initializeMsal() {
+            try {
+                log('Initializing MSAL...');
+                loginButton.disabled = true;
+                
+                msalInstance = new msal.PublicClientApplication(msalConfig);
+                
+                // Handle redirect promise
+                msalInstance.handleRedirectPromise()
+                    .then(response => {
+                        if (response) {
+                            log('Received authentication response after redirect');
+                            handleResponse(response);
+                        } else {
+                            log('No redirect response found, checking for existing accounts');
+                            const accounts = msalInstance.getAllAccounts();
+                            if (accounts.length > 0) {
+                                log('Found existing account: ' + accounts[0].username);
+                                updateUI(true, accounts[0]);
+                            } else {
+                                log('No accounts found');
+                                updateUI(false);
+                            }
+                        }
+                        loginButton.disabled = false;
+                    })
+                    .catch(error => {
+                        log('Error handling redirect: ' + error.message);
+                        showError(error.message);
+                        loginButton.disabled = false;
+                    });
+            } catch (error) {
+                log('Failed to initialize MSAL: ' + error.message);
+                showError('Failed to initialize MSAL: ' + error.message);
+                loginButton.disabled = false;
+            }
+        }
+
+        // Sign in function
+        function signIn() {
+            if (!msalInstance) {
+                log('MSAL not initialized');
+                showError('MSAL not initialized');
+                return;
+            }
+
+            loginButton.disabled = true;
+            log('Starting authentication...');
+            
+            try {
+                // Try popup authentication
+                msalInstance.loginPopup(loginRequest)
+                    .then(response => {
+                        log('Authentication successful with popup');
+                        handleResponse(response);
+                        loginButton.disabled = false;
+                    })
+                    .catch(error => {
+                        log('Popup authentication failed: ' + error.message);
+                        
+                        // If popup fails, try redirect
+                        if (error.name === 'BrowserAuthError' && 
+                            (error.message.includes('popup') || error.message.includes('window'))) {
+                            log('Popup blocked, falling back to redirect authentication...');
+                            msalInstance.loginRedirect(loginRequest);
+                        } else {
+                            showError(error.message);
+                            loginButton.disabled = false;
+                        }
+                    });
+            } catch (error) {
+                log('Authentication error: ' + error.message);
+                showError(error.message);
+                loginButton.disabled = false;
+            }
+        }
+
+        // Handle response
+        function handleResponse(response) {
+            if (response.account) {
+                log('Authentication successful for account: ' + response.account.username);
+                updateUI(true, response.account);
+            } else {
+                log('Authentication response received but no account info');
+                updateUI(false);
+            }
+        }
+
+        // Update UI
+        function updateUI(isAuthenticated, account = null) {
+            if (isAuthenticated && account) {
+                statusSpan.textContent = 'Authenticated';
+                statusSpan.className = 'success';
+                accountInfoDiv.style.display = 'block';
+                accountInfoDiv.innerHTML = `
+                    <p><strong>User:</strong> ${account.username}</p>
+                    <p><strong>Name:</strong> ${account.name}</p>
+                    <p><strong>ID:</strong> ${account.homeAccountId}</p>
+                `;
+                loginButton.textContent = 'Already Signed In';
+            } else {
+                statusSpan.textContent = 'Not Authenticated';
+                statusSpan.className = '';
+                accountInfoDiv.style.display = 'none';
+                loginButton.textContent = 'Sign in with Microsoft';
+            }
+        }
+
+        // Show error
+        function showError(message) {
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = 'Error: ' + message;
+        }
+
+        // Event listeners
+        loginButton.addEventListener('click', signIn);
+
+        // Initialize on page load
+        window.addEventListener('load', initializeMsal);
+    </script>
+</body>
+</html> 
