@@ -500,10 +500,9 @@ export default function PortfolioPage() {
             onClick={async () => {
               setIsCompiling(true);
               try {
-                const compilationService = PortfolioCompilationService.getInstance();
-                const portfolioBlob = await compilationService.compilePortfolio(evidenceItems);
-                const url = await compilationService.uploadPortfolioToSharePoint(evidenceItems, portfolioBlob);
-                setPortfolioUrl(url);
+                const compilationService = new PortfolioCompilationService();
+                await compilationService.downloadPortfolio(evidenceItems);
+                setError(null);
               } catch (err) {
                 setError(err instanceof Error ? err.message : 'Failed to compile portfolio');
               } finally {
@@ -512,7 +511,7 @@ export default function PortfolioPage() {
             }}
             disabled={isCompiling || evidenceItems.length === 0}
           >
-            {isCompiling ? 'Compiling...' : 'Compile Portfolio'}
+            {isCompiling ? 'Compiling...' : 'Download Portfolio Report'}
           </button>
         </div>
 
