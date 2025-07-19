@@ -306,14 +306,41 @@ export default function CandidateEvidencePage() {
 
         console.log(`Updating assessment for ${selectedEvidenceItem.name}:`, updateData);
 
-        // Try updating the list item
+        // Try updating the list item using different methods
         try {
+          // Method 1: Try direct fields update
           const updateResponse = await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem/fields`).patch(updateData);
           console.log('Update response:', updateResponse);
           console.log('✅ SharePoint update successful');
         } catch (updateError) {
-          console.error('SharePoint update failed:', updateError);
-          throw updateError;
+          console.error('Method 1 failed:', updateError);
+          
+          try {
+            // Method 2: Try updating the entire list item
+            const fullUpdateData = {
+              fields: {
+                ...listItemResponse.fields,
+                ...updateData.fields
+              }
+            };
+            
+            const updateResponse2 = await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem`).patch(fullUpdateData);
+            console.log('Method 2 update response:', updateResponse2);
+            console.log('✅ SharePoint update successful (Method 2)');
+          } catch (updateError2) {
+            console.error('Method 2 failed:', updateError2);
+            
+            try {
+              // Method 3: Try using the list item ID directly
+              const listItemId = listItemResponse.id;
+              const updateResponse3 = await spService['client']?.api(`/sites/${siteId}/lists/Documents/items/${listItemId}`).patch(updateData);
+              console.log('Method 3 update response:', updateResponse3);
+              console.log('✅ SharePoint update successful (Method 3)');
+            } catch (updateError3) {
+              console.error('Method 3 failed:', updateError3);
+              throw updateError3;
+            }
+          }
         }
 
         // Update the local state immediately
@@ -341,8 +368,13 @@ export default function CandidateEvidencePage() {
         } : null);
 
         console.log(`✅ Assessment updated for ${selectedEvidenceItem.name}`);
-      } catch (listItemError) {
-        console.warn('Could not get list item, trying alternative approach:', listItemError);
+              } catch (listItemError) {
+          console.warn('Could not get list item, trying alternative approach:', listItemError);
+          console.error('List item error details:', {
+            message: (listItemError as any)?.message,
+            status: (listItemError as any)?.status,
+            response: (listItemError as any)?.response
+          });
         
         // If we can't update the list item, just update local state
         console.log('Updating local state only...');
