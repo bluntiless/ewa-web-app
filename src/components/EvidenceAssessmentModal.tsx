@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import FileViewer from './FileViewer';
 
 interface EvidenceAssessmentModalProps {
   isOpen: boolean;
@@ -23,6 +24,15 @@ export default function EvidenceAssessmentModal({
   const [feedback, setFeedback] = useState(evidenceItem?.assessorFeedback || '');
   const [isUpdating, setIsUpdating] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
+  // Update local state when evidenceItem changes
+  useEffect(() => {
+    if (evidenceItem) {
+      setSelectedStatus(evidenceItem.status || 'Pending');
+      setFeedback(evidenceItem.assessorFeedback || '');
+    }
+  }, [evidenceItem]);
 
   const handleStatusChange = (status: string) => {
     setSelectedStatus(status);
@@ -32,11 +42,17 @@ export default function EvidenceAssessmentModal({
     if (!evidenceItem) return;
     
     setIsUpdating(true);
+    setSaveSuccess(false);
     try {
       await onAssessmentUpdate(selectedStatus, feedback);
-      onClose();
+      setSaveSuccess(true);
+      // Show success message briefly before closing
+      setTimeout(() => {
+        onClose();
+      }, 1500);
     } catch (error) {
       console.error('Failed to update assessment:', error);
+      alert('Failed to save assessment. Please try again.');
     } finally {
       setIsUpdating(false);
     }
@@ -81,17 +97,11 @@ export default function EvidenceAssessmentModal({
           <div className="flex flex-col h-full">
             {/* File Preview Area */}
             <div className="flex-1 p-4 bg-gray-50">
-              <div className="bg-white rounded-lg p-4 h-full flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-6xl mb-4">📄</div>
-                  <p className="text-gray-600">{evidenceItem.name}</p>
-                  <button
-                    onClick={() => evidenceItem.webUrl && window.open(evidenceItem.webUrl, '_blank')}
-                    className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                  >
-                    Open File
-                  </button>
-                </div>
+              <div className="bg-white rounded-lg h-full overflow-hidden">
+                <FileViewer
+                  fileUrl={evidenceItem.webUrl}
+                  fileName={evidenceItem.name}
+                />
               </div>
             </div>
 
@@ -186,7 +196,13 @@ export default function EvidenceAssessmentModal({
                 <button
                   onClick={handleSave}
                   disabled={isUpdating}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center space-x-2"
+                  className={`px-4 py-2 rounded-lg flex items-center space-x-2 ${
+                    saveSuccess 
+                      ? 'bg-green-600 text-white' 
+                      : isUpdating 
+                        ? 'bg-blue-600 text-white opacity-50' 
+                        : 'bg-blue-600 text-white hover:bg-blue-700'
+                  }`}
                 >
                   {isUpdating ? (
                     <>
@@ -195,6 +211,13 @@ export default function EvidenceAssessmentModal({
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
                       <span>Saving...</span>
+                    </>
+                  ) : saveSuccess ? (
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Saved!</span>
                     </>
                   ) : (
                     <>

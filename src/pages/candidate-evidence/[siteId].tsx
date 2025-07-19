@@ -272,7 +272,7 @@ export default function CandidateEvidencePage() {
       // Update the list item
       await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem/fields`).patch(updateData);
 
-      // Update the local state
+      // Update the local state immediately
       setItems(prevItems => 
         prevItems.map(item => 
           item.id === selectedEvidenceItem.id 
@@ -286,6 +286,15 @@ export default function CandidateEvidencePage() {
             : item
         )
       );
+
+      // Update the selected evidence item state as well
+      setSelectedEvidenceItem(prev => prev ? {
+        ...prev,
+        status,
+        assessorFeedback: feedback,
+        assessorName: 'Wayne Wright',
+        assessmentDate: new Date().toISOString()
+      } : null);
 
       console.log(`✅ Assessment updated for ${selectedEvidenceItem.name}`);
     } catch (error) {
