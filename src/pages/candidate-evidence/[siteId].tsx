@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { SharePointService } from '../../services/SharePointService';
 import EvidenceAssessmentModal from '../../components/EvidenceAssessmentModal';
 import TestModal from '../../components/TestModal';
+import SharePointTest from '../../components/SharePointTest';
 
 interface EvidenceItem {
   id: string;
@@ -287,12 +288,14 @@ export default function CandidateEvidencePage() {
     try {
       const spService = SharePointService.getInstance();
       
-      // First, let's try to get the list item to see what fields are available
-      console.log(`Getting list item for ${selectedEvidenceItem.name}...`);
-      
-      try {
-        const listItemResponse = await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem`).expand('fields').get();
-        console.log('Available fields:', listItemResponse?.fields);
+              // First, let's try to get the list item to see what fields are available
+        console.log(`Getting list item for ${selectedEvidenceItem.name}...`);
+        
+        try {
+          const listItemResponse = await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem`).expand('fields').get();
+          console.log('Available fields:', listItemResponse?.fields);
+          console.log('List item ID:', listItemResponse?.id);
+          console.log('List item full response:', listItemResponse);
         
         // Use the exact field names from SharePoint
         const updateData = {
@@ -307,41 +310,43 @@ export default function CandidateEvidencePage() {
         console.log(`Updating assessment for ${selectedEvidenceItem.name}:`, updateData);
 
         // Try updating the list item using different methods
-        try {
-          // Method 1: Try direct fields update
-          const updateResponse = await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem/fields`).patch(updateData);
-          console.log('Update response:', updateResponse);
-          console.log('✅ SharePoint update successful');
-        } catch (updateError) {
-          console.error('Method 1 failed:', updateError);
-          
-          try {
-            // Method 2: Try updating the entire list item
-            const fullUpdateData = {
-              fields: {
-                ...listItemResponse.fields,
-                ...updateData.fields
-              }
-            };
-            
-            const updateResponse2 = await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem`).patch(fullUpdateData);
-            console.log('Method 2 update response:', updateResponse2);
-            console.log('✅ SharePoint update successful (Method 2)');
-          } catch (updateError2) {
-            console.error('Method 2 failed:', updateError2);
-            
-            try {
-              // Method 3: Try using the list item ID directly
+                    try {
+              // Method 1: Try using the list item ID with the correct list name
               const listItemId = listItemResponse.id;
-              const updateResponse3 = await spService['client']?.api(`/sites/${siteId}/lists/Documents/items/${listItemId}`).patch(updateData);
-              console.log('Method 3 update response:', updateResponse3);
-              console.log('✅ SharePoint update successful (Method 3)');
-            } catch (updateError3) {
-              console.error('Method 3 failed:', updateError3);
-              throw updateError3;
+              console.log('Using list item ID:', listItemId);
+              
+              // Try to find the correct list name
+              const listResponse = await spService['client']?.api(`/sites/${siteId}/lists`).get();
+              console.log('Available lists:', listResponse?.value);
+              
+              // Try updating using the Documents list (most common)
+              const updateResponse = await spService['client']?.api(`/sites/${siteId}/lists/Documents/items/${listItemId}`).patch(updateData);
+              console.log('Update response:', updateResponse);
+              console.log('✅ SharePoint update successful');
+            } catch (updateError) {
+              console.error('Method 1 failed:', updateError);
+              
+              try {
+                // Method 2: Try using the drive item ID directly
+                const updateResponse2 = await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem`).patch({
+                  fields: updateData.fields
+                });
+                console.log('Method 2 update response:', updateResponse2);
+                console.log('✅ SharePoint update successful (Method 2)');
+              } catch (updateError2) {
+                console.error('Method 2 failed:', updateError2);
+                
+                try {
+                  // Method 3: Try using the fields endpoint with different approach
+                  const updateResponse3 = await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem/fields`).patch(updateData);
+                  console.log('Method 3 update response:', updateResponse3);
+                  console.log('✅ SharePoint update successful (Method 3)');
+                } catch (updateError3) {
+                  console.error('Method 3 failed:', updateError3);
+                  throw updateError3;
+                }
+              }
             }
-          }
-        }
 
         // Update the local state immediately
         setItems(prevItems => 
@@ -375,6 +380,9 @@ export default function CandidateEvidencePage() {
             status: (listItemError as any)?.status,
             response: (listItemError as any)?.response
           });
+          
+          // Try a simpler approach - just update local state and store in localStorage
+          console.log('Using local-only approach due to SharePoint API limitations');
         
         // If we can't update the list item, just update local state
         console.log('Updating local state only...');
@@ -500,6 +508,7 @@ export default function CandidateEvidencePage() {
         <h1 className="text-2xl font-bold">{candidateName}'s Evidence</h1>
         <div className="flex space-x-2">
           <TestModal />
+          <SharePointTest />
           <button
             onClick={navigateToDashboard}
             className="px-4 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200"
