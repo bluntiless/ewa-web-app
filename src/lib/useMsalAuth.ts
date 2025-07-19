@@ -16,20 +16,24 @@ export function useMsalAuth(scopes = ['User.Read']) {
         if (!isMounted) return;
 
         // Handle any redirect promise first
-        await msalInstance.handleRedirectPromise();
+        const response = await msalInstance.handleRedirectPromise();
         if (!isMounted) return;
+
+        // If we have a response from redirect, set the account
+        if (response && response.account) {
+          setAccount(response.account);
+          setLoading(false);
+          return;
+        }
 
         const accounts = msalInstance.getAllAccounts();
         if (accounts.length > 0) {
           setAccount(accounts[0]);
           setLoading(false);
         } else {
-          // Only trigger login if we don't have an account
-          const response = await msalInstance.loginPopup({ scopes, prompt: 'select_account' });
-          if (isMounted) {
-            setAccount(response.account);
-            setLoading(false);
-          }
+          // Use redirect instead of popup to avoid popup blocking
+          await msalInstance.loginRedirect({ scopes, prompt: 'select_account' });
+          // Don't set loading to false here as we're redirecting
         }
       } catch (e) {
         if (isMounted) {

@@ -19,11 +19,12 @@ export default function TestLogin() {
         if (accounts.length > 0) {
           setAccount(accounts[0]);
         } else {
-          const response = await msalInstance.loginPopup({
+          // Use redirect instead of popup to avoid popup blocking
+          await msalInstance.loginRedirect({
             scopes: ['User.Read'],
             prompt: 'select_account',
           });
-          setAccount(response.account);
+          // Don't set account here as we're redirecting
         }
       } catch (e) {
         console.error('MSAL login error:', e);
