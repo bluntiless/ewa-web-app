@@ -234,6 +234,7 @@ export default function CandidateEvidencePage() {
       setPathHistory(prev => [...prev, item.path]);
     } else {
       // For files, show assessment modal instead of opening directly
+      console.log('Opening assessment modal for:', item);
       setSelectedEvidenceItem(item);
       setShowAssessmentModal(true);
     }
@@ -446,15 +447,21 @@ export default function CandidateEvidencePage() {
       </div>
 
       {/* Assessment Modal */}
-      <EvidenceAssessmentModal
-        isOpen={showAssessmentModal}
-        onClose={() => {
-          setShowAssessmentModal(false);
-          setSelectedEvidenceItem(null);
-        }}
-        evidenceItem={selectedEvidenceItem}
-        onAssessmentUpdate={handleAssessmentUpdate}
-      />
+      {showAssessmentModal && (
+        <>
+          {console.log('Rendering modal with evidence item:', selectedEvidenceItem)}
+          <EvidenceAssessmentModal
+            isOpen={showAssessmentModal}
+            onClose={() => {
+              console.log('Closing assessment modal');
+              setShowAssessmentModal(false);
+              setSelectedEvidenceItem(null);
+            }}
+            evidenceItem={selectedEvidenceItem}
+            onAssessmentUpdate={handleAssessmentUpdate}
+          />
+        </>
+      )}
     </div>
   );
 } 

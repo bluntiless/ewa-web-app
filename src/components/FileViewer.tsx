@@ -34,12 +34,14 @@ export default function FileViewer({ fileUrl, fileName, fileType }: FileViewerPr
           setContent(fileUrl);
         } else if (['txt', 'md', 'json', 'xml', 'html', 'css', 'js', 'ts', 'jsx', 'tsx'].includes(extension || '')) {
           // For text files, fetch and display content
-          const response = await fetch(fileUrl);
-          if (response.ok) {
-            const text = await response.text();
-            setContent(text);
-          } else {
-            throw new Error('Failed to load file content');
+          try {
+            // For SharePoint files, we need to use the Microsoft Graph API with authentication
+            // For now, we'll show the external link option for text files
+            console.log('Text file detected, showing external link option');
+            setError('Text preview not available for SharePoint files. You can open the file externally.');
+          } catch (fetchError) {
+            console.warn('Could not fetch text content, showing external link:', fetchError);
+            setError('Text preview not available. You can open the file externally.');
           }
         } else {
           // For other file types, show a preview with download option
@@ -95,6 +97,7 @@ export default function FileViewer({ fileUrl, fileName, fileType }: FileViewerPr
           src={`${fileUrl}#toolbar=0&navpanes=0&scrollbar=0`}
           className="w-full h-full border-0"
           title={fileName}
+          onError={() => setError('Failed to load PDF. You can open it externally.')}
         />
       </div>
     );
@@ -108,7 +111,7 @@ export default function FileViewer({ fileUrl, fileName, fileType }: FileViewerPr
           src={fileUrl}
           alt={fileName}
           className="max-w-full max-h-full object-contain"
-          onError={() => setError('Failed to load image')}
+          onError={() => setError('Failed to load image. You can open it externally.')}
         />
       </div>
     );

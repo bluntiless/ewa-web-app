@@ -29,8 +29,10 @@ export default function EvidenceAssessmentModal({
   // Update local state when evidenceItem changes
   useEffect(() => {
     if (evidenceItem) {
+      console.log('EvidenceAssessmentModal: Updating with new evidence item:', evidenceItem);
       setSelectedStatus(evidenceItem.status || 'Pending');
       setFeedback(evidenceItem.assessorFeedback || '');
+      setSaveSuccess(false); // Reset success state
     }
   }, [evidenceItem]);
 
