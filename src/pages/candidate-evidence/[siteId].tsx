@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { SharePointService } from '../../services/SharePointService';
+import EvidenceAssessmentModal from '../../components/EvidenceAssessmentModal';
 
 interface EvidenceItem {
   id: string;
@@ -25,6 +26,8 @@ export default function CandidateEvidencePage() {
   const [currentPath, setCurrentPath] = useState('');
   const [pathHistory, setPathHistory] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [selectedEvidenceItem, setSelectedEvidenceItem] = useState<EvidenceItem | null>(null);
+  const [showAssessmentModal, setShowAssessmentModal] = useState(false);
 
   useEffect(() => {
     const loadItems = async () => {
@@ -230,13 +233,9 @@ export default function CandidateEvidencePage() {
       setCurrentPath(item.path);
       setPathHistory(prev => [...prev, item.path]);
     } else {
-      // For all file types, use webUrl to display/preview in browser (not download)
-      if (item.webUrl) {
-        window.open(item.webUrl, '_blank');
-      } else if (item.downloadUrl) {
-        // Only use downloadUrl as last resort fallback
-        window.open(item.downloadUrl, '_blank');
-      }
+      // For files, show assessment modal instead of opening directly
+      setSelectedEvidenceItem(item);
+      setShowAssessmentModal(true);
     }
   };
 
@@ -250,6 +249,49 @@ export default function CandidateEvidencePage() {
 
   const navigateToDashboard = () => {
     router.push('/assessor-review');
+  };
+
+  const handleAssessmentUpdate = async (status: string, feedback: string) => {
+    if (!selectedEvidenceItem || !siteId || typeof siteId !== 'string') return;
+
+    try {
+      const spService = SharePointService.getInstance();
+      
+      // Update the SharePoint list item with assessment data
+      const updateData = {
+        fields: {
+          Assessment: status,
+          AssessorFeedback: feedback,
+          AssessorName: 'Wayne Wright', // This should come from the authenticated user
+          AssessmentDate: new Date().toISOString()
+        }
+      };
+
+      console.log(`Updating assessment for ${selectedEvidenceItem.name}:`, updateData);
+
+      // Update the list item
+      await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem/fields`).patch(updateData);
+
+      // Update the local state
+      setItems(prevItems => 
+        prevItems.map(item => 
+          item.id === selectedEvidenceItem.id 
+            ? { 
+                ...item, 
+                status, 
+                assessorFeedback: feedback,
+                assessorName: 'Wayne Wright',
+                assessmentDate: new Date().toISOString()
+              }
+            : item
+        )
+      );
+
+      console.log(`✅ Assessment updated for ${selectedEvidenceItem.name}`);
+    } catch (error) {
+      console.error('Failed to update assessment:', error);
+      throw error;
+    }
   };
 
   if (loading) {
@@ -342,12 +384,27 @@ export default function CandidateEvidencePage() {
                       )}
                     </p>
                   )}
-                  {!item.isFolder && item.assessorFeedback && (
-                    <div className="mt-2 p-2 bg-gray-50 rounded text-sm">
-                      <span className="font-medium text-gray-700">Feedback:</span>
-                      <p className="text-gray-600 mt-1">{item.assessorFeedback}</p>
-                    </div>
-                  )}
+                                {!item.isFolder && item.assessorFeedback && (
+                <div className="mt-2 p-2 bg-gray-50 rounded text-sm">
+                  <span className="font-medium text-gray-700">Feedback:</span>
+                  <p className="text-gray-600 mt-1">{item.assessorFeedback}</p>
+                </div>
+              )}
+              {!item.isFolder && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedEvidenceItem(item);
+                    setShowAssessmentModal(true);
+                  }}
+                  className="mt-2 px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200 flex items-center space-x-1"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                  <span>Feedback</span>
+                </button>
+              )}
                 </div>
               </div>
               {!item.isFolder && (
@@ -378,6 +435,17 @@ export default function CandidateEvidencePage() {
           </div>
         )}
       </div>
+
+      {/* Assessment Modal */}
+      <EvidenceAssessmentModal
+        isOpen={showAssessmentModal}
+        onClose={() => {
+          setShowAssessmentModal(false);
+          setSelectedEvidenceItem(null);
+        }}
+        evidenceItem={selectedEvidenceItem}
+        onAssessmentUpdate={handleAssessmentUpdate}
+      />
     </div>
   );
 } 
