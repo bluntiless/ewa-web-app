@@ -1,3 +1,4 @@
+// FORCE VERCEL DEPLOYMENT - Latest commit: 492c1d6 - Fixed PortfolioCompilationService usage
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Evidence, AssessmentStatus } from '../models/Evidence';
