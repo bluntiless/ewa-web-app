@@ -97,6 +97,7 @@ export default function Home() {
     try {
       setIsCompiling(true);
       setError(null);
+      // Use new PortfolioCompilationService constructor instead of singleton
       const portfolioService = new PortfolioCompilationService();
       await portfolioService.downloadPortfolio(evidence);
     } catch (err: any) {
