@@ -1538,12 +1538,6 @@ export default function AssessorDashboard() {
               
               <div className="mt-4 flex space-x-2">
                 <button
-                  onClick={() => router.push('/sharepoint-diagnostic')}
-                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-                >
-                  Run SharePoint Diagnostic
-                </button>
-                <button
                   onClick={() => {
                     // Clear all caches
                     sessionStorage.removeItem('assessor-dashboard-data');
