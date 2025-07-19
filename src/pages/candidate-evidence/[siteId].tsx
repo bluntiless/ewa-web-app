@@ -278,15 +278,35 @@ export default function CandidateEvidencePage() {
     if (!selectedEvidenceItem || !siteId || typeof siteId !== 'string') return;
 
     try {
-      console.log(`SharePoint API not available - using local storage for ${selectedEvidenceItem.name}`);
+      const spService = SharePointService.getInstance();
       
-      // Store assessment data locally
-      const assessmentData = {
-        status,
-        feedback,
-        assessor: 'Wayne Wright',
-        date: new Date().toISOString()
+      // First authenticate
+      await spService.authenticate();
+      console.log('✅ Authenticated with SharePoint');
+      
+      // Get the file path from the SharePoint URL
+      const filePath = selectedEvidenceItem.webUrl?.split('/Shared%20Documents/')[1];
+      if (!filePath) {
+        throw new Error('Could not extract file path from SharePoint URL');
+      }
+      
+      console.log(`📁 File path: ${filePath}`);
+      
+      // Try to update the SharePoint list item using the correct API
+      const updateData = {
+        fields: {
+          AssessmentStatus: status,
+          AssessorFeedback: feedback,
+          AssessorName: 'Wayne Wright',
+          AssessmentDate: new Date().toISOString()
+        }
       };
+      
+      console.log(`🔄 Updating SharePoint for ${selectedEvidenceItem.name}:`, updateData);
+      
+      // Use the drive item API to update the list item
+      const updateResponse = await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem/fields`).patch(updateData);
+      console.log('✅ SharePoint update successful:', updateResponse);
       
       // Update local state immediately
       setItems(prevItems => 
@@ -312,20 +332,28 @@ export default function CandidateEvidencePage() {
         assessmentDate: new Date().toISOString()
       } : null);
       
-      // Store in localStorage
+      // Store in localStorage as backup
+      const assessmentData = {
+        status,
+        feedback,
+        assessor: 'Wayne Wright',
+        date: new Date().toISOString()
+      };
       setLocalAssessments(prev => ({
         ...prev,
         [selectedEvidenceItem.id]: assessmentData
       }));
       localStorage.setItem(`assessment_${selectedEvidenceItem.id}`, JSON.stringify(assessmentData));
       
-      console.log(`✅ Local assessment saved for ${selectedEvidenceItem.name}`);
-      console.log('Assessment data:', assessmentData);
+      console.log(`✅ Assessment updated in SharePoint and local storage for ${selectedEvidenceItem.name}`);
       
     } catch (error) {
-      console.error('Failed to update assessment:', error);
+      console.error('❌ SharePoint update failed:', error);
       
-      // Even if everything fails, update local state
+      // Fallback to local storage only
+      console.log(`📱 Using local storage fallback for ${selectedEvidenceItem.name}`);
+      
+      // Update local state immediately
       setItems(prevItems => 
         prevItems.map(item => 
           item.id === selectedEvidenceItem.id 

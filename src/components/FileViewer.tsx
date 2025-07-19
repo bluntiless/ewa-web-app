@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import PDFViewer from './PDFViewer';
 
 interface FileViewerProps {
   fileUrl?: string;
@@ -92,19 +93,7 @@ export default function FileViewer({ fileUrl, fileName, fileType }: FileViewerPr
   // PDF Viewer
   if (extension === 'pdf') {
     return (
-      <div className="h-96 w-full flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="text-6xl mb-4">📄</div>
-          <p className="text-gray-600 mb-2">{fileName}</p>
-          <p className="text-gray-500 text-sm mb-4">PDF preview not available for SharePoint files</p>
-          <button
-            onClick={() => fileUrl && window.open(fileUrl, '_blank')}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            Open PDF
-          </button>
-        </div>
-      </div>
+      <PDFViewer fileUrl={fileUrl} fileName={fileName} />
     );
   }
 
