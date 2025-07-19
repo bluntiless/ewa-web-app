@@ -97,10 +97,8 @@ export default function Home() {
     try {
       setIsCompiling(true);
       setError(null);
-      const portfolioService = PortfolioCompilationService.getInstance();
-      const portfolioBlob = await portfolioService.compilePortfolio(evidence);
-      const sharePointUrl = await portfolioService.uploadPortfolioToSharePoint(evidence, portfolioBlob);
-      window.open(sharePointUrl, '_blank');
+      const portfolioService = new PortfolioCompilationService();
+      await portfolioService.downloadPortfolio(evidence);
     } catch (err: any) {
       setError(err.message || 'Failed to compile portfolio');
     } finally {
