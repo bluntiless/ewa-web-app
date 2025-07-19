@@ -284,29 +284,125 @@ export default function CandidateEvidencePage() {
       await spService.authenticate();
       console.log('✅ Authenticated with SharePoint');
       
-      // Get the file path from the SharePoint URL
-      const filePath = selectedEvidenceItem.webUrl?.split('/Shared%20Documents/')[1];
-      if (!filePath) {
-        throw new Error('Could not extract file path from SharePoint URL');
+      const authenticatedUser = 'Wayne Wright';
+      const currentDate = new Date().toISOString();
+      
+      console.log(`🔄 Updating assessment status for item: ${selectedEvidenceItem.name}`);
+      console.log(`📊 New status: ${status}`);
+      console.log(`👤 Assessor: ${authenticatedUser}`);
+      console.log(`📅 Date: ${currentDate}`);
+      console.log(`🏢 Site ID: ${siteId}`);
+      
+      // Try multiple approaches to update the assessment status (like iOS app)
+      let successCount = 0;
+      let totalAttempts = 0;
+      
+      // Approach 1: Update list item fields
+      try {
+        totalAttempts += 1;
+        const listItemEndpoint = `/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem/fields`;
+        
+        const fieldsToUpdate = {
+          AssessmentStatus: status,
+          AssessorName: authenticatedUser,
+          AssessmentDate: currentDate,
+          Status: status,
+          Assessor: authenticatedUser,
+          AssessmentDateTime: currentDate,
+          ContentType: 'Evidence',
+          Title: selectedEvidenceItem.name
+        };
+        
+        console.log('🔄 Approach 1: Updating list item fields...');
+        await spService['client']?.api(listItemEndpoint).patch(fieldsToUpdate);
+        console.log('✅ Successfully updated list item fields');
+        successCount += 1;
+      } catch (error) {
+        console.log('❌ List item update error:', error);
       }
       
-      console.log(`📁 File path: ${filePath}`);
+      // Approach 2: Update file properties
+      try {
+        totalAttempts += 1;
+        const driveItemEndpoint = `/sites/${siteId}/drive/items/${selectedEvidenceItem.id}`;
+        
+        const driveItemUpdate = {
+          fileSystemInfo: {
+            customProperties: {
+              AssessmentStatus: status,
+              AssessorName: authenticatedUser,
+              AssessmentDate: currentDate,
+              Status: status,
+              Assessor: authenticatedUser
+            }
+          }
+        };
+        
+        console.log('🔄 Approach 2: Updating file properties...');
+        await spService['client']?.api(driveItemEndpoint).patch(driveItemUpdate);
+        console.log('✅ Successfully updated file properties');
+        successCount += 1;
+      } catch (error) {
+        console.log('❌ File properties update error:', error);
+      }
       
-      // Try to update the SharePoint list item using the correct API
-      const updateData = {
-        fields: {
+      // Approach 3: Update metadata directly
+      try {
+        totalAttempts += 1;
+        const metadataEndpoint = `/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem`;
+        
+        const metadataUpdate = {
+          fields: {
+            AssessmentStatus: status,
+            AssessorName: authenticatedUser,
+            AssessmentDate: currentDate,
+            Status: status,
+            Assessor: authenticatedUser,
+            AssessmentDateTime: currentDate
+          }
+        };
+        
+        console.log('🔄 Approach 3: Updating metadata...');
+        await spService['client']?.api(metadataEndpoint).patch(metadataUpdate);
+        console.log('✅ Successfully updated metadata');
+        successCount += 1;
+      } catch (error) {
+        console.log('❌ Metadata update error:', error);
+      }
+      
+      // Approach 4: Update custom properties
+      try {
+        totalAttempts += 1;
+        const customPropertyEndpoint = `/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem/fields`;
+        
+        const customPropertyUpdate = {
           AssessmentStatus: status,
-          AssessorFeedback: feedback,
-          AssessorName: 'Wayne Wright',
-          AssessmentDate: new Date().toISOString()
-        }
-      };
+          AssessorName: authenticatedUser,
+          AssessmentDate: currentDate
+        };
+        
+        console.log('🔄 Approach 4: Updating custom properties...');
+        await spService['client']?.api(customPropertyEndpoint).patch(customPropertyUpdate);
+        console.log('✅ Successfully updated custom properties');
+        successCount += 1;
+      } catch (error) {
+        console.log('❌ Custom property update error:', error);
+      }
       
-      console.log(`🔄 Updating SharePoint for ${selectedEvidenceItem.name}:`, updateData);
+      console.log('📊 Assessment update summary:');
+      console.log(`   - Total attempts: ${totalAttempts}`);
+      console.log(`   - Successful updates: ${successCount}`);
+      console.log(`   - Success rate: ${successCount > 0 ? '✅' : '❌'}`);
       
-      // Use the drive item API to update the list item
-      const updateResponse = await spService['client']?.api(`/sites/${siteId}/drive/items/${selectedEvidenceItem.id}/listItem/fields`).patch(updateData);
-      console.log('✅ SharePoint update successful:', updateResponse);
+      // If at least one update succeeded, consider it a success
+      if (successCount > 0) {
+        console.log(`✅ Assessment status update completed for ${selectedEvidenceItem.name}`);
+        console.log(`📊 Final status: ${status}`);
+        console.log(`👤 Assessor: ${authenticatedUser}`);
+        console.log(`📅 Date: ${currentDate}`);
+      } else {
+        throw new Error('Failed to update assessment status in SharePoint');
+      }
       
       // Update local state immediately
       setItems(prevItems => 
@@ -316,8 +412,8 @@ export default function CandidateEvidencePage() {
                 ...item, 
                 status, 
                 assessorFeedback: feedback,
-                assessorName: 'Wayne Wright',
-                assessmentDate: new Date().toISOString()
+                assessorName: authenticatedUser,
+                assessmentDate: currentDate
               }
             : item
         )
@@ -328,16 +424,16 @@ export default function CandidateEvidencePage() {
         ...prev,
         status,
         assessorFeedback: feedback,
-        assessorName: 'Wayne Wright',
-        assessmentDate: new Date().toISOString()
+        assessorName: authenticatedUser,
+        assessmentDate: currentDate
       } : null);
       
       // Store in localStorage as backup
       const assessmentData = {
         status,
         feedback,
-        assessor: 'Wayne Wright',
-        date: new Date().toISOString()
+        assessor: authenticatedUser,
+        date: currentDate
       };
       setLocalAssessments(prev => ({
         ...prev,
