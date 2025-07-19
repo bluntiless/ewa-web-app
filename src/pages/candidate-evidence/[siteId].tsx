@@ -310,7 +310,8 @@ export default function CandidateEvidencePage() {
           Assessor: authenticatedUser,
           AssessmentDateTime: currentDate,
           ContentType: 'Evidence',
-          Title: selectedEvidenceItem.name
+          Title: selectedEvidenceItem.name,
+          AssessorFeedback: feedback
         };
         
         console.log('🔄 Approach 1: Updating list item fields...');
@@ -333,7 +334,8 @@ export default function CandidateEvidencePage() {
               AssessorName: authenticatedUser,
               AssessmentDate: currentDate,
               Status: status,
-              Assessor: authenticatedUser
+              Assessor: authenticatedUser,
+              AssessorFeedback: feedback
             }
           }
         };
@@ -358,7 +360,8 @@ export default function CandidateEvidencePage() {
             AssessmentDate: currentDate,
             Status: status,
             Assessor: authenticatedUser,
-            AssessmentDateTime: currentDate
+            AssessmentDateTime: currentDate,
+            AssessorFeedback: feedback
           }
         };
         
@@ -378,7 +381,8 @@ export default function CandidateEvidencePage() {
         const customPropertyUpdate = {
           AssessmentStatus: status,
           AssessorName: authenticatedUser,
-          AssessmentDate: currentDate
+          AssessmentDate: currentDate,
+          AssessorFeedback: feedback
         };
         
         console.log('🔄 Approach 4: Updating custom properties...');
