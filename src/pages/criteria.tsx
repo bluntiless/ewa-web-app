@@ -8,6 +8,7 @@ import BottomNavigation from '../components/BottomNavigation';
 import { useMsalAuth } from '../lib/useMsalAuth';
 import { useEvidence } from '../hooks/useEvidence';
 import { SharePointService } from '../services/SharePointService';
+import { PerformanceCriteriaTable } from '../components/PerformanceCriteriaTable';
 
 function EvidenceModal({
   open,
@@ -123,6 +124,8 @@ export default function Criteria() {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const { account, loading: msalLoading, error } = useMsalAuth();
   const [localIsUploading, setLocalIsUploading] = useState(false);
+  const [showTableView, setShowTableView] = useState(false);
+  const [evidence, setEvidence] = useState<any[]>([]);
 
   // Get SharePoint site URL from localStorage
   const siteUrl = typeof window !== 'undefined' ? localStorage.getItem('sharepointSiteUrl') || undefined : undefined;
@@ -131,6 +134,13 @@ export default function Criteria() {
   const { uploadEvidence, isLoading: hookIsLoading } = useEvidence({
     unitCode: unit?.code || '',
     criteriaCode: '', // This will be specified during the upload call
+    siteUrl
+  });
+
+  // Fetch evidence for the table view
+  const { evidence: evidenceData, refreshEvidence } = useEvidence({
+    unitCode: unit?.code || '',
+    criteriaCode: '',
     siteUrl
   });
 
@@ -206,6 +216,13 @@ export default function Criteria() {
       setLoading(false);
     }
   }, [router.query]);
+
+  // Update evidence state when evidence data changes
+  useEffect(() => {
+    if (evidenceData) {
+      setEvidence(evidenceData);
+    }
+  }, [evidenceData]);
 
   const handleCheckboxChange = (outcomeIndex: number, criteriaIndex: number) => {
     const key = `${outcomeIndex}-${criteriaIndex}`;
@@ -359,6 +376,32 @@ export default function Criteria() {
           <div className="text-base text-neutral-400 mb-1">{unit.displayCode || unit.code} {unit.title}</div>
         </div>
         
+        {/* View Toggle Button */}
+        <div className="mb-6 flex justify-center">
+          <div className="bg-neutral-800 rounded-xl p-1 flex">
+            <button
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                !showTableView 
+                  ? 'bg-blue-600 text-white' 
+                  : 'text-neutral-400 hover:text-white'
+              }`}
+              onClick={() => setShowTableView(false)}
+            >
+              Standard View
+            </button>
+            <button
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                showTableView 
+                  ? 'bg-blue-600 text-white' 
+                  : 'text-neutral-400 hover:text-white'
+              }`}
+              onClick={() => setShowTableView(true)}
+            >
+              Assessment Table
+            </button>
+          </div>
+        </div>
+        
         {uploadError && (
           <div className="mb-6 bg-red-900 text-white p-4 rounded-lg">
             {uploadError}
@@ -378,50 +421,64 @@ export default function Criteria() {
           </div>
         )}
         {learningOutcomes.length > 0 ? (
-          <div className="space-y-8">
-            {learningOutcomes.map((outcome, outcomeIndex) => (
-              <div key={outcome.number} className="space-y-4">
-                <div className="font-bold text-lg text-blue-400">Learning Outcome {outcome.number}: {outcome.title}</div>
-                {outcome.performanceCriteria && UnitModel.getSortedPerformanceCriteria(outcome.performanceCriteria).map((criteria, criteriaIndex) => {
-                  let checkboxColor = 'text-neutral-400';
-                  let textColor = 'text-white';
-                  let descriptionColor = 'text-neutral-300';
-                  
-                  if (criteria.status === 'approved') {
-                    checkboxColor = 'text-green-400';
-                    textColor = 'text-green-400'; // Light green for completed criteria
-                    descriptionColor = 'text-green-500'; // Slightly darker green for description
-                  } else if (criteria.status === 'pending') {
-                    checkboxColor = 'text-yellow-400';
-                  }
-                  
-                  const isSelected = selectedCriteria.some(sel => sel.outcomeIdx === outcomeIndex && sel.criteriaIdx === criteriaIndex);
-                  return (
-                  <div key={criteria.code} className={`bg-neutral-900 rounded-xl px-4 py-3 flex items-center gap-3 ${criteria.status === 'approved' ? 'opacity-80' : ''}`}>
-                    <input 
-                      type="checkbox" 
-                        checked={isSelected}
-                      onChange={() => handleCheckboxChange(outcomeIndex, criteriaIndex)}
-                        className={`form-checkbox h-5 w-5 bg-neutral-800 border-neutral-700 rounded focus:ring-blue-500 ${checkboxColor}`}
-                        style={{ accentColor: criteria.status === 'approved' ? '#22c55e' : criteria.status === 'pending' ? '#facc15' : undefined }}
-                        disabled={criteria.status === 'approved' || criteria.status === 'pending'}
-                    />
-                    <div>
-                      <div className={`font-semibold ${textColor}`}>Criteria {criteria.code}</div>
-                      <div className={`text-sm ${descriptionColor}`}>{criteria.description}</div>
-                        {criteria.status === 'pending' && (
-                          <div className="text-yellow-400 text-xs mt-1">Evidence uploaded, awaiting assessment</div>
-                        )}
-                        {criteria.status === 'approved' && (
-                          <div className="text-green-400 text-xs mt-1">✓ Approved - No further action needed</div>
-                        )}
+          showTableView ? (
+            // Assessment Table View
+            <PerformanceCriteriaTable
+              unitCode={unit.code}
+              learningOutcomes={learningOutcomes}
+              evidence={evidence}
+              onCriteriaClick={(criteriaCode) => {
+                // Handle criteria click in table view - could open evidence details
+                console.log('Criteria clicked in table view:', criteriaCode);
+              }}
+            />
+          ) : (
+            // Standard View
+            <div className="space-y-8">
+              {learningOutcomes.map((outcome, outcomeIndex) => (
+                <div key={outcome.number} className="space-y-4">
+                  <div className="font-bold text-lg text-blue-400">Learning Outcome {outcome.number}: {outcome.title}</div>
+                  {outcome.performanceCriteria && UnitModel.getSortedPerformanceCriteria(outcome.performanceCriteria).map((criteria, criteriaIndex) => {
+                    let checkboxColor = 'text-neutral-400';
+                    let textColor = 'text-white';
+                    let descriptionColor = 'text-neutral-300';
+                    
+                    if (criteria.status === 'approved') {
+                      checkboxColor = 'text-green-400';
+                      textColor = 'text-green-400'; // Light green for completed criteria
+                      descriptionColor = 'text-green-500'; // Slightly darker green for description
+                    } else if (criteria.status === 'pending') {
+                      checkboxColor = 'text-yellow-400';
+                    }
+                    
+                    const isSelected = selectedCriteria.some(sel => sel.outcomeIdx === outcomeIndex && sel.criteriaIdx === criteriaIndex);
+                    return (
+                    <div key={criteria.code} className={`bg-neutral-900 rounded-xl px-4 py-3 flex items-center gap-3 ${criteria.status === 'approved' ? 'opacity-80' : ''}`}>
+                      <input 
+                        type="checkbox" 
+                          checked={isSelected}
+                        onChange={() => handleCheckboxChange(outcomeIndex, criteriaIndex)}
+                          className={`form-checkbox h-5 w-5 bg-neutral-800 border-neutral-700 rounded focus:ring-blue-500 ${checkboxColor}`}
+                          style={{ accentColor: criteria.status === 'approved' ? '#22c55e' : criteria.status === 'pending' ? '#facc15' : undefined }}
+                          disabled={criteria.status === 'approved' || criteria.status === 'pending'}
+                      />
+                      <div>
+                        <div className={`font-semibold ${textColor}`}>Criteria {criteria.code}</div>
+                        <div className={`text-sm ${descriptionColor}`}>{criteria.description}</div>
+                          {criteria.status === 'pending' && (
+                            <div className="text-yellow-400 text-xs mt-1">Evidence uploaded, awaiting assessment</div>
+                          )}
+                          {criteria.status === 'approved' && (
+                            <div className="text-green-400 text-xs mt-1">✓ Approved - No further action needed</div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          )
         ) : (
           <div className="text-center text-neutral-400 py-8">
             No learning outcomes found for this unit.
