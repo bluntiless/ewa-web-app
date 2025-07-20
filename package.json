@@ -2,6 +2,7 @@
   "name": "ewa-nvq-portfolio-web",
   "version": "0.1.0",
   "private": true,
+  "description": "FORCE VERCEL DEPLOYMENT - Latest commit: 74fa239 - Fixed PortfolioCompilationService",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
