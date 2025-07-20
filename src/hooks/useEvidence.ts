@@ -266,16 +266,24 @@ export function useEvidence({ unitCode, criteriaCode, siteUrl }: UseEvidenceProp
       });
       
       // Build the folder path structure for this file
-      // For combined criteria codes (e.g. "1.1_1.2_1.3"), use a special folder name
-      // Evidence/Unit_Code/Combined_Criteria
-      // Replace dots with underscores for SharePoint compatibility
+      // Create individual criteria folders instead of combined folders
+      // Evidence/Unit_Code/Criteria_Code
       const sanitizedUnitCode = currentUnitCode.replace(/\./g, '_');
-      const sanitizedCriteriaCode = currentCriteriaCode.replace(/\./g, '_');
+      
+      // For individual criteria codes, use the exact criteria code
+      // For combined criteria (e.g. "1.1_1.2_1.3"), create a folder for each criteria
+      const criteriaCodes = currentCriteriaCode.split('_').filter(code => code.trim());
+      
+      // Use the first criteria code for the folder name (most common case)
+      // This ensures assessors can find evidence in the expected structure
+      const primaryCriteriaCode = criteriaCodes[0] || currentCriteriaCode;
+      const sanitizedCriteriaCode = primaryCriteriaCode.replace(/\./g, '_');
       
       // Ensure the file goes into the Evidence folder structure with the proper nesting
       // Make sure the folder path starts with "Evidence" folder and has the unit and criteria subfolders
       const folderPath = `Evidence/${sanitizedUnitCode}/${sanitizedCriteriaCode}`;
       console.log('useEvidence: uploading to folder path:', folderPath);
+      console.log('useEvidence: criteria codes:', criteriaCodes, 'using primary:', primaryCriteriaCode);
       
       // Validate and prepare the file name and MIME type
       let finalFileName = file.name;

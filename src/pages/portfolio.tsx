@@ -11,6 +11,7 @@ import { UnitProgress } from '../components/UnitProgress';
 import React from 'react';
 import { Unit, LearningOutcome, PerformanceCriteria } from '../models/Unit';
 import { ProgressView } from '../components/ProgressView';
+import { AssessmentService } from '../services/AssessmentService';
 
 // Helper function to convert SharePointService.Evidence to Model.Evidence
 const toModelEvidence = (spEvidence: SharePointServiceEvidence): ModelEvidence => {
@@ -192,23 +193,66 @@ export default function PortfolioPage() {
 
   // Function to refresh evidence with latest assessment status from SharePoint
   const refreshEvidenceWithStatus = async () => {
+    setIsRefreshing(true);
+    setError(null);
+    
     try {
-      setIsRefreshing(true);
-      setError(null);
+      console.log('Portfolio: Starting evidence refresh with status...');
       
-      console.log('Portfolio: Refreshing evidence with latest assessment status...');
+      // Force refresh from SharePoint to get latest assessment status
+      const assessmentService = AssessmentService.getInstance();
+      const sharePointService = SharePointService.getInstance();
       
-      // Use the refreshEvidence function from useEvidence hook
-      await refreshEvidence();
+      // Get all evidence for all units to ensure we have the latest status
+      const allEvidence: EvidenceMetadata[] = [];
       
-      // Convert evidence from hook to ModelEvidence format
-      const modelEvidence = evidence.map(metadataToModelEvidence);
-      setEvidenceItems(modelEvidence);
+      // Get unique unit codes from existing evidence
+      const unitCodes = [...new Set(evidenceItems.map(item => item.unitCode))];
       
-      console.log('Portfolio: Evidence refreshed successfully');
-    } catch (err) {
-      console.error('Portfolio: Error refreshing evidence:', err);
-      setError(err instanceof Error ? err.message : 'Failed to refresh evidence');
+      for (const unitCode of unitCodes) {
+        try {
+          console.log(`Portfolio: Refreshing evidence for unit ${unitCode}...`);
+          const unitEvidence = await assessmentService.getEvidenceForCriteria(unitCode, 'ALL');
+          allEvidence.push(...unitEvidence);
+        } catch (error) {
+          console.warn(`Portfolio: Failed to refresh evidence for unit ${unitCode}:`, error);
+        }
+      }
+      
+      // If no evidence found via AssessmentService, try SharePoint directly
+      if (allEvidence.length === 0) {
+        console.log('Portfolio: No evidence found via AssessmentService, trying SharePoint...');
+        try {
+          const spEvidence = await sharePointService.getEvidence();
+          const convertedEvidence = spEvidence.map(item => ({
+            id: item.id,
+            name: item.title,
+            webUrl: item.webUrl,
+            downloadUrl: item.downloadUrl,
+            size: 0,
+            mimeType: 'application/octet-stream',
+            createdDateTime: new Date(item.dateUploaded),
+            lastModifiedDateTime: new Date(item.dateUploaded),
+            assessmentStatus: item.assessmentStatus || AssessmentStatus.Pending,
+            assessorFeedback: item.assessorFeedback || '',
+            assessorName: item.assessorName || '',
+            assessmentDate: item.assessmentDate ? new Date(item.assessmentDate) : undefined,
+            criteriaCode: item.criteriaCode,
+            unitCode: item.unitCode,
+            description: item.description || ''
+          }));
+          allEvidence.push(...convertedEvidence);
+        } catch (spError) {
+          console.error('Portfolio: SharePoint evidence fetch failed:', spError);
+        }
+      }
+      
+      console.log(`Portfolio: Refreshed ${allEvidence.length} evidence items`);
+      setEvidenceItems(allEvidence);
+      
+    } catch (error) {
+      console.error('Portfolio: Error refreshing evidence:', error);
+      setError(error instanceof Error ? error.message : 'Failed to refresh evidence');
     } finally {
       setIsRefreshing(false);
     }
@@ -438,6 +482,7 @@ export default function PortfolioPage() {
                     setError(err instanceof Error ? err.message : 'Failed to delete evidence');
                   }
                 }}
+                onRefreshEvidence={refreshEvidenceWithStatus}
                 siteUrl={siteUrl}
               />
             )}

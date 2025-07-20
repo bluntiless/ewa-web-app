@@ -4,6 +4,7 @@ import { Evidence, AssessmentStatus } from '../models/Evidence';
 interface EvidenceDisplayProps {
   evidence: Evidence[];
   onDeleteEvidence?: (evidenceId: string) => Promise<void>;
+  onRefreshEvidence?: () => Promise<void>;
   siteUrl?: string;
 }
 
@@ -24,17 +25,44 @@ const getFileIcon = (filename: string, url?: string): string => {
     return url || '/file-icons/image.png';
   } else if (lowerFilename.match(/\.(mp4|mov|avi|wmv|mpg|mpeg|webm|mkv|3gp)$/)) {
     return '/file-icons/video.png';
+  } else if (lowerFilename.endsWith('.html') || lowerFilename.endsWith('.htm')) {
+    return '/file-icons/generic.png'; // HTML files
+  } else if (lowerFilename.endsWith('.txt')) {
+    return '/file-icons/generic.png'; // Text files
   } else {
     return '/file-icons/generic.png';
   }
 };
 
+// Function to truncate long criteria codes for display
+const truncateCriteriaCode = (criteriaCode: string, maxLength: number = 50): string => {
+  if (criteriaCode.length <= maxLength) {
+    return criteriaCode;
+  }
+  return criteriaCode.substring(0, maxLength) + '...';
+};
+
 export const EvidenceDisplay: React.FC<EvidenceDisplayProps> = ({
   evidence,
   onDeleteEvidence,
+  onRefreshEvidence,
   siteUrl
 }) => {
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    if (!onRefreshEvidence) return;
+    
+    try {
+      setIsRefreshing(true);
+      await onRefreshEvidence();
+    } catch (error) {
+      console.error('Failed to refresh evidence:', error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const getStatusBadge = (status: AssessmentStatus) => {
     switch(status) {
@@ -121,6 +149,15 @@ export const EvidenceDisplay: React.FC<EvidenceDisplayProps> = ({
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-semibold">Evidence</h2>
+        {onRefreshEvidence && (
+          <button
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isRefreshing ? 'Refreshing...' : 'Refresh'}
+          </button>
+        )}
       </div>
 
       <div className="space-y-4">
@@ -144,22 +181,24 @@ export const EvidenceDisplay: React.FC<EvidenceDisplayProps> = ({
 
               {/* Evidence details */}
               <div className="flex-1 p-4">
-                <div className="flex justify-between items-start mb-2">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold">{item.title}</h3>
+                <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-2 gap-2">
+                  <div className="flex-1 min-w-0"> {/* min-w-0 allows text truncation */}
+                    <h3 className="text-lg font-semibold break-words">{item.title}</h3>
                     
                     {/* Unit and criteria reference - like iOS app */}
                     <div className="mt-2">
-                      <p className="text-sm text-gray-400">
-                        Unit {item.unitCode} - {item.criteriaCode}
+                      <p className="text-sm text-gray-400 break-words">
+                        Unit {item.unitCode} - {truncateCriteriaCode(item.criteriaCode)}
                       </p>
                     </div>
                     
                     {item.description && (
-                      <p className="text-sm text-gray-400 mt-2">{item.description}</p>
+                      <p className="text-sm text-gray-400 mt-2 break-words">{item.description}</p>
                     )}
                   </div>
-                  {getStatusBadge(item.assessmentStatus)}
+                  <div className="flex-shrink-0"> {/* Prevent status badge from shrinking */}
+                    {getStatusBadge(item.assessmentStatus)}
+                  </div>
                 </div>
 
                 {/* Assessment Info - like iOS app */}
