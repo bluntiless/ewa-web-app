@@ -348,4 +348,4 @@ export const PendingEvidenceView: React.FC<PendingEvidenceViewProps> = ({
       )}
     </div>
   );
-}; 
+};

@@ -7,4 +7,4 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     status: 'Fixed PortfolioCompilationService and added evidence status refresh',
     timestamp: new Date().toISOString()
   });
-} 
+}

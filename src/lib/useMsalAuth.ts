@@ -52,4 +52,4 @@ export function useMsalAuth(scopes = ['User.Read']) {
   }, [account, loading, error]);
 
   return { account, loading, error };
-} 
+}

@@ -282,4 +282,4 @@ export class AssessmentService {
       throw new Error('Failed to get evidence for criteria: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   }
-} 
+}

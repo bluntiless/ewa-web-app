@@ -482,4 +482,4 @@ export class PortfolioCompilationService {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }
-} 
+}

@@ -183,4 +183,4 @@ export const PerformanceCriteriaTable: React.FC<PerformanceCriteriaTableProps> =
       ))}
     </div>
   );
-}; 
+};

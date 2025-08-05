@@ -867,4 +867,4 @@ export const nvq1605Qualification = {
   progress: 0,
   units: allNVQ1605Units.length,
   unitsData: allNVQ1605Units
-}; 
+};

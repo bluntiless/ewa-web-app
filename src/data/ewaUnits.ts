@@ -535,4 +535,4 @@ export const qualifications = [
     units: 17,
     unitsData: [] // To be populated later
   }
-]; 
+];

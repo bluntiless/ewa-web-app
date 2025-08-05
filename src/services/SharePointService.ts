@@ -2802,4 +2802,4 @@ export function mapSharePointDataToEvidence(item: any): Evidence {
 // Generate a random ID for new evidence items
 function generateId(): string {
   return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-} 
+}

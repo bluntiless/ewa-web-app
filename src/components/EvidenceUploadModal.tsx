@@ -183,4 +183,4 @@ export const EvidenceUploadModal: React.FC<EvidenceUploadModalProps> = ({
       </div>
     </div>
   );
-}; 
+};

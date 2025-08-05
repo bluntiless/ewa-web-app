@@ -53,4 +53,4 @@ export class EvidenceModel {
     if (!dateObj) return '';
     return dateObj.toLocaleDateString();
   }
-} 
+}

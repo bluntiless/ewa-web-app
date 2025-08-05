@@ -812,4 +812,4 @@ export function getUnitByCode(code: string): CityAndGuildsUnit | undefined {
     unit.code === searchCode || 
     unit.displayCode === code
   );
-} 
+}

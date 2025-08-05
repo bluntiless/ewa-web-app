@@ -136,4 +136,4 @@ export default function FileViewer({ fileUrl, fileName, fileType }: FileViewerPr
       </div>
     </div>
   );
-} 
+}

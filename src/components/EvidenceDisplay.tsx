@@ -296,4 +296,4 @@ export const EvidenceDisplay: React.FC<EvidenceDisplayProps> = ({
       )}
     </div>
   );
-}; 
+};

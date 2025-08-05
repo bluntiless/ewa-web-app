@@ -309,4 +309,4 @@ export const UnitProgress: React.FC<UnitProgressProps> = ({
       />
     </div>
   );
-}; 
+};

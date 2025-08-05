@@ -10,4 +10,4 @@
 3. Added assessment status and feedback display like iOS app
 4. Updated portfolio compilation to include assessment data
 
-### Build Status: READY TO DEPLOY 
+### Build Status: READY TO DEPLOY
