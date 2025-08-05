@@ -1,5 +1,0 @@
-DEPLOYMENT FORCE - 2025-01-27-21-30
-Latest Commit: b70e3de
-Status: Fixed PortfolioCompilationService getInstance error
-Features: Added evidence status refresh functionality
-Changes: Portfolio page now shows assessment status and feedback from SharePoint
