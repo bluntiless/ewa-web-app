@@ -156,7 +156,7 @@ export const PerformanceCriteriaTable: React.FC<PerformanceCriteriaTableProps> =
                           </div>
                         )}
                       </td>
-                      {requiresTwoOccasions && (
+                      {requiresTwoOccasions && secondOccasion && (
                         <td className="p-4">
                           <div className={secondOccasion.className}>
                             {secondOccasion.text}
