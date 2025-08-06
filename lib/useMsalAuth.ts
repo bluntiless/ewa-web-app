@@ -53,7 +53,7 @@ export function useMsalAuth(): UseMsalAuthReturn {
       const msalInstance = await getInitializedMsalInstance()
 
       const loginRequest = {
-        scopes: ["User.Read", "Sites.Read.All", "Files.Read.All"],
+        scopes: ["User.Read", "Sites.Read.All", "Files.ReadWrite.All"],
         prompt: "select_account",
       }
 

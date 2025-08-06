@@ -1,389 +1,315 @@
 "use client"
 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Separator } from "@/components/ui/separator"
+import { useState, useEffect, useMemo } from "react"
 import { useParams } from "next/navigation"
-import { useEffect, useState } from "react"
-import { SharePointService } from "../../../services/SharePointService"
-import React from 'react';
+import { PortfolioCompilationService } from "@/services/PortfolioCompilationService"
+import { Evidence, EvidenceMetadata } from "@/models/Evidence"
+import { useToast } from "@/hooks/use-toast"
+import { allUnits, getUnitsByQualification } from "@/data/units"
+import { Unit, LearningOutcome, PerformanceCriterion } from "@/models/Unit"
+import { Loader2, FileText, Image, File } from 'lucide-react'
 
-interface EvidenceItem {
-  id: string
-  name: string
-  dateSubmitted: Date
-  status: string
-  downloadUrl?: string
-  webUrl?: string
-  isFolder: boolean
-  path: string
-  assessorFeedback?: string
-  assessorName?: string
-  assessmentDate?: string
-}
+export default function CandidateEvidencePage() {
+  const { siteId } = useParams()
+  const { toast } = useToast()
 
-const CandidateEvidencePage: React.FC = () => {
-  const params = useParams()
-  const siteId = params.siteId as string
+  const [evidenceList, setEvidenceList] = useState<Evidence[]>([])
+  const [isLoadingList, setIsLoadingList] = useState(true)
+  const [listError, setListError] = useState<string | null>(null)
 
-  const [loading, setLoading] = useState(true)
-  const [items, setItems] = useState<EvidenceItem[]>([])
-  const [candidateName, setCandidateName] = useState("")
-  const [currentPath, setCurrentPath] = useState("")
-  const [pathHistory, setPathHistory] = useState<string[]>([])
-  const [error, setError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+
+  const [newEvidenceTitle, setNewEvidenceTitle] = useState("")
+  const [newEvidenceDescription, setNewEvidenceDescription] = useState("")
+  const [selectedQualification, setSelectedQualification] = useState<"EWA" | "NVQ" | "">("")
+  const [selectedUnitId, setSelectedUnitId] = useState("")
+  const [selectedLearningOutcomeId, setSelectedLearningOutcomeId] = useState("")
+  const [selectedPerformanceCriterionId, setSelectedPerformanceCriterionId] = useState("")
+  const [file, setFile] = useState<File | null>(null)
+
+  const availableUnits = useMemo(() => {
+    return selectedQualification ? getUnitsByQualification(selectedQualification) : []
+  }, [selectedQualification])
+
+  const availableLearningOutcomes = useMemo(() => {
+    const unit = availableUnits.find((u) => u.id === selectedUnitId)
+    return unit ? unit.learningOutcomes : []
+  }, [selectedUnitId, availableUnits])
+
+  const availablePerformanceCriteria = useMemo(() => {
+    const lo = availableLearningOutcomes.find((l) => l.id === selectedLearningOutcomeId)
+    return lo ? lo.performanceCriteria : []
+  }, [selectedLearningOutcomeId, availableLearningOutcomes])
 
   useEffect(() => {
-    const loadItems = async () => {
-      if (!siteId || typeof siteId !== "string") return
-
+    const fetchEvidence = async () => {
+      setIsLoadingList(true)
+      setListError(null)
       try {
-        setLoading(true)
-        const spService = SharePointService.getInstance()
-
-        // Get site details first
-        const siteResponse = await spService["client"]?.api(`/sites/${siteId}`).get()
-        if (siteResponse) {
-          setCandidateName(siteResponse.displayName)
-        }
-
-        // Try to find the best starting path
-        await findBestStartingPath()
-      } catch (error) {
-        console.error("Failed to load candidate info:", error)
-        setError("Failed to load candidate information.")
-        setLoading(false)
+        // In a real app, siteId would be used to filter evidence or fetch from a specific source
+        const fetchedEvidence = await PortfolioCompilationService.getCandidateEvidence(siteId as string)
+        setEvidenceList(fetchedEvidence)
+      } catch (err: any) {
+        setListError(err.message || "Failed to load evidence list.")
+      } finally {
+        setIsLoadingList(false)
       }
     }
 
-    loadItems()
+    if (siteId) {
+      fetchEvidence()
+    }
   }, [siteId])
 
-  useEffect(() => {
-    if (siteId && currentPath) {
-      loadCurrentPath()
-    }
-  }, [currentPath, siteId])
-
-  const findBestStartingPath = async () => {
-    if (!siteId || typeof siteId !== "string") return
-
-    const spService = SharePointService.getInstance()
-
-    // Try different possible starting paths
-    const possiblePaths = [
-      "Documents/Evidence",
-      "Evidence",
-      "Shared Documents/Evidence",
-      "Documents",
-      "Shared Documents",
-    ]
-
-    for (const path of possiblePaths) {
-      try {
-        console.log(`Trying starting path: ${path}`)
-        const response = await spService["client"]?.api(`/sites/${siteId}/drive/root:/${path}:/children`).get()
-
-        if (response?.value && response.value.length > 0) {
-          console.log(`✅ Found items in ${path}, using as starting path`)
-          setCurrentPath(path)
-          setPathHistory([path])
-          return
-        }
-      } catch (error) {
-        console.log(`❌ Path ${path} not accessible`)
-      }
-    }
-
-    // If no evidence paths work, try root
-    try {
-      console.log("Trying root path as fallback")
-      const response = await spService["client"]?.api(`/sites/${siteId}/drive/root/children`).get()
-
-      if (response?.value) {
-        console.log("✅ Using root path as starting point")
-        setCurrentPath("")
-        setPathHistory([""])
-        return
-      }
-    } catch (error) {
-      console.error("Failed to access root path:", error)
-    }
-
-    setError("Could not access any folders in this site. You may not have permission.")
-    setLoading(false)
-  }
-
-  const loadCurrentPath = async () => {
-    if (!siteId || typeof siteId !== "string") return
-
-    try {
-      setLoading(true)
-      setError(null)
-      const spService = SharePointService.getInstance()
-
-      console.log(`Loading path: "${currentPath}"`)
-
-      let response
-      if (currentPath === "" || currentPath === "/") {
-        // Load root
-        response = await spService["client"]?.api(`/sites/${siteId}/drive/root/children`).get()
-      } else {
-        // Load specific path
-        response = await spService["client"]?.api(`/sites/${siteId}/drive/root:/${currentPath}:/children`).get()
-      }
-
-      if (response?.value) {
-        const evidenceItems: EvidenceItem[] = []
-
-        // Process each item to get detailed metadata
-        for (const item of response.value) {
-          let assessmentStatus = "Unknown"
-          let assessorFeedback = ""
-          let assessorName = ""
-          let assessmentDate = ""
-
-          // For files, try to get the SharePoint list item metadata
-          if (!item.folder) {
-            try {
-              console.log(`Getting metadata for file: ${item.name}`)
-
-              // Get the list item with all fields
-              const listItemResponse = await spService["client"]
-                ?.api(`/sites/${siteId}/drive/items/${item.id}/listItem`)
-                .expand("fields")
-                .get()
-
-              console.log(`Metadata for ${item.name}:`, listItemResponse)
-
-              if (listItemResponse?.fields) {
-                const fields = listItemResponse.fields
-
-                // Try different possible field names for assessment status
-                assessmentStatus =
-                  fields.Assessment ||
-                  fields.AssessmentStatus ||
-                  fields.assessment ||
-                  fields.Assessment_x0020_Status ||
-                  fields["Assessment Status"] ||
-                  "Unknown"
-
-                // Get assessor feedback
-                assessorFeedback =
-                  fields.AssessorFeedback ||
-                  fields.Assessor_x0020_Feedback ||
-                  fields["Assessor Feedback"] ||
-                  fields.AssessorFe ||
-                  ""
-
-                // Get assessor name
-                assessorName =
-                  fields.AssessorName ||
-                  fields.Assessor_x0020_Name ||
-                  fields["Assessor Name"] ||
-                  fields.AssessorNa ||
-                  ""
-
-                // Get assessment date
-                assessmentDate =
-                  fields.AssessmentDate ||
-                  fields.Assessment_x0020_Date ||
-                  fields["Assessment Date"] ||
-                  fields.AssessmentDa ||
-                  ""
-
-                console.log(
-                  `📊 ${item.name} - Status: "${assessmentStatus}", Feedback: "${assessorFeedback}", Assessor: "${assessorName}"`,
-                )
-              }
-            } catch (metadataError) {
-              console.warn(`⚠️ Could not get metadata for ${item.name}:`, metadataError)
-              // For files without metadata access, keep as Unknown
-            }
-          }
-
-          const evidenceItem: EvidenceItem = {
-            id: item.id,
-            name: item.name,
-            dateSubmitted: new Date(item.createdDateTime),
-            status: assessmentStatus,
-            downloadUrl: item["@microsoft.graph.downloadUrl"],
-            webUrl: item.webUrl,
-            isFolder: !!item.folder,
-            path: currentPath ? `${currentPath}/${item.name}` : item.name,
-            assessorFeedback,
-            assessorName,
-            assessmentDate,
-          }
-
-          evidenceItems.push(evidenceItem)
-        }
-
-        // Sort folders first, then files
-        evidenceItems.sort((a, b) => {
-          if (a.isFolder && !b.isFolder) return -1
-          if (!a.isFolder && b.isFolder) return 1
-          return a.name.localeCompare(b.name)
-        })
-
-        setItems(evidenceItems)
-        console.log(`✅ Loaded ${evidenceItems.length} items from ${currentPath || "root"}`)
-      } else {
-        setItems([])
-        console.log(`📭 No items found in ${currentPath || "root"}`)
-      }
-      setLoading(false)
-    } catch (error: any) {
-      console.error("Failed to load path:", error)
-      setError(`Failed to load ${currentPath || "root"}. ${error?.message || "Access denied or path not found."}`)
-      setLoading(false)
-    }
-  }
-
-  const handleItemClick = (item: EvidenceItem) => {
-    if (item.isFolder) {
-      // Navigate into folder
-      setCurrentPath(item.path)
-      setPathHistory((prev) => [...prev, item.path])
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0])
     } else {
-      // For all file types, use webUrl to display/preview in browser (not download)
-      if (item.webUrl) {
-        window.open(item.webUrl, "_blank")
-      } else if (item.downloadUrl) {
-        // Only use downloadUrl as last resort fallback
-        window.open(item.downloadUrl, "_blank")
+      setFile(null)
+    }
+  }
+
+  const handleSubmitEvidence = async () => {
+    setSubmitError(null)
+    if (
+      !newEvidenceTitle ||
+      !newEvidenceDescription ||
+      !selectedQualification ||
+      !selectedUnitId ||
+      !selectedLearningOutcomeId ||
+      !selectedPerformanceCriterionId ||
+      !file
+    ) {
+      setSubmitError("Please fill in all fields and select a file.")
+      return
+    }
+
+    setIsSubmitting(true)
+    try {
+      const newEvidence: Omit<Evidence, "id" | "status" | "uploadDate"> = {
+        title: newEvidenceTitle,
+        description: newEvidenceDescription,
+        uploadedBy: "Current User (Mock)", // Replace with actual user
+        unitId: selectedUnitId,
+        criterionId: selectedPerformanceCriterionId,
+        fileUrl: `/mock-uploads/${file.name}`, // Mock URL for demonstration
       }
+      await PortfolioCompilationService.submitEvidence(newEvidence)
+      toast({
+        title: "Evidence Submitted",
+        description: "Your evidence has been successfully uploaded for review.",
+        variant: "default",
+      })
+      // Clear form
+      setNewEvidenceTitle("")
+      setNewEvidenceDescription("")
+      setSelectedQualification("")
+      setSelectedUnitId("")
+      setSelectedLearningOutcomeId("")
+      setSelectedPerformanceCriterionId("")
+      setFile(null)
+      // Refresh evidence list
+      const fetchedEvidence = await PortfolioCompilationService.getCandidateEvidence(siteId as string)
+      setEvidenceList(fetchedEvidence)
+    } catch (err: any) {
+      setSubmitError(err.message || "Failed to submit evidence.")
+      toast({
+        title: "Submission Failed",
+        description: err.message || "There was an error submitting your evidence.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
-  const navigateBack = () => {
-    if (pathHistory.length > 1) {
-      const newHistory = pathHistory.slice(0, -1)
-      setPathHistory(newHistory)
-      setCurrentPath(newHistory[newHistory.length - 1])
-    }
-  }
-
-  const navigateToDashboard = () => {
-    window.location.href = "/assessor-review"
-  }
-
-  if (loading) {
-    return (
-      <div className="p-4">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Loading...</h1>
-          <button onClick={navigateToDashboard} className="px-4 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200">
-            Back to Dashboard
-          </button>
-        </div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="p-4">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Error</h1>
-          <button onClick={navigateToDashboard} className="px-4 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200">
-            Back to Dashboard
-          </button>
-        </div>
-        <div className="text-red-600">{error}</div>
-      </div>
-    )
+  const getFileIcon = (fileType: string) => {
+    if (fileType.includes("image")) return <Image className="h-5 w-5 text-blue-500" />
+    if (fileType.includes("pdf")) return <FileText className="h-5 w-5 text-red-500" />
+    return <File className="h-5 w-5 text-gray-500" />
   }
 
   return (
-    <div className="p-4">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">{candidateName}'s Evidence</h1>
-        <button onClick={navigateToDashboard} className="px-4 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200">
-          Back to Dashboard
-        </button>
-      </div>
+    <div className="container mx-auto p-4">
+      <Card className="w-full max-w-4xl mx-auto">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Candidate Evidence for Site: {siteId}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold">Upload New Evidence</h3>
+            <Label htmlFor="evidence-title">Evidence Title</Label>
+            <Input
+              id="evidence-title"
+              type="text"
+              placeholder="e.g., Project X Completion Report"
+              value={newEvidenceTitle}
+              onChange={(e) => setNewEvidenceTitle(e.target.value)}
+            />
 
-      {/* Breadcrumb */}
-      <div className="mb-4">
-        <div className="flex items-center space-x-2 text-sm text-gray-600">
-          <span>Path:</span>
-          <span className="font-mono bg-gray-100 px-2 py-1 rounded">{currentPath}</span>
-          {pathHistory.length > 1 && (
-            <button
-              onClick={navigateBack}
-              className="px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200"
-            >
-              ← Back
-            </button>
-          )}
-        </div>
-      </div>
+            <Label htmlFor="evidence-description">Description</Label>
+            <Textarea
+              id="evidence-description"
+              placeholder="Provide a brief description of your evidence and how it meets the criteria."
+              value={newEvidenceDescription}
+              onChange={(e) => setNewEvidenceDescription(e.target.value)}
+              rows={4}
+            />
 
-      <div className="grid grid-cols-1 gap-4">
-        {items.map((item) => (
-          <div
-            key={item.id}
-            className={`bg-white p-4 rounded-lg shadow cursor-pointer hover:bg-gray-50 ${
-              item.isFolder ? "border-l-4 border-blue-500" : ""
-            }`}
-            onClick={() => handleItemClick(item)}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <span className="text-2xl">{item.isFolder ? "📁" : "📄"}</span>
-                <div className="flex-1">
-                  <h3 className="font-medium">{item.name}</h3>
-                  <p className="text-sm text-gray-500">
-                    {item.isFolder ? "Folder" : `Submitted: ${item.dateSubmitted.toLocaleDateString()}`}
-                  </p>
-                  {!item.isFolder && item.assessorName && (
-                    <p className="text-sm text-gray-600 mt-1">
-                      <span className="font-medium">Assessor:</span> {item.assessorName}
-                      {item.assessmentDate && (
-                        <span className="ml-2 text-gray-500">
-                          • {new Date(item.assessmentDate).toLocaleDateString()}
-                        </span>
-                      )}
-                    </p>
-                  )}
-                  {!item.isFolder && item.assessorFeedback && (
-                    <div className="mt-2 p-2 bg-gray-50 rounded text-sm">
-                      <span className="font-medium text-gray-700">Feedback:</span>
-                      <p className="text-gray-600 mt-1">{item.assessorFeedback}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-              {!item.isFolder && (
-                <div className="flex flex-col items-end space-y-1">
-                  <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      item.status.toLowerCase().includes("approved")
-                        ? "bg-green-100 text-green-800"
-                        : item.status.toLowerCase().includes("pending")
-                          ? "bg-yellow-100 text-yellow-800"
-                          : item.status.toLowerCase().includes("rejected")
-                            ? "bg-red-100 text-red-800"
-                            : item.status.toLowerCase().includes("needs")
-                              ? "bg-orange-100 text-orange-800"
-                              : "bg-gray-100 text-gray-800"
-                    }`}
-                  >
-                    {item.status}
-                  </span>
-                  {item.assessmentDate && (
-                    <span className="text-xs text-gray-500">{new Date(item.assessmentDate).toLocaleTimeString()}</span>
-                  )}
-                </div>
+            <Label htmlFor="qualification-select">Qualification</Label>
+            <Select value={selectedQualification} onValueChange={(value: "EWA" | "NVQ") => {
+              setSelectedQualification(value)
+              setSelectedUnitId("")
+              setSelectedLearningOutcomeId("")
+              setSelectedPerformanceCriterionId("")
+            }}>
+              <SelectTrigger id="qualification-select">
+                <SelectValue placeholder="Select Qualification" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="EWA">EWA Qualification</SelectItem>
+                <SelectItem value="NVQ">NVQ Qualification</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {selectedQualification && (
+              <>
+                <Label htmlFor="unit-select">Unit</Label>
+                <Select value={selectedUnitId} onValueChange={(value) => {
+                  setSelectedUnitId(value)
+                  setSelectedLearningOutcomeId("")
+                  setSelectedPerformanceCriterionId("")
+                }}>
+                  <SelectTrigger id="unit-select">
+                    <SelectValue placeholder="Select Unit" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availableUnits.map((unit) => (
+                      <SelectItem key={unit.id} value={unit.id}>
+                        {unit.id}: {unit.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </>
+            )}
+
+            {selectedUnitId && (
+              <>
+                <Label htmlFor="lo-select">Learning Outcome</Label>
+                <Select value={selectedLearningOutcomeId} onValueChange={(value) => {
+                  setSelectedLearningOutcomeId(value)
+                  setSelectedPerformanceCriterionId("")
+                }}>
+                  <SelectTrigger id="lo-select">
+                    <SelectValue placeholder="Select Learning Outcome" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availableLearningOutcomes.map((lo) => (
+                      <SelectItem key={lo.id} value={lo.id}>
+                        {lo.id}: {lo.description}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </>
+            )}
+
+            {selectedLearningOutcomeId && (
+              <>
+                <Label htmlFor="pc-select">Performance Criterion</Label>
+                <Select value={selectedPerformanceCriterionId} onValueChange={setSelectedPerformanceCriterionId}>
+                  <SelectTrigger id="pc-select">
+                    <SelectValue placeholder="Select Performance Criterion" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availablePerformanceCriteria.map((pc) => (
+                      <SelectItem key={pc.id} value={pc.id}>
+                        {pc.id}: {pc.description}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </>
+            )}
+
+            <Label htmlFor="file-upload">Attach File</Label>
+            <Input id="file-upload" type="file" onChange={handleFileChange} />
+
+            {submitError && <p className="text-red-500 text-sm">{submitError}</p>}
+
+            <Button onClick={handleSubmitEvidence} className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...
+                </>
+              ) : (
+                "Submit Evidence"
               )}
-            </div>
+            </Button>
           </div>
-        ))}
 
-        {items.length === 0 && (
-          <div className="text-center py-8 text-gray-500">No items found in {currentPath || "root"}.</div>
-        )}
-      </div>
+          <Separator />
+
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold">My Submitted Evidence</h3>
+            {isLoadingList ? (
+              <div className="flex justify-center items-center">
+                <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
+                <p className="ml-2 text-gray-600">Loading submitted evidence...</p>
+              </div>
+            ) : listError ? (
+              <p className="text-red-500 text-center">{listError}</p>
+            ) : evidenceList.length === 0 ? (
+              <p className="text-center text-gray-500">No evidence submitted yet.</p>
+            ) : (
+              <div className="grid gap-4">
+                {evidenceList.map((item) => (
+                  <Card key={item.id} className="p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-semibold">{item.title}</h4>
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          item.status === "Approved"
+                            ? "bg-green-100 text-green-800"
+                            : item.status === "Pending"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
+                        {item.status}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-1">{item.description}</p>
+                    <p className="text-xs text-gray-500">
+                      Unit: {item.unitId} | Criterion: {item.criterionId}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Uploaded by {item.uploadedBy} on {item.uploadDate}
+                    </p>
+                    {item.fileUrl && (
+                      <Button variant="link" className="p-0 h-auto mt-2 flex items-center space-x-1">
+                        {getFileIcon(item.fileUrl.split(".").pop() || "")}
+                        <a href={item.fileUrl} target="_blank" rel="noopener noreferrer">
+                          View File
+                        </a>
+                      </Button>
+                    )}
+                  </Card>
+                ))}
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
     </div>
-  );
-};
-
-export default CandidateEvidencePage;
+  )
+}

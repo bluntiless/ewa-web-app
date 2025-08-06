@@ -1,13 +1,13 @@
 "use client"
 
-import React from 'react';
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { Separator } from "@/components/ui/separator"
 import { Users, MessageCircle, Video, Settings, Search, Send, Phone, Mail, MapPin, Clock, LogOut, LogIn } from 'lucide-react'
 import BottomNavigation from "../../components/BottomNavigation"
 import { useMsalAuth } from "../../hooks/useMsalAuth"
@@ -17,11 +17,6 @@ interface TeamMember {
   name: string
   role: string
   avatar?: string
-  status: "online" | "offline" | "away"
-  email: string
-  phone?: string
-  location?: string
-  lastSeen?: string
 }
 
 interface StudyGroup {
@@ -41,53 +36,18 @@ interface Message {
   avatar?: string
 }
 
-const TeamsPage: React.FC = () => {
+export default function TeamsPage() {
   const { account, loading, error: msalError, login, logout } = useMsalAuth()
   const [activeTab, setActiveTab] = useState<"teams" | "groups" | "messages">("teams")
   const [searchQuery, setSearchQuery] = useState("")
   const [newMessage, setNewMessage] = useState("")
 
-  // Mock data for teams and groups
   const [teamMembers] = useState<TeamMember[]>([
-    {
-      id: "1",
-      name: "Sarah Johnson",
-      role: "Lead Assessor",
-      status: "online",
-      email: "sarah.johnson@company.com",
-      phone: "+44 123 456 7890",
-      location: "London, UK",
-      lastSeen: "Active now",
-    },
-    {
-      id: "2",
-      name: "Mike Chen",
-      role: "Senior Assessor",
-      status: "away",
-      email: "mike.chen@company.com",
-      phone: "+44 123 456 7891",
-      location: "Manchester, UK",
-      lastSeen: "5 minutes ago",
-    },
-    {
-      id: "3",
-      name: "Emma Wilson",
-      role: "Assessor",
-      status: "offline",
-      email: "emma.wilson@company.com",
-      location: "Birmingham, UK",
-      lastSeen: "2 hours ago",
-    },
-    {
-      id: "4",
-      name: "David Brown",
-      role: "Training Coordinator",
-      status: "online",
-      email: "david.brown@company.com",
-      phone: "+44 123 456 7892",
-      location: "Leeds, UK",
-      lastSeen: "Active now",
-    },
+    { id: "1", name: "Alice Johnson", role: "Assessor", avatar: "/placeholder-user.jpg" },
+    { id: "2", name: "Bob Williams", role: "Candidate", avatar: "/placeholder-user.jpg" },
+    { id: "3", name: "Charlie Brown", role: "Internal Verifier", avatar: "/placeholder-user.jpg" },
+    { id: "4", name: "Diana Prince", role: "Candidate", avatar: "/placeholder-user.jpg" },
+    { id: "5", name: "Eve Adams", role: "Assessor", avatar: "/placeholder-user.jpg" },
   ])
 
   const [studyGroups] = useState<StudyGroup[]>([
@@ -120,21 +80,21 @@ const TeamsPage: React.FC = () => {
   const [messages] = useState<Message[]>([
     {
       id: "1",
-      sender: "Sarah Johnson",
+      sender: "Alice Johnson",
       content: "Good morning everyone! Don't forget about the assessment review meeting at 2 PM today.",
       timestamp: "09:30 AM",
       avatar: "/placeholder.svg?height=32&width=32",
     },
     {
       id: "2",
-      sender: "Mike Chen",
+      sender: "Bob Williams",
       content: "I've uploaded the new assessment criteria documents to the shared folder.",
       timestamp: "10:15 AM",
       avatar: "/placeholder.svg?height=32&width=32",
     },
     {
       id: "3",
-      sender: "Emma Wilson",
+      sender: "Charlie Brown",
       content: "Can someone help me with the NETP3-04 unit assessment? I have a few questions.",
       timestamp: "11:20 AM",
       avatar: "/placeholder.svg?height=32&width=32",
@@ -162,11 +122,13 @@ const TeamsPage: React.FC = () => {
     }
   }
 
-  const filteredMembers = teamMembers.filter(
-    (member) =>
-      member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      member.role.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+  const filteredMembers = useMemo(() => {
+    return teamMembers.filter(
+      (member) =>
+        member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        member.role.toLowerCase().includes(searchQuery.toLowerCase()),
+    )
+  }, [searchQuery, teamMembers])
 
   const filteredGroups = studyGroups.filter(
     (group) =>
@@ -297,72 +259,47 @@ const TeamsPage: React.FC = () => {
         {/* Content based on active tab */}
         {activeTab === "teams" && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredMembers.map((member) => (
-              <Card
-                key={member.id}
-                className="bg-neutral-900 border-neutral-800 hover:bg-neutral-800 transition-colors"
-              >
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="relative">
-                      <Avatar className="w-12 h-12">
-                        <AvatarImage src={member.avatar || "/placeholder.svg"} alt={member.name} />
-                        <AvatarFallback className="bg-blue-600 text-white">
-                          {member.name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div
-                        className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-neutral-900 ${getStatusColor(member.status)}`}
-                      ></div>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-white truncate">{member.name}</h3>
-                      <p className="text-sm text-gray-400">{member.role}</p>
-                      <div className="flex items-center text-xs text-gray-500 mt-1">
-                        <Clock className="w-3 h-3 mr-1" />
-                        {member.lastSeen}
+            {filteredMembers.length > 0 ? (
+              filteredMembers.map((member) => (
+                <Card
+                  key={member.id}
+                  className="bg-neutral-900 border-neutral-800 hover:bg-neutral-800 transition-colors"
+                >
+                  <CardContent className="p-6">
+                    <div className="flex items-start space-x-4">
+                      <div className="relative">
+                        <Avatar className="w-12 h-12">
+                          <AvatarImage src={member.avatar || "/placeholder.svg"} alt={member.name} />
+                          <AvatarFallback className="bg-blue-600 text-white">
+                            {member.name.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-white truncate">{member.name}</h3>
+                        <p className="text-sm text-gray-400">{member.role}</p>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="mt-4 space-y-2">
-                    <div className="flex items-center text-sm text-gray-400">
-                      <Mail className="w-4 h-4 mr-2" />
-                      <span className="truncate">{member.email}</span>
+                    <div className="flex space-x-2 mt-4">
+                      <Button size="sm" className="flex-1 bg-blue-600 hover:bg-blue-700">
+                        <MessageCircle className="w-4 h-4 mr-1" />
+                        Message
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-neutral-700 text-neutral-300 hover:bg-neutral-800 bg-transparent"
+                      >
+                        <Video className="w-4 h-4" />
+                      </Button>
                     </div>
-                    {member.phone && (
-                      <div className="flex items-center text-sm text-gray-400">
-                        <Phone className="w-4 h-4 mr-2" />
-                        <span>{member.phone}</span>
-                      </div>
-                    )}
-                    {member.location && (
-                      <div className="flex items-center text-sm text-gray-400">
-                        <MapPin className="w-4 h-4 mr-2" />
-                        <span>{member.location}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex space-x-2 mt-4">
-                    <Button size="sm" className="flex-1 bg-blue-600 hover:bg-blue-700">
-                      <MessageCircle className="w-4 h-4 mr-1" />
-                      Message
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="border-neutral-700 text-neutral-300 hover:bg-neutral-800 bg-transparent"
-                    >
-                      <Video className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <p className="col-span-full text-center text-gray-500">No team members found.</p>
+            )}
           </div>
         )}
 
@@ -428,10 +365,7 @@ const TeamsPage: React.FC = () => {
                       <Avatar className="w-8 h-8">
                         <AvatarImage src={message.avatar || "/placeholder.svg"} alt={message.sender} />
                         <AvatarFallback className="bg-blue-600 text-white text-xs">
-                          {message.sender
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
+                          {message.sender.charAt(0)}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1">
@@ -471,5 +405,3 @@ const TeamsPage: React.FC = () => {
     </div>
   )
 }
-
-export default TeamsPage;

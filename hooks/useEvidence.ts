@@ -1,103 +1,131 @@
 import { useState, useEffect, useCallback } from "react"
-import { SharePointService, Evidence, EvidenceMetadata, AssessmentStatus } from "@/services/SharePointService"
+import { Evidence } from "@/models/Evidence"
+import { PortfolioCompilationService } from "@/services/PortfolioCompilationService"
+import { useToast } from "@/hooks/use-toast"
 
-export interface UseEvidenceReturn {
+interface UseEvidenceReturn {
   evidence: Evidence[]
-  loading: boolean
+  isLoading: boolean
   error: string | null
-  uploadEvidence: (file: File, folderPath: string, fileName: string) => Promise<void>
-  deleteEvidence: (fileUrl: string) => Promise<void>
+  addEvidence: (newEvidence: Omit<Evidence, "id" | "status" | "uploadDate">) => Promise<void>
+  updateEvidence: (updatedEvidence: Evidence) => Promise<void>
+  deleteEvidence: (evidenceId: string) => Promise<void>
   refreshEvidence: () => Promise<void>
-  updateEvidenceMetadata: (fileUrl: string, metadata: Partial<EvidenceMetadata>) => Promise<void>
 }
 
-export function useEvidence(): UseEvidenceReturn {
+export function useEvidence(candidateId: string): UseEvidenceReturn {
   const [evidence, setEvidence] = useState<Evidence[]>([])
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const sharePointService = SharePointService.getInstance()
+  const { toast } = useToast()
 
   const fetchEvidence = useCallback(async () => {
-    setLoading(true)
+    setIsLoading(true)
     setError(null)
     try {
-      const fetchedEvidence = await sharePointService.getEvidence()
+      const fetchedEvidence = await PortfolioCompilationService.getCandidateEvidence(candidateId)
       setEvidence(fetchedEvidence)
     } catch (err: any) {
-      console.error("Failed to fetch evidence:", err)
       setError(err.message || "Failed to load evidence.")
+      toast({
+        title: "Error",
+        description: err.message || "Failed to load evidence.",
+        variant: "destructive",
+      })
     } finally {
-      setLoading(false)
+      setIsLoading(false)
     }
-  }, [sharePointService])
+  }, [candidateId, toast])
 
   useEffect(() => {
     fetchEvidence()
   }, [fetchEvidence])
 
-  const uploadEvidence = useCallback(
-    async (file: File, folderPath: string, fileName: string) => {
-      setLoading(true)
+  const addEvidence = useCallback(
+    async (newEvidence: Omit<Evidence, "id" | "status" | "uploadDate">) => {
+      setIsLoading(true)
       setError(null)
       try {
-        // SharePointService.uploadEvidence handles both direct and session uploads
-        await sharePointService.uploadEvidence(file, folderPath, fileName)
-        await fetchEvidence() // Refresh list after upload
+        const added = await PortfolioCompilationService.submitEvidence(newEvidence)
+        setEvidence((prev) => [...prev, added])
+        toast({
+          title: "Evidence Added",
+          description: `"${added.title}" submitted successfully.`,
+          variant: "default",
+        })
       } catch (err: any) {
-        console.error("Failed to upload evidence:", err)
-        setError(err.message || "Failed to upload evidence.")
+        setError(err.message || "Failed to add evidence.")
+        toast({
+          title: "Error",
+          description: err.message || "Failed to add evidence.",
+          variant: "destructive",
+        })
       } finally {
-        setLoading(false)
+        setIsLoading(false)
       }
     },
-    [sharePointService, fetchEvidence],
+    [toast],
+  )
+
+  const updateEvidence = useCallback(
+    async (updatedEvidence: Evidence) => {
+      setIsLoading(true)
+      setError(null)
+      try {
+        const updated = await PortfolioCompilationService.updateEvidence(updatedEvidence)
+        setEvidence((prev) => prev.map((e) => (e.id === updated.id ? updated : e)))
+        toast({
+          title: "Evidence Updated",
+          description: `"${updated.title}" updated successfully.`,
+          variant: "default",
+        })
+      } catch (err: any) {
+        setError(err.message || "Failed to update evidence.")
+        toast({
+          title: "Error",
+          description: err.message || "Failed to update evidence.",
+          variant: "destructive",
+        })
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    [toast],
   )
 
   const deleteEvidence = useCallback(
-    async (fileUrl: string) => {
-      setLoading(true)
+    async (evidenceId: string) => {
+      setIsLoading(true)
       setError(null)
       try {
-        await sharePointService.deleteFile(fileUrl)
-        await fetchEvidence() // Refresh list after delete
+        await PortfolioCompilationService.deleteEvidence(evidenceId)
+        setEvidence((prev) => prev.filter((e) => e.id !== evidenceId))
+        toast({
+          title: "Evidence Deleted",
+          description: "Evidence removed successfully.",
+          variant: "default",
+        })
       } catch (err: any) {
-        console.error("Failed to delete evidence:", err)
         setError(err.message || "Failed to delete evidence.")
+        toast({
+          title: "Error",
+          description: err.message || "Failed to delete evidence.",
+          variant: "destructive",
+        })
       } finally {
-        setLoading(false)
+        setIsLoading(false)
       }
     },
-    [sharePointService, fetchEvidence],
-  )
-
-  const updateEvidenceMetadata = useCallback(
-    async (fileUrl: string, metadata: Partial<EvidenceMetadata>) => {
-      setLoading(true)
-      setError(null)
-      try {
-        // This would typically involve a specific SharePoint API call to update list item fields
-        // For now, we'll simulate it and then refresh
-        console.log(`Updating metadata for ${fileUrl}:`, metadata)
-        // In a real scenario, you'd call a SharePointService method like:
-        // await sharePointService.updateFileMetadata(fileUrl, metadata);
-        await fetchEvidence() // Refresh to reflect changes
-      } catch (err: any) {
-        console.error("Failed to update evidence metadata:", err)
-        setError(err.message || "Failed to update evidence metadata.")
-      } finally {
-        setLoading(false)
-      }
-    },
-    [fetchEvidence],
+    [toast],
   )
 
   return {
     evidence,
-    loading,
+    isLoading,
     error,
-    uploadEvidence,
+    addEvidence,
+    updateEvidence,
     deleteEvidence,
     refreshEvidence: fetchEvidence,
-    updateEvidenceMetadata,
   }
 }

@@ -1,30 +1,18 @@
-export interface Unit {
+export interface PerformanceCriterion {
   id: string
-  code: string
-  title: string
   description: string
-  qualification: "EWA" | "NVQ"
-  type: string
-  creditValue: number
-  guidedLearningHours: number
-  totalQualificationTime: number
-  level: number
-  learningOutcomes: LearningOutcome[]
-  status?: 'completed' | 'in_progress' | 'not_started'
-  overallProgress?: number
-  displayCode?: string
-  category?: string
 }
 
 export interface LearningOutcome {
   id: string
-  code: string
   description: string
-  performanceCriteria: PerformanceCriteria[]
+  performanceCriteria: PerformanceCriterion[]
 }
 
-export interface PerformanceCriteria {
+export interface Unit {
   id: string
-  code: string
-  description: string
+  title: string
+  qualification: "EWA" | "NVQ"
+  learningOutcomes: LearningOutcome[]
+  isCompleted?: boolean // Optional: for tracking user progress
 }

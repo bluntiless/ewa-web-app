@@ -9,8 +9,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Separator } from "@/components/ui/separator"
 import { Users, FileText, Clock, CheckCircle, AlertCircle, Search, RefreshCw, TrendingUp } from 'lucide-react'
-import React from 'react';
 
 const ASSESSMENT_STATUSES = {
   PENDING: "pending",
@@ -41,7 +45,7 @@ interface Candidate {
   lastActivity?: Date
 }
 
-const AssessorReviewPage: React.FC = () => {
+export default function AssessorDashboard() {
   const { account, loading, error: msalError } = useMsalAuth()
   const router = useRouter()
 
@@ -672,53 +676,59 @@ const AssessorReviewPage: React.FC = () => {
             </Card>
           </div>
         ) : (
-          <Card className="bg-neutral-900 border-neutral-800">
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <FileText className="w-5 h-5 mr-2" />
-                Evidence Queue ({filteredEvidence.length})
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {isLoading ? (
-                <div className="text-center py-8 text-gray-500">Loading evidence...</div>
-              ) : filteredEvidence.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">No pending evidence found.</div>
-              ) : (
-                <div className="space-y-4">
-                  {filteredEvidence.map((evidence) => (
-                    <div
-                      key={evidence.id}
-                      className="bg-neutral-800 rounded-lg p-4 cursor-pointer hover:bg-neutral-700 transition-colors"
-                      onClick={() => handleEvidenceClick(evidence)}
-                    >
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <h3 className="text-lg font-semibold">{evidence.name}</h3>
-                          <p className="text-sm text-gray-400">
-                            {evidence.candidateName} • {evidence.dateSubmitted.toLocaleDateString()}
-                          </p>
-                          {evidence.description && <p className="text-sm text-gray-500 mt-1">{evidence.description}</p>}
+          <div className="space-y-6">
+            <Card className="bg-neutral-900 border-neutral-800">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <FileText className="w-5 h-5 mr-2" />
+                  Evidence Queue ({filteredEvidence.length})
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {isLoading ? (
+                  <div className="text-center py-8 text-gray-500">Loading evidence...</div>
+                ) : filteredEvidence.length === 0 ? (
+                  <div className="text-center py-8 text-gray-500">No pending evidence found.</div>
+                ) : (
+                  <div className="space-y-4">
+                    {filteredEvidence.map((evidence) => (
+                      <div
+                        key={evidence.id}
+                        className="bg-neutral-800 rounded-lg p-4 cursor-pointer hover:bg-neutral-700 transition-colors"
+                        onClick={() => handleEvidenceClick(evidence)}
+                      >
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <h3 className="text-lg font-semibold">{evidence.name}</h3>
+                            <p className="text-sm text-gray-400">
+                              {evidence.candidateName} • {evidence.dateSubmitted.toLocaleDateString()}
+                            </p>
+                            {evidence.description && <p className="text-sm text-gray-500 mt-1">{evidence.description}</p>}
+                          </div>
+                          <div className="text-right">
+                            <div className="text-sm text-gray-400">{evidence.dateSubmitted.toLocaleDateString()}</div>
+                            <div className="text-xs text-gray-500">{evidence.dateSubmitted.toLocaleTimeString()}</div>
+                          </div>
                         </div>
-                        <div className="text-right">
-                          <div className="text-sm text-gray-400">{evidence.dateSubmitted.toLocaleDateString()}</div>
-                          <div className="text-xs text-gray-500">{evidence.dateSubmitted.toLocaleTimeString()}</div>
+                        <div className="mt-2 flex justify-between items-center">
+                          <Badge variant="secondary" className="bg-yellow-600 text-white">
+                            Pending Review
+                          </Badge>
+                          <Button variant="ghost" size="sm" className="text-blue-400 hover:text-blue-300">
+                            Review Evidence →
+                          </Button>
                         </div>
                       </div>
-                      <div className="mt-2 flex justify-between items-center">
-                        <Badge variant="secondary" className="bg-yellow-600 text-white">
-                          Pending Review
-                        </Badge>
-                        <Button variant="ghost" size="sm" className="text-blue-400 hover:text-blue-300">
-                          Review Evidence →
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {selectedCandidate && (
+              <AssessorReviewPage candidate={selectedCandidate} />
+            )}
+          </div>
         )}
       </div>
 
@@ -727,4 +737,141 @@ const AssessorReviewPage: React.FC = () => {
   )
 }
 
-export default AssessorReviewPage;
+function AssessorReviewPage({ candidate }) {
+  const [selectedUnit, setSelectedUnit] = useState("")
+  const [selectedCriterion, setSelectedCriterion] = useState("")
+  const [evidenceDescription, setEvidenceDescription] = useState("")
+  const [feedback, setFeedback] = useState("")
+  const [isApproved, setIsApproved] = useState(false)
+
+  const handleUnitChange = (value: string) => {
+    setSelectedUnit(value)
+    setSelectedCriterion("") // Reset criterion when unit changes
+  }
+
+  const handleCriterionChange = (value: string) => {
+    setSelectedCriterion(value)
+  }
+
+  const handleSubmitReview = () => {
+    console.log({
+      selectedUnit,
+      selectedCriterion,
+      evidenceDescription,
+      feedback,
+      isApproved,
+    })
+    // Here you would typically send this data to a backend service
+    alert("Review submitted!")
+    // Reset form
+    setSelectedUnit("")
+    setSelectedCriterion("")
+    setEvidenceDescription("")
+    setFeedback("")
+    setIsApproved(false)
+  }
+
+  // Mock data for units and criteria
+  const units = [
+    { id: "unit1", name: "Unit 1: Health & Safety" },
+    { id: "unit2", name: "Unit 2: Communication Skills" },
+    { id: "unit3", name: "Unit 3: Project Management" },
+  ]
+
+  const criteria = {
+    unit1: [
+      { id: "c1.1", name: "1.1 Identify workplace hazards" },
+      { id: "c1.2", name: "1.2 Implement safety procedures" },
+    ],
+    unit2: [
+      { id: "c2.1", name: "2.1 Communicate effectively with team members" },
+      { id: "c2.2", name: "2.2 Present information clearly" },
+    ],
+    unit3: [
+      { id: "c3.1", name: "3.1 Plan project stages" },
+      { id: "c3.2", name: "3.2 Monitor project progress" },
+    ],
+  }
+
+  return (
+    <div className="container mx-auto p-4">
+      <Card className="w-full max-w-3xl mx-auto">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Assessor Review</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid gap-4">
+            <Label htmlFor="unit-select">Select Unit</Label>
+            <Select value={selectedUnit} onValueChange={handleUnitChange}>
+              <SelectTrigger id="unit-select">
+                <SelectValue placeholder="Select a unit" />
+              </SelectTrigger>
+              <SelectContent>
+                {units.map((unit) => (
+                  <SelectItem key={unit.id} value={unit.id}>
+                    {unit.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {selectedUnit && (
+            <div className="grid gap-4">
+              <Label htmlFor="criterion-select">Select Criterion</Label>
+              <Select value={selectedCriterion} onValueChange={handleCriterionChange}>
+                <SelectTrigger id="criterion-select">
+                  <SelectValue placeholder="Select a criterion" />
+                </SelectTrigger>
+                <SelectContent>
+                  {criteria[selectedUnit as keyof typeof criteria]?.map((criterion) => (
+                    <SelectItem key={criterion.id} value={criterion.id}>
+                      {criterion.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          <div className="grid gap-4">
+            <Label htmlFor="evidence-description">Evidence Description</Label>
+            <Textarea
+              id="evidence-description"
+              placeholder="Describe the evidence provided by the candidate..."
+              value={evidenceDescription}
+              onChange={(e) => setEvidenceDescription(e.target.value)}
+              rows={5}
+            />
+          </div>
+
+          <div className="grid gap-4">
+            <Label htmlFor="feedback">Feedback</Label>
+            <Textarea
+              id="feedback"
+              placeholder="Provide constructive feedback for the candidate..."
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
+              rows={5}
+            />
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="approve"
+              checked={isApproved}
+              onCheckedChange={(checked) => setIsApproved(checked as boolean)}
+            />
+            <Label htmlFor="approve">Approve Evidence</Label>
+          </div>
+
+          <Separator />
+
+          <Button type="submit" className="w-full" onClick={handleSubmitReview}>
+            Submit Review
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}

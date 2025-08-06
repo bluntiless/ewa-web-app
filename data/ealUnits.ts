@@ -1,414 +1,278 @@
 import { Unit } from "@/models/Unit"
 
-export const ealUnits: Unit[] = [
+export const allEALUnits: Unit[] = [
   {
-    code: "NVQ_U1",
-    title: "Working Safely in an Engineering Environment",
-    description: "Understand and apply safe working practices in engineering.",
+    id: "NETP3-01",
+    title: "Complying with statutory regulations and organisational safety requirements",
     qualification: "NVQ",
     learningOutcomes: [
       {
-        code: "NVQ_U1_LO1",
-        description: "Comply with health and safety legislation.",
+        id: "NETP3-01.1",
+        description: "Comply with statutory regulations and organisational safety requirements.",
         performanceCriteria: [
-          { code: "NVQ_U1_PC1.1", description: "Identify relevant health and safety regulations." },
-          { code: "NVQ_U1_PC1.2", description: "Follow company safety procedures." },
-        ],
-      },
-      {
-        code: "NVQ_U1_LO2",
-        description: "Use personal protective equipment (PPE) correctly.",
-        performanceCriteria: [
-          { code: "NVQ_U1_PC2.1", description: "Select appropriate PPE for tasks." },
-          { code: "NVQ_U1_PC2.2", description: "Inspect and maintain PPE." },
+          { id: "NETP3-01.1.1", description: "Work safely at all times, complying with health and safety legislation, regulations and other relevant guidelines." },
+          { id: "NETP3-01.1.2", description: "Comply with emergency procedures." },
+          { id: "NETP3-01.1.3", description: "Use the relevant personal protective equipment (PPE) for the task and the environment." },
+          { id: "NETP3-01.1.4", description: "Maintain a safe and tidy working environment." },
         ],
       },
     ],
   },
   {
-    code: "NVQ_U2",
-    title: "Carrying Out Fault Diagnosis on Electrical Equipment",
-    description: "Diagnose and rectify faults in electrical systems.",
+    id: "NETP3-02",
+    title: "Working efficiently and effectively in the electrical power industry",
     qualification: "NVQ",
     learningOutcomes: [
       {
-        code: "NVQ_U2_LO1",
-        description: "Identify symptoms of electrical faults.",
+        id: "NETP3-02.1",
+        description: "Work efficiently and effectively in the electrical power industry.",
         performanceCriteria: [
-          { code: "NVQ_U2_PC1.1", description: "Interpret fault codes and indicators." },
-          { code: "NVQ_U2_PC1.2", description: "Conduct visual inspections for damage." },
-        ],
-      },
-      {
-        code: "NVQ_U2_LO2",
-        description: "Apply diagnostic techniques.",
-        performanceCriteria: [
-          { code: "NVQ_U2_PC2.1", description: "Use test equipment to locate faults." },
-          { code: "NVQ_U2_PC2.2", description: "Analyze circuit diagrams to pinpoint issues." },
+          { id: "NETP3-02.1.1", description: "Plan and organise work activities efficiently." },
+          { id: "NETP3-02.1.2", description: "Work effectively with others." },
+          { id: "NETP3-02.1.3", description: "Identify and resolve problems." },
+          { id: "NETP3-02.1.4", description: "Maintain effective working relationships." },
         ],
       },
     ],
   },
   {
-    code: "NVQ_U3",
-    title: "Maintaining Electrical Equipment",
-    description: "Perform routine maintenance on electrical equipment.",
+    id: "NETP3-03",
+    title: "Working safely in the electrical power environment",
     qualification: "NVQ",
     learningOutcomes: [
       {
-        code: "NVQ_U3_LO1",
-        description: "Plan maintenance activities.",
+        id: "NETP3-03.1",
+        description: "Work safely in the electrical power environment.",
         performanceCriteria: [
-          { code: "NVQ_U3_PC1.1", description: "Schedule preventative maintenance tasks." },
-          { code: "NVQ_U3_PC1.2", description: "Obtain necessary permits and isolations." },
-        ],
-      },
-      {
-        code: "NVQ_U3_LO2",
-        description: "Execute maintenance procedures.",
-        performanceCriteria: [
-          { code: "NVQ_U3_PC2.1", description: "Clean and lubricate components." },
-          { code: "NVQ_U3_PC2.2", description: "Replace worn or faulty parts." },
+          { id: "NETP3-03.1.1", description: "Identify and control hazards in the electrical power environment." },
+          { id: "NETP3-03.1.2", description: "Apply safe isolation procedures." },
+          { id: "NETP3-03.1.3", description: "Use appropriate safety equipment and tools." },
         ],
       },
     ],
   },
   {
-    code: "NVQ_U4",
-    title: "Installing Electrical Equipment",
-    description: "Install electrical equipment and systems.",
+    id: "NETP3-04",
+    title: "Preparing and installing wiring systems and associated equipment",
     qualification: "NVQ",
     learningOutcomes: [
       {
-        code: "NVQ_U4_LO1",
-        description: "Prepare for installation.",
+        id: "NETP3-04.1",
+        description: "Prepare and install wiring systems and associated equipment.",
         performanceCriteria: [
-          { code: "NVQ_U4_PC1.1", description: "Read and interpret installation drawings." },
-          { code: "NVQ_U4_PC1.2", description: "Prepare mounting surfaces and cable routes." },
-        ],
-      },
-      {
-        code: "NVQ_U4_LO2",
-        description: "Connect electrical equipment.",
-        performanceCriteria: [
-          { code: "NVQ_U4_PC2.1", description: "Wire components according to specifications." },
-          { code: "NVQ_U4_PC2.2", description: "Ensure proper earthing and bonding." },
+          { id: "NETP3-04.1.1", description: "Interpret wiring diagrams and specifications." },
+          { id: "NETP3-04.1.2", description: "Select and prepare cables and conductors." },
+          { id: "NETP3-04.1.3", description: "Install wiring systems and equipment to required standards." },
         ],
       },
     ],
   },
   {
-    code: "NVQ_U5",
-    title: "Testing and Commissioning Electrical Equipment",
-    description: "Test and commission electrical equipment.",
+    id: "NETP3-05",
+    title: "Inspecting and testing wiring systems and associated equipment",
     qualification: "NVQ",
     learningOutcomes: [
       {
-        code: "NVQ_U5_LO1",
-        description: "Perform pre-commissioning checks.",
+        id: "NETP3-05.1",
+        description: "Inspect and test wiring systems and associated equipment.",
         performanceCriteria: [
-          { code: "NVQ_U5_PC1.1", description: "Verify correct installation." },
-          { code: "NVQ_U5_PC1.2", description: "Conduct insulation resistance tests." },
-        ],
-      },
-      {
-        code: "NVQ_U5_LO2",
-        description: "Execute commissioning procedures.",
-        performanceCriteria: [
-          { code: "NVQ_U5_PC2.1", description: "Perform functional tests." },
-          { code: "NVQ_U5_PC2.2", description: "Record commissioning data." },
+          { id: "NETP3-05.1.1", description: "Perform visual inspections of wiring systems." },
+          { id: "NETP3-05.1.2", description: "Conduct electrical tests using appropriate instruments." },
+          { id: "NETP3-05.1.3", description: "Interpret test results and identify faults." },
         ],
       },
     ],
   },
   {
-    code: "NVQ_U6",
-    title: "Working Effectively and Efficiently in Engineering",
-    description: "Work effectively and efficiently in an engineering environment.",
+    id: "NETP3-06",
+    title: "Diagnosing and correcting faults in wiring systems and associated equipment",
     qualification: "NVQ",
     learningOutcomes: [
       {
-        code: "NVQ_U6_LO1",
-        description: "Plan and organize work activities.",
+        id: "NETP3-06.1",
+        description: "Diagnose and correct faults in wiring systems and associated equipment.",
         performanceCriteria: [
-          { code: "NVQ_U6_PC1.1", description: "Prioritize tasks effectively." },
-          { code: "NVQ_U6_PC1.2", description: "Manage time and resources efficiently." },
-        ],
-      },
-      {
-        code: "NVQ_U6_LO2",
-        description: "Communicate effectively.",
-        performanceCriteria: [
-          { code: "NVQ_U6_PC2.1", description: "Convey information clearly to colleagues." },
-          { code: "NVQ_U6_PC2.2", description: "Listen actively to instructions and feedback." },
+          { id: "NETP3-06.1.1", description: "Apply fault diagnosis techniques." },
+          { id: "NETP3-06.1.2", description: "Locate and rectify faults safely and effectively." },
+          { id: "NETP3-06.1.3", description: "Verify the effectiveness of repairs." },
         ],
       },
     ],
   },
   {
-    code: "NVQ_U7",
-    title: "Using and Communicating Technical Information",
-    description: "Use and communicate technical information.",
+    id: "NETP3-07",
+    title: "Preparing and installing electrical containment systems",
     qualification: "NVQ",
     learningOutcomes: [
       {
-        code: "NVQ_U7_LO1",
-        description: "Interpret technical documents.",
+        id: "NETP3-07.1",
+        description: "Prepare and install electrical containment systems.",
         performanceCriteria: [
-          { code: "NVQ_U7_PC1.1", description: "Read and understand engineering drawings." },
-          { code: "NVQ_U7_PC1.2", description: "Interpret technical specifications." },
-        ],
-      },
-      {
-        code: "NVQ_U7_LO2",
-        description: "Communicate technical information.",
-        performanceCriteria: [
-          { code: "NVQ_U7_PC2.1", description: "Prepare technical reports." },
-          { code: "NVQ_U7_PC2.2", description: "Present technical data clearly." },
+          { id: "NETP3-07.1.1", description: "Interpret drawings and specifications for containment systems." },
+          { id: "NETP3-07.1.2", description: "Select and prepare containment materials." },
+          { id: "NETP3-07.1.3", description: "Install containment systems to required standards." },
         ],
       },
     ],
   },
   {
-    code: "NVQ_U8",
-    title: "Carrying Out Wiring and Connection of Electrical Equipment and Components",
-    description: "Perform wiring and connection tasks.",
+    id: "NETP3-08",
+    title: "Preparing and installing earthing and bonding systems",
     qualification: "NVQ",
     learningOutcomes: [
       {
-        code: "NVQ_U8_LO1",
-        description: "Prepare cables and conductors.",
+        id: "NETP3-08.1",
+        description: "Prepare and install earthing and bonding systems.",
         performanceCriteria: [
-          { code: "NVQ_U8_PC1.1", description: "Strip insulation without damaging conductors." },
-          { code: "NVQ_U8_PC1.2", description: "Crimp and solder terminals correctly." },
-        ],
-      },
-      {
-        code: "NVQ_U8_LO2",
-        description: "Connect electrical components.",
-        performanceCriteria: [
-          { code: "NVQ_U8_PC2.1", description: "Follow wiring diagrams accurately." },
-          { code: "NVQ_U8_PC2.2", description: "Ensure secure and safe connections." },
+          { id: "NETP3-08.1.1", description: "Understand the principles of earthing and bonding." },
+          { id: "NETP3-08.1.2", description: "Select and install earthing and bonding conductors." },
+          { id: "NETP3-08.1.3", description: "Test earthing and bonding systems." },
         ],
       },
     ],
   },
   {
-    code: "NVQ_U9",
-    title: "Inspecting and Testing Electrical Installations",
-    description: "Inspect and test electrical installations.",
+    id: "NETP3-09",
+    title: "Preparing and installing electrical equipment for hazardous areas",
     qualification: "NVQ",
     learningOutcomes: [
       {
-        code: "NVQ_U9_LO1",
-        description: "Conduct visual inspections.",
+        id: "NETP3-09.1",
+        description: "Prepare and install electrical equipment for hazardous areas.",
         performanceCriteria: [
-          { code: "NVQ_U9_PC1.1", description: "Check for physical damage and correct installation." },
-          { code: "NVQ_U9_PC1.2", description: "Verify compliance with regulations." },
-        ],
-      },
-      {
-        code: "NVQ_U9_LO2",
-        description: "Perform electrical tests.",
-        performanceCriteria: [
-          { code: "NVQ_U9_PC2.1", description: "Measure earth electrode resistance." },
-          { code: "NVQ_U9_PC2.2", description: "Test RCD operation." },
+          { id: "NETP3-09.1.1", description: "Identify hazardous area classifications." },
+          { id: "NETP3-09.1.2", description: "Select appropriate equipment for hazardous areas." },
+          { id: "NETP3-09.1.3", description: "Install equipment to relevant standards for hazardous areas." },
         ],
       },
     ],
   },
   {
-    code: "NVQ_U10",
-    title: "Maintaining and Repairing Electrical Systems",
-    description: "Maintain and repair electrical systems.",
+    id: "NETP3-10",
+    title: "Maintaining electrical equipment and systems",
     qualification: "NVQ",
     learningOutcomes: [
       {
-        code: "NVQ_U10_LO1",
-        description: "Perform preventative maintenance.",
+        id: "NETP3-10.1",
+        description: "Maintain electrical equipment and systems.",
         performanceCriteria: [
-          { code: "NVQ_U10_PC1.1", description: "Clean and inspect system components." },
-          { code: "NVQ_U10_PC1.2", description: "Replace worn parts before failure." },
-        ],
-      },
-      {
-        code: "NVQ_U10_LO2",
-        description: "Rectify system faults.",
-        performanceCriteria: [
-          { code: "NVQ_U10_PC2.1", description: "Isolate faulty sections safely." },
-          { code: "NVQ_U10_PC2.2", description: "Repair or replace defective components." },
+          { id: "NETP3-10.1.1", description: "Perform routine maintenance checks." },
+          { id: "NETP3-10.1.2", description: "Replace faulty components." },
+          { id: "NETP3-10.1.3", description: "Record maintenance activities." },
         ],
       },
     ],
   },
   {
-    code: "NVQ_U11",
-    title: "Installing and Connecting Wiring Systems",
-    description: "Install and connect wiring systems.",
+    id: "NETP3-11",
+    title: "Installing and commissioning electrical systems",
     qualification: "NVQ",
     learningOutcomes: [
       {
-        code: "NVQ_U11_LO1",
-        description: "Prepare wiring routes.",
+        id: "NETP3-11.1",
+        description: "Install and commission electrical systems.",
         performanceCriteria: [
-          { code: "NVQ_U11_PC1.1", description: "Select appropriate containment systems." },
-          { code: "NVQ_U11_PC1.2", description: "Install conduits and trunking." },
-        ],
-      },
-      {
-        code: "NVQ_U11_LO2",
-        description: "Install and terminate cables.",
-        performanceCriteria: [
-          { code: "NVQ_U11_PC2.1", description: "Pull cables through containment." },
-          { code: "NVQ_U11_PC2.2", description: "Terminate cables at accessories and equipment." },
+          { id: "NETP3-11.1.1", description: "Plan and prepare for system installation." },
+          { id: "NETP3-11.1.2", description: "Install system components." },
+          { id: "NETP3-11.1.3", description: "Perform commissioning tests." },
         ],
       },
     ],
   },
   {
-    code: "NVQ_U12",
-    title: "Maintaining and Servicing Electrical Control Systems",
-    description: "Maintain and service electrical control systems.",
+    id: "NETP3-12",
+    title: "Working with electrical drawings and specifications",
     qualification: "NVQ",
     learningOutcomes: [
       {
-        code: "NVQ_U12_LO1",
-        description: "Diagnose faults in control systems.",
+        id: "NETP3-12.1",
+        description: "Work with electrical drawings and specifications.",
         performanceCriteria: [
-          { code: "NVQ_U12_PC1.1", description: "Interpret control circuit diagrams." },
-          { code: "NVQ_U12_PC1.2", description: "Use diagnostic tools to identify component failures." },
-        ],
-      },
-      {
-        code: "NVQ_U12_LO2",
-        description: "Perform maintenance on control systems.",
-        performanceCriteria: [
-          { code: "NVQ_U12_PC2.1", description: "Calibrate sensors and actuators." },
-          { code: "NVQ_U12_PC2.2", description: "Replace faulty relays and contactors." },
+          { id: "NETP3-12.1.1", description: "Interpret electrical schematics and diagrams." },
+          { id: "NETP3-12.1.2", description: "Understand technical specifications." },
+          { id: "NETP3-12.1.3", description: "Identify discrepancies in documentation." },
         ],
       },
     ],
   },
   {
-    code: "NVQ_U13",
-    title: "Installing and Commissioning Electrical Control Systems",
-    description: "Install and commission electrical control systems.",
+    id: "NETP3-13",
+    title: "Applying environmental legislation and working practices",
     qualification: "NVQ",
     learningOutcomes: [
       {
-        code: "NVQ_U13_LO1",
-        description: "Install control panels and components.",
+        id: "NETP3-13.1",
+        description: "Apply environmental legislation and working practices.",
         performanceCriteria: [
-          { code: "NVQ_U13_PC1.1", description: "Mount control panel enclosures." },
-          { code: "NVQ_U13_PC1.2", description: "Wire internal components of control panels." },
-        ],
-      },
-      {
-        code: "NVQ_U13_LO2",
-        description: "Commission control systems.",
-        performanceCriteria: [
-          { code: "NVQ_U13_PC2.1", description: "Perform power-up tests." },
-          { code: "NVQ_U13_PC2.2", description: "Verify system functionality and safety interlocks." },
+          { id: "NETP3-13.1.1", description: "Comply with environmental regulations." },
+          { id: "NETP3-13.1.2", description: "Implement waste management procedures." },
+          { id: "NETP3-13.1.3", description: "Promote energy efficiency." },
         ],
       },
     ],
   },
   {
-    code: "NVQ_U14",
-    title: "Working with Programmable Logic Controllers (PLCs)",
-    description: "Work with Programmable Logic Controllers (PLCs).",
+    id: "NETP3-14",
+    title: "Using and communicating technical information",
     qualification: "NVQ",
     learningOutcomes: [
       {
-        code: "NVQ_U14_LO1",
-        description: "Understand PLC hardware and software.",
+        id: "NETP3-14.1",
+        description: "Use and communicate technical information.",
         performanceCriteria: [
-          { code: "NVQ_U14_PC1.1", description: "Identify different types of PLC modules." },
-          { code: "NVQ_U14_PC1.2", description: "Explain basic PLC programming languages." },
-        ],
-      },
-      {
-        code: "NVQ_U14_LO2",
-        description: "Program and troubleshoot PLCs.",
-        performanceCriteria: [
-          { code: "NVQ_U14_PC2.1", description: "Write simple ladder logic programs." },
-          { code: "NVQ_U14_PC2.2", description: "Diagnose and resolve PLC program errors." },
+          { id: "NETP3-14.1.1", description: "Access and interpret technical documents." },
+          { id: "NETP3-14.1.2", description: "Communicate technical information clearly." },
+          { id: "NETP3-14.1.3", description: "Record technical data accurately." },
         ],
       },
     ],
   },
   {
-    code: "NVQ_U15",
-    title: "Maintaining and Repairing Rotating Electrical Machines",
-    description: "Maintain and repair rotating electrical machines.",
+    id: "NETP3-15",
+    title: "Carrying out fault diagnosis on complex electrical systems",
     qualification: "NVQ",
     learningOutcomes: [
       {
-        code: "NVQ_U15_LO1",
-        description: "Perform preventative maintenance on motors.",
+        id: "NETP3-15.1",
+        description: "Carry out fault diagnosis on complex electrical systems.",
         performanceCriteria: [
-          { code: "NVQ_U15_PC1.1", description: "Inspect motor windings and bearings." },
-          { code: "NVQ_U15_PC1.2", description: "Lubricate motor components." },
-        ],
-      },
-      {
-        code: "NVQ_U15_LO2",
-        description: "Diagnose and repair motor faults.",
-        performanceCriteria: [
-          { code: "NVQ_U15_PC2.1", description: "Test motor insulation and continuity." },
-          { code: "NVQ_U15_PC2.2", description: "Replace faulty motor components." },
+          { id: "NETP3-15.1.1", description: "Apply advanced diagnostic techniques." },
+          { id: "NETP3-15.1.2", description: "Use specialist test equipment." },
+          { id: "NETP3-15.1.3", description: "Analyse complex fault symptoms." },
         ],
       },
     ],
   },
   {
-    code: "NVQ_U16",
-    title: "Working with Electrical Drawings and Schematics",
-    description: "Work with electrical drawings and schematics.",
+    id: "NETP3-16",
+    title: "Planning and preparing for electrical installation work",
     qualification: "NVQ",
     learningOutcomes: [
       {
-        code: "NVQ_U16_LO1",
-        description: "Interpret electrical symbols and conventions.",
+        id: "NETP3-16.1",
+        description: "Plan and prepare for electrical installation work.",
         performanceCriteria: [
-          { code: "NVQ_U16_PC1.1", description: "Identify common electrical symbols." },
-          { code: "NVQ_U16_PC1.2", description: "Understand line diagrams and wiring diagrams." },
-        ],
-      },
-      {
-        code: "NVQ_U16_LO2",
-        description: "Create simple electrical drawings.",
-        performanceCriteria: [
-          { code: "NVQ_U16_PC2.1", description: "Draw basic circuit diagrams." },
-          { code: "NVQ_U16_PC2.2", description: "Annotate drawings with relevant information." },
+          { id: "NETP3-16.1.1", description: "Assess site conditions and requirements." },
+          { id: "NETP3-16.1.2", description: "Obtain necessary permits and approvals." },
+          { id: "NETP3-16.1.3", description: "Organise tools, equipment, and materials." },
         ],
       },
     ],
   },
   {
-    code: "NVQ_U17",
-    title: "Applying Environmental Regulations in Electrical Work",
-    description: "Apply environmental regulations in electrical work.",
+    id: "NETP3-17",
+    title: "Undertaking electrical installation work",
     qualification: "NVQ",
     learningOutcomes: [
       {
-        code: "NVQ_U17_LO1",
-        description: "Comply with environmental legislation.",
+        id: "NETP3-17.1",
+        description: "Undertake electrical installation work.",
         performanceCriteria: [
-          { code: "NVQ_U17_PC1.1", description: "Identify environmental regulations relevant to electrical waste." },
-          { code: "NVQ_U17_PC1.2", description: "Follow procedures for hazardous waste disposal." },
-        ],
-      },
-      {
-        code: "NVQ_U17_LO2",
-        description: "Implement sustainable practices.",
-        performanceCriteria: [
-          { code: "NVQ_U17_PC2.1", description: "Minimize energy consumption in electrical installations." },
-          { code: "NVQ_U17_PC2.2", description: "Promote the use of renewable energy sources." },
+          { id: "NETP3-17.1.1", description: "Install electrical components and systems." },
+          { id: "NETP3-17.1.2", description: "Terminate and connect cables." },
+          { id: "NETP3-17.1.3", description: "Ensure installations comply with regulations." },
         ],
       },
     ],
   },
 ]
-
-export const allEALUnits = ealUnits

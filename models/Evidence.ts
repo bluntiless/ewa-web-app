@@ -1,40 +1,25 @@
-export enum AssessmentStatus {
-  NotStarted = "not-started",
-  Pending = "pending",
-  Approved = "approved",
-  Rejected = "rejected",
-  NeedsRevision = "needs-revision",
-}
-
 export interface Evidence {
   id: string
-  criteriaCode: string
-  unitCode: string
   title: string
   description: string
-  dateUploaded: string
-  assessmentStatus: AssessmentStatus
-  assessorFeedback?: string
-  assessorName?: string
-  assessmentDate?: string
-  webUrl: string
-  downloadUrl?: string
+  uploadedBy: string
+  uploadDate: string
+  status: "Pending" | "Approved" | "Rejected"
+  fileUrl?: string // Optional: URL to the actual file
+  unitId: string
+  criterionId: string
 }
 
 export interface EvidenceMetadata {
   id: string
-  name: string
-  webUrl?: string
-  downloadUrl?: string
-  size: number
-  mimeType: string
-  createdDateTime: Date
-  lastModifiedDateTime: Date
-  assessmentStatus?: AssessmentStatus
-  assessorFeedback?: string
-  assessorName?: string
-  assessmentDate?: Date | string | null
-  criteriaCode?: string
-  unitCode?: string
-  description?: string
+  title: string
+  description: string
+  uploadedBy: string
+  uploadDate: string
+  status: "Pending" | "Approved" | "Rejected"
+  unitId: string
+  criterionId: string
+  fileType: string // e.g., "pdf", "jpg", "docx"
+  fileSize: string // e.g., "2.5 MB"
+  thumbnailUrl?: string // Optional: URL to a thumbnail image
 }

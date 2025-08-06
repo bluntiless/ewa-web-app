@@ -1,130 +1,106 @@
-'use client'
+"use client"
 
-import { useSearchParams } from "next/navigation"
-import { useMemo } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Search } from 'lucide-react'
+import { useState, useMemo } from "react"
 import { allUnits } from "@/data/units"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle, Circle, XCircle, ArrowLeft } from 'lucide-react'
-import Link from "next/link"
 
 export default function CriteriaPage() {
-  const searchParams = useSearchParams()
-  const unitCode = searchParams.get("unit")
-  const criteriaCode = searchParams.get("criteria")
+  const [searchTerm, setSearchTerm] = useState("")
 
-  const unit = useMemo(() => {
-    return allUnits.find((u) => u.code === unitCode)
-  }, [unitCode])
-
-  const learningOutcome = useMemo(() => {
-    return unit?.learningOutcomes.find((lo) =>
-      lo.performanceCriteria.some((pc) => pc.code === criteriaCode)
-    )
-  }, [unit, criteriaCode])
-
-  const performanceCriteria = useMemo(() => {
-    return learningOutcome?.performanceCriteria.find((pc) => pc.code === criteriaCode)
-  }, [learningOutcome, criteriaCode])
-
-  // Mock function for progress - replace with actual logic later
-  const getCriteriaStatus = (code: string) => {
-    // In a real app, this would fetch actual status from a backend/context
-    const statuses = ["completed", "in-progress", "not-started"]
-    return statuses[Math.floor(Math.random() * statuses.length)]
-  }
-
-  if (!unit || !learningOutcome || !performanceCriteria) {
-    return (
-      <div className="min-h-screen bg-neutral-950 text-white p-4 flex flex-col items-center justify-center">
-        <h1 className="text-2xl font-bold mb-4">Criteria Not Found</h1>
-        <p className="text-neutral-400 mb-6">
-          The unit or performance criteria you are looking for could not be found.
-        </p>
-        <Link href="/units" passHref>
-          <Button className="bg-blue-600 hover:bg-blue-700">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Units
-          </Button>
-        </Link>
-      </div>
-    )
-  }
-
-  const status = getCriteriaStatus(performanceCriteria.code)
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "completed":
-        return "bg-green-500/20 text-green-400 border-green-500/30"
-      case "in-progress":
-        return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
-      case "not-started":
-      default:
-        return "bg-neutral-500/20 text-neutral-400 border-neutral-500/30"
+  const filteredUnits = useMemo(() => {
+    if (!searchTerm) {
+      return allUnits
     }
-  }
+    const lowerCaseSearchTerm = searchTerm.toLowerCase()
+    return allUnits
+      .map((unit) => {
+        const filteredLearningOutcomes = unit.learningOutcomes
+          .map((lo) => {
+            const filteredPerformanceCriteria = lo.performanceCriteria.filter(
+              (pc) =>
+                pc.id.toLowerCase().includes(lowerCaseSearchTerm) ||
+                pc.description.toLowerCase().includes(lowerCaseSearchTerm),
+            )
+            return { ...lo, performanceCriteria: filteredPerformanceCriteria }
+          })
+          .filter((lo) => lo.performanceCriteria.length > 0)
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "completed":
-        return <CheckCircle className="h-5 w-5 text-green-500" />
-      case "in-progress":
-        return <Circle className="h-5 w-5 text-yellow-500" />
-      case "not-started":
-      default:
-        return <XCircle className="h-5 w-5 text-neutral-500" />
-    }
-  }
+        if (
+          unit.id.toLowerCase().includes(lowerCaseSearchTerm) ||
+          unit.title.toLowerCase().includes(lowerCaseSearchTerm) ||
+          filteredLearningOutcomes.length > 0
+        ) {
+          return { ...unit, learningOutcomes: filteredLearningOutcomes }
+        }
+        return null
+      })
+      .filter(Boolean)
+  }, [searchTerm])
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white p-4 sm:p-6 lg:p-8">
-      <div className="max-w-4xl mx-auto">
-        <Link href="/units" passHref>
-          <Button variant="outline" className="mb-6 flex items-center">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Units
-          </Button>
-        </Link>
+    <div className="container mx-auto p-4">
+      <Card className="w-full max-w-4xl mx-auto">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">All Criteria</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+            <Input
+              type="text"
+              placeholder="Search criteria by ID or description..."
+              className="pl-10 pr-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
 
-        <Card className="bg-neutral-900 border-neutral-800 mb-6">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="bg-blue-600 text-white">
-                  {unit.qualification}
-                </Badge>
-                <CardTitle className="text-2xl">{unit.code}</CardTitle>
-              </div>
-              <Badge className={getStatusColor(status)}>
-                {getStatusIcon(status)}
-                <span className="ml-2">{status.charAt(0).toUpperCase() + status.slice(1)}</span>
-              </Badge>
-            </div>
-            <CardDescription className="text-neutral-300">{unit.title}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-neutral-400">{unit.description}</p>
-          </CardContent>
-        </Card>
+          {filteredUnits.length === 0 && (
+            <p className="text-center text-gray-500">No criteria found matching your search.</p>
+          )}
 
-        <Card className="bg-neutral-900 border-neutral-800">
-          <CardHeader>
-            <CardTitle className="text-xl">Learning Outcome: {learningOutcome.code}</CardTitle>
-            <CardDescription className="text-neutral-300">{learningOutcome.description}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <h3 className="text-lg font-semibold mb-3">Performance Criteria: {performanceCriteria.code}</h3>
-            <p className="text-neutral-400 mb-4">{performanceCriteria.description}</p>
-
-            <div className="flex gap-4">
-              <Button className="bg-green-600 hover:bg-green-700">Mark as Completed</Button>
-              <Button variant="outline">Upload Evidence</Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          <Accordion type="multiple" className="w-full">
+            {filteredUnits.map((unit) => (
+              <Card key={unit.id} className="mb-4">
+                <AccordionItem value={unit.id}>
+                  <AccordionTrigger className="p-4 text-left hover:no-underline">
+                    <div className="flex flex-col items-start">
+                      <h3 className="text-lg font-semibold">
+                        {unit.id}: {unit.title}
+                      </h3>
+                      <Badge variant="secondary" className="mt-1">
+                        {unit.qualification}
+                      </Badge>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="p-4 pt-0">
+                    <div className="space-y-4">
+                      {unit.learningOutcomes.map((lo) => (
+                        <div key={lo.id} className="border rounded-md p-3 bg-gray-50">
+                          <h4 className="font-medium text-md mb-2">
+                            {lo.id}. {lo.description}
+                          </h4>
+                          <ul className="list-disc list-inside space-y-1 text-gray-700">
+                            {lo.performanceCriteria.map((pc) => (
+                              <li key={pc.id}>
+                                <strong>{pc.id}:</strong> {pc.description}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Card>
+            ))}
+          </Accordion>
+        </CardContent>
+      </Card>
     </div>
   )
 }

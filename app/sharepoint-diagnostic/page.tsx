@@ -1,519 +1,176 @@
 "use client"
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { CheckCircle, XCircle, AlertTriangle, Loader2, RefreshCw, Globe, Shield, Database, FileText, Settings } from 'lucide-react'
-import { msalInstance, loginRequest } from "@/lib/msalInstance"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Separator } from "@/components/ui/separator"
+import { useState } from "react"
 import { SharePointService } from "@/services/SharePointService"
-
-interface DiagnosticTest {
-  id: string
-  name: string
-  description: string
-  status: "pending" | "running" | "passed" | "failed" | "warning"
-  result?: string
-  error?: string
-  details?: any
-}
+import { Loader2 } from 'lucide-react'
 
 export default function SharePointDiagnosticPage() {
-  const [tests, setTests] = useState<DiagnosticTest[]>([
-    {
-      id: "browser",
-      name: "Browser Compatibility",
-      description: "Check if browser supports required features",
-      status: "pending",
-    },
-    {
-      id: "msal-config",
-      name: "MSAL Configuration",
-      description: "Verify MSAL client configuration",
-      status: "pending",
-    },
-    {
-      id: "auth",
-      name: "Authentication",
-      description: "Test Azure AD authentication flow",
-      status: "pending",
-    },
-    {
-      id: "sharepoint-access",
-      name: "SharePoint Site Access",
-      description: "Test access to SharePoint site",
-      status: "pending",
-    },
-    {
-      id: "drive-access",
-      name: "Drive Access",
-      description: "Test access to SharePoint document library",
-      status: "pending",
-    },
-    {
-      id: "evidence-retrieval",
-      name: "Evidence Retrieval",
-      description: "Test retrieving evidence files",
-      status: "pending",
-    },
-  ])
+  const [siteUrl, setSiteUrl] = useState("")
+  const [siteInfo, setSiteInfo] = useState<any>(null)
+  const [siteError, setSiteError] = useState<string | null>(null)
+  const [isLoadingSiteInfo, setIsLoadingSiteInfo] = useState(false)
 
-  const [isRunning, setIsRunning] = useState(false)
-  const [currentTest, setCurrentTest] = useState<string | null>(null)
+  const [folderPath, setFolderPath] = useState("")
+  const [folderContents, setFolderContents] = useState<any[] | null>(null)
+  const [folderError, setFolderError] = useState<string | null>(null)
+  const [isLoadingFolderContents, setIsLoadingFolderContents] = useState(false)
 
-  const updateTest = (id: string, updates: Partial<DiagnosticTest>) => {
-    setTests((prev) => prev.map((test) => (test.id === id ? { ...test, ...updates } : test)))
-  }
+  const [uploadFile, setUploadFile] = useState<File | null>(null)
+  const [uploadStatus, setUploadStatus] = useState<string | null>(null)
+  const [uploadError, setUploadError] = useState<string | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
 
-  const runTest = async (testId: string) => {
-    setCurrentTest(testId)
-    updateTest(testId, { status: "running" })
-
+  const handleGetSiteInfo = async () => {
+    setSiteInfo(null)
+    setSiteError(null)
+    if (!siteUrl) {
+      setSiteError("Please enter a SharePoint site URL.")
+      return
+    }
+    setIsLoadingSiteInfo(true)
     try {
-      switch (testId) {
-        case "browser":
-          await testBrowserCompatibility(testId)
-          break
-        case "msal-config":
-          await testMsalConfiguration(testId)
-          break
-        case "auth":
-          await testAuthentication(testId)
-          break
-        case "sharepoint-access":
-          await testSharePointAccess(testId)
-          break
-        case "drive-access":
-          await testDriveAccess(testId)
-          break
-        case "evidence-retrieval":
-          await testEvidenceRetrieval(testId)
-          break
-      }
-    } catch (error) {
-      updateTest(testId, {
-        status: "failed",
-        error: error instanceof Error ? error.message : "Unknown error",
-      })
+      const info = await SharePointService.getSiteInfo(siteUrl)
+      setSiteInfo(info)
+    } catch (error: any) {
+      setSiteError(error.message || "Failed to get site information.")
+    } finally {
+      setIsLoadingSiteInfo(false)
     }
   }
 
-  const testBrowserCompatibility = async (testId: string) => {
-    const features = {
-      localStorage: typeof Storage !== "undefined",
-      sessionStorage: typeof sessionStorage !== "undefined",
-      fetch: typeof fetch !== "undefined",
-      promises: typeof Promise !== "undefined",
-      crypto: typeof crypto !== "undefined",
+  const handleGetFolderContents = async () => {
+    setFolderContents(null)
+    setFolderError(null)
+    if (!siteUrl || !folderPath) {
+      setFolderError("Please enter both a site URL and a folder path.")
+      return
     }
-
-    const allSupported = Object.values(features).every(Boolean)
-
-    updateTest(testId, {
-      status: allSupported ? "passed" : "failed",
-      result: allSupported ? "All required features supported" : "Some features missing",
-      details: features,
-    })
-  }
-
-  const testMsalConfiguration = async (testId: string) => {
+    setIsLoadingFolderContents(true)
     try {
-      await msalInstance.initialize()
-      const config = msalInstance.getConfiguration()
-
-      const currentOrigin = window.location.origin
-      const configuredRedirectUri = config.auth.redirectUri
-
-      const isRedirectUriCorrect = configuredRedirectUri === currentOrigin
-
-      updateTest(testId, {
-        status: isRedirectUriCorrect ? "passed" : "warning",
-        result: isRedirectUriCorrect
-          ? "MSAL configuration is correct"
-          : `Redirect URI mismatch: configured=${configuredRedirectUri}, current=${currentOrigin}`,
-        details: {
-          clientId: config.auth.clientId,
-          authority: config.auth.authority,
-          redirectUri: configuredRedirectUri,
-          currentOrigin,
-          isRedirectUriCorrect,
-        },
-      })
-    } catch (error) {
-      updateTest(testId, {
-        status: "failed",
-        error: error instanceof Error ? error.message : "MSAL initialization failed",
-      })
+      const contents = await SharePointService.getFolderContents(siteUrl, folderPath)
+      setFolderContents(contents)
+    } catch (error: any) {
+      setFolderError(error.message || "Failed to get folder contents.")
+    } finally {
+      setIsLoadingFolderContents(false)
     }
   }
 
-  const testAuthentication = async (testId: string) => {
+  const handleFileUpload = async () => {
+    setUploadStatus(null)
+    setUploadError(null)
+    if (!siteUrl || !folderPath || !uploadFile) {
+      setUploadError("Please provide site URL, folder path, and select a file.")
+      return
+    }
+    setIsUploading(true)
     try {
-      // Check if user is already authenticated
-      const accounts = msalInstance.getAllAccounts()
-
-      if (accounts.length === 0) {
-        // Try to authenticate
-        const response = await msalInstance.loginPopup(loginRequest)
-        updateTest(testId, {
-          status: "passed",
-          result: `Authenticated as ${response.account?.username}`,
-          details: {
-            account: response.account,
-            scopes: response.scopes,
-          },
-        })
-      } else {
-        // User already authenticated
-        updateTest(testId, {
-          status: "passed",
-          result: `Already authenticated as ${accounts[0].username}`,
-          details: {
-            account: accounts[0],
-          },
-        })
-      }
-    } catch (error) {
-      updateTest(testId, {
-        status: "failed",
-        error: error instanceof Error ? error.message : "Authentication failed",
-      })
+      setUploadStatus("Uploading...")
+      const result = await SharePointService.uploadFile(siteUrl, folderPath, uploadFile)
+      setUploadStatus(`File uploaded successfully: ${result.name}`)
+      setUploadFile(null) // Clear selected file
+    } catch (error: any) {
+      setUploadError(error.message || "Failed to upload file.")
+      setUploadStatus(null)
+    } finally {
+      setIsUploading(false)
     }
   }
-
-  const testSharePointAccess = async (testId: string) => {
-    try {
-      const accounts = msalInstance.getAllAccounts()
-      if (accounts.length === 0) {
-        throw new Error("Not authenticated")
-      }
-
-      const sharePointService = SharePointService.getInstance()
-      const sites = await sharePointService.getAllAccessibleSites() // Changed to getAllAccessibleSites
-
-      updateTest(testId, {
-        status: "passed",
-        result: `Found ${sites.length} SharePoint sites`,
-        details: { sites: sites.slice(0, 3) }, // Show first 3 sites
-      })
-    } catch (error) {
-      updateTest(testId, {
-        status: "failed",
-        error: error instanceof Error ? error.message : "SharePoint access failed",
-      })
-    }
-  }
-
-  const testDriveAccess = async (testId: string) => {
-    try {
-      const accounts = msalInstance.getAllAccounts()
-      if (accounts.length === 0) {
-        throw new Error("Not authenticated")
-      }
-
-      const sharePointService = SharePointService.getInstance()
-      const sites = await sharePointService.getAllAccessibleSites() // Changed to getAllAccessibleSites
-
-      if (sites.length === 0) {
-        throw new Error("No SharePoint sites found")
-      }
-
-      // Assuming the first site found has a drive
-      const siteId = sites[0].id
-      // SharePointService does not have getSiteDrives directly, it's internal to getDriveId
-      // For diagnostic purposes, we can try to get a drive ID
-      const driveId = await sharePointService['getDriveId'](sites[0].webUrl); // Accessing private method for testing
-      
-      updateTest(testId, {
-        status: "passed",
-        result: `Successfully accessed a document library (Drive ID: ${driveId.substring(0, 8)}...)`,
-        details: { driveId: driveId },
-      })
-    } catch (error) {
-      updateTest(testId, {
-        status: "failed",
-        error: error instanceof Error ? error.message : "Drive access failed",
-      })
-    }
-  }
-
-  const testEvidenceRetrieval = async (testId: string) => {
-    try {
-      const accounts = msalInstance.getAllAccounts()
-      if (accounts.length === 0) {
-        throw new Error("Not authenticated")
-      }
-
-      const sharePointService = SharePointService.getInstance()
-      const evidence = await sharePointService.getEvidence() // Using getEvidence
-
-      updateTest(testId, {
-        status: "passed",
-        result: `Found ${evidence.length} evidence files`,
-        details: { files: evidence.slice(0, 5) },
-      })
-    } catch (error) {
-      updateTest(testId, {
-        status: "failed",
-        error: error instanceof Error ? error.message : "Evidence retrieval failed",
-      })
-    }
-  }
-
-  const runAllTests = async () => {
-    setIsRunning(true)
-
-    for (const test of tests) {
-      await runTest(test.id)
-      // Small delay between tests
-      await new Promise((resolve) => setTimeout(resolve, 500))
-    }
-
-    setIsRunning(false)
-    setCurrentTest(null)
-  }
-
-  const resetTests = () => {
-    setTests((prev) =>
-      prev.map((test) => ({
-        ...test,
-        status: "pending" as const,
-        result: undefined,
-        error: undefined,
-        details: undefined,
-      })),
-    )
-    setCurrentTest(null)
-    setIsRunning(false)
-  }
-
-  const getStatusIcon = (status: DiagnosticTest["status"]) => {
-    switch (status) {
-      case "passed":
-        return <CheckCircle className="h-4 w-4 text-green-500" />
-      case "failed":
-        return <XCircle className="h-4 w-4 text-red-500" />
-      case "warning":
-        return <AlertTriangle className="h-4 w-4 text-yellow-500" />
-      case "running":
-        return <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />
-      default:
-        return <div className="h-4 w-4 rounded-full bg-neutral-600" />
-    }
-  }
-
-  const getStatusColor = (status: DiagnosticTest["status"]) => {
-    switch (status) {
-      case "passed":
-        return "bg-green-500/20 text-green-400 border-green-500/30"
-      case "failed":
-        return "bg-red-500/20 text-red-400 border-red-500/30"
-      case "warning":
-        return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
-      case "running":
-        return "bg-blue-500/20 text-blue-400 border-blue-500/30"
-      default:
-        return "bg-neutral-500/20 text-neutral-400 border-neutral-500/30"
-    }
-  }
-
-  const getTestIcon = (testId: string) => {
-    switch (testId) {
-      case "browser":
-        return <Globe className="h-5 w-5" />
-      case "msal-config":
-        return <Settings className="h-5 w-5" />
-      case "auth":
-        return <Shield className="h-5 w-5" />
-      case "sharepoint-access":
-      case "drive-access":
-        return <Database className="h-5 w-5" />
-      case "evidence-retrieval":
-        return <FileText className="h-5 w-5" />
-      default:
-        return <Settings className="h-5 w-5" />
-    }
-  }
-
-  const passedTests = tests.filter((t) => t.status === "passed").length
-  const failedTests = tests.filter((t) => t.status === "failed").length
-  const warningTests = tests.filter((t) => t.status === "warning").length
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white p-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold mb-2">SharePoint Diagnostic Tool</h1>
-          <p className="text-neutral-400">Diagnose and troubleshoot SharePoint integration issues</p>
-        </div>
-
-        {/* Summary */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <Card className="bg-neutral-900 border-neutral-800">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Tests</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{tests.length}</div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-neutral-900 border-neutral-800">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Passed</CardTitle>
-              <CheckCircle className="h-4 w-4 text-green-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-green-400">{passedTests}</div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-neutral-900 border-neutral-800">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Failed</CardTitle>
-              <XCircle className="h-4 w-4 text-red-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-red-400">{failedTests}</div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-neutral-900 border-neutral-800">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Warnings</CardTitle>
-              <AlertTriangle className="h-4 w-4 text-yellow-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-yellow-400">{warningTests}</div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Controls */}
-        <div className="flex gap-4 mb-6">
-          <Button onClick={runAllTests} disabled={isRunning} className="bg-blue-600 hover:bg-blue-700">
-            {isRunning ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Running Tests...
-              </>
-            ) : (
-              <>
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Run All Tests
-              </>
-            )}
-          </Button>
-
-          <Button onClick={resetTests} variant="outline" disabled={isRunning}>
-            Reset Tests
-          </Button>
-        </div>
-
-        {/* Test Results */}
-        <div className="space-y-4">
-          {tests.map((test) => (
-            <Card key={test.id} className="bg-neutral-900 border-neutral-800">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    {getTestIcon(test.id)}
-                    <div>
-                      <CardTitle className="text-lg">{test.name}</CardTitle>
-                      <CardDescription className="text-neutral-400">{test.description}</CardDescription>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {getStatusIcon(test.status)}
-                    <Badge className={getStatusColor(test.status)}>
-                      {test.status.charAt(0).toUpperCase() + test.status.slice(1)}
-                    </Badge>
-                    {!isRunning && test.status !== "running" && (
-                      <Button size="sm" variant="outline" onClick={() => runTest(test.id)}>
-                        Run Test
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </CardHeader>
-
-              {(test.result || test.error) && (
-                <CardContent>
-                  {test.result && (
-                    <Alert className="mb-4">
-                      <AlertDescription>{test.result}</AlertDescription>
-                    </Alert>
-                  )}
-
-                  {test.error && (
-                    <Alert className="mb-4 border-red-500/30 bg-red-500/10">
-                      <XCircle className="h-4 w-4" />
-                      <AlertDescription className="text-red-400">{test.error}</AlertDescription>
-                    </Alert>
-                  )}
-
-                  {test.details && (
-                    <div className="mt-4">
-                      <h4 className="text-sm font-medium mb-2">Details:</h4>
-                      <pre className="text-xs bg-neutral-800 p-3 rounded overflow-x-auto">
-                        {JSON.stringify(test.details, null, 2)}
-                      </pre>
-                    </div>
-                  )}
-                </CardContent>
+    <div className="container mx-auto p-4">
+      <Card className="w-full max-w-4xl mx-auto">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">SharePoint Diagnostic Tool</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold">Site Information</h3>
+            <Label htmlFor="site-url">SharePoint Site URL</Label>
+            <Input
+              id="site-url"
+              type="text"
+              placeholder="e.g., https://yourtenant.sharepoint.com/sites/MySite"
+              value={siteUrl}
+              onChange={(e) => setSiteUrl(e.target.value)}
+            />
+            <Button onClick={handleGetSiteInfo} className="w-full" disabled={isLoadingSiteInfo}>
+              {isLoadingSiteInfo ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Getting Info...
+                </>
+              ) : (
+                "Get Site Info"
               )}
-            </Card>
-          ))}
-        </div>
+            </Button>
+            {siteError && <p className="text-red-500 text-sm">{siteError}</p>}
+            {siteInfo && (
+              <div className="bg-gray-100 p-4 rounded-md text-sm break-all">
+                <h4 className="font-medium">Site Details:</h4>
+                <pre>{JSON.stringify(siteInfo, null, 2)}</pre>
+              </div>
+            )}
+          </div>
 
-        {/* Troubleshooting Guide */}
-        <Card className="bg-neutral-900 border-neutral-800 mt-8">
-          <CardHeader>
-            <CardTitle>Troubleshooting Guide</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <h4 className="font-medium text-yellow-400 mb-2">Redirect URI Mismatch (AADSTS50011)</h4>
-              <p className="text-sm text-neutral-300 mb-2">
-                This error occurs when the redirect URI in your Azure AD app registration doesn't match the current
-                domain.
-              </p>
-              <ul className="text-sm text-neutral-400 space-y-1 ml-4">
-                <li>• Go to Azure Portal → App Registrations → Your App</li>
-                <li>• Navigate to Authentication → Platform configurations</li>
-                <li>
-                  • Add the current domain as a redirect URI:{" "}
-                  <code className="bg-neutral-800 px-1 rounded">
-                    {typeof window !== "undefined" ? window.location.origin : "current-domain"}
-                  </code>
-                </li>
-                <li>• Ensure the app is configured as a Single-Page Application (SPA)</li>
-              </ul>
-            </div>
+          <Separator />
 
-            <div>
-              <h4 className="font-medium text-yellow-400 mb-2">Authentication Issues</h4>
-              <ul className="text-sm text-neutral-400 space-y-1 ml-4">
-                <li>• Clear browser cache and cookies</li>
-                <li>• Try incognito/private browsing mode</li>
-                <li>• Check if popup blockers are disabled</li>
-                <li>• Verify the correct scopes are requested</li>
-              </ul>
-            </div>
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold">Folder Contents</h3>
+            <Label htmlFor="folder-path">Folder Path (relative to site)</Label>
+            <Input
+              id="folder-path"
+              type="text"
+              placeholder="e.g., Shared Documents/General"
+              value={folderPath}
+              onChange={(e) => setFolderPath(e.target.value)}
+            />
+            <Button onClick={handleGetFolderContents} className="w-full" disabled={isLoadingFolderContents}>
+              {isLoadingFolderContents ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Getting Contents...
+                </>
+              ) : (
+                "Get Folder Contents"
+              )}
+            </Button>
+            {folderError && <p className="text-red-500 text-sm">{folderError}</p>}
+            {folderContents && (
+              <div className="bg-gray-100 p-4 rounded-md text-sm break-all">
+                <h4 className="font-medium">Folder Contents:</h4>
+                <pre>{JSON.stringify(folderContents, null, 2)}</pre>
+              </div>
+            )}
+          </div>
 
-            <div>
-              <h4 className="font-medium text-yellow-400 mb-2">SharePoint Access Issues</h4>
-              <ul className="text-sm text-neutral-400 space-y-1 ml-4">
-                <li>• Ensure the user has access to the SharePoint site</li>
-                <li>• Verify the correct API permissions are granted</li>
-                <li>• Check if the SharePoint site exists and is accessible</li>
-                <li>• Confirm the site URL is correct</li>
-              </ul>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          <Separator />
+
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold">Upload File</h3>
+            <Label htmlFor="file-upload">Select File</Label>
+            <Input
+              id="file-upload"
+              type="file"
+              onChange={(e) => setUploadFile(e.target.files ? e.target.files[0] : null)}
+            />
+            <Button onClick={handleFileUpload} className="w-full" disabled={!uploadFile || isUploading}>
+              {isUploading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Uploading...
+                </>
+              ) : (
+                "Upload File"
+              )}
+            </Button>
+            {uploadStatus && <p className="text-green-600 text-sm">{uploadStatus}</p>}
+            {uploadError && <p className="text-red-500 text-sm">{uploadError}</p>}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

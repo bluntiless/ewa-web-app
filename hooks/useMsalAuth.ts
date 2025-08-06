@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import type { AccountInfo, AuthenticationResult } from "@azure/msal-browser"
-import { getInitializedMsalInstance, isInteractionInProgress, setInteractionInProgress } from "@/lib/msalInstance"
+import { getInitializedMsalInstance, isInteractionInProgress, setInteractionInProgress } from "../lib/msalInstance" // Corrected import path
 
 export interface UseMsalAuthReturn {
   account: AccountInfo | null
