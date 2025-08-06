@@ -168,10 +168,15 @@ export default function AssessorEvidenceReview() {
                   )}
                 </div>
                 <button
-                  onClick={() => setViewingFile({ 
-                    url: evidence.downloadUrl || evidence.webUrl, 
-                    name: evidence.name 
-                  })}
+                  onClick={() => {
+                    const fileUrl = evidence.downloadUrl || evidence.webUrl;
+                    if (fileUrl) {
+                      setViewingFile({ 
+                        url: fileUrl, 
+                        name: evidence.name 
+                      });
+                    }
+                  }}
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
                 >
                   View File
