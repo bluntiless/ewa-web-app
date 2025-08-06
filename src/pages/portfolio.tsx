@@ -209,7 +209,7 @@ export default function PortfolioPage() {
       const allEvidence: EvidenceMetadata[] = [];
       
       // Get unique unit codes from existing evidence
-      const unitCodes = [...new Set(evidenceItems.map(item => item.unitCode))];
+      const unitCodes = Array.from(new Set(evidenceItems.map(item => item.unitCode)));
       
       for (const unitCode of unitCodes) {
         try {
