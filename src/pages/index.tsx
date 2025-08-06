@@ -32,30 +32,7 @@ const qualifications = [
   },
 ];
 
-// City & Guilds qualifications
-const cityAndGuildsQualifications = [
-  {
-    id: 'cg-performance',
-    title: 'City & Guilds 2357 - Performance Units',
-    subtitle: '8 Performance Units for City & Guilds 2357',
-    progress: 0,
-    units: 8,
-  },
-  {
-    id: 'cg-knowledge',
-    title: 'City & Guilds 2357 - Knowledge Units',
-    subtitle: '9 Knowledge Units for City & Guilds 2357',
-    progress: 0,
-    units: 9,
-  },
-  {
-    id: 'cg-all',
-    title: 'City & Guilds 2357 - All Units',
-    subtitle: 'Complete City & Guilds 2357 Level 3 Qualification',
-    progress: 0,
-    units: 17,
-  },
-];
+
 
 export default function Home() {
   const router = useRouter();
@@ -136,30 +113,7 @@ export default function Home() {
             </button>
           ))}
         </div>
-        {/* City & Guilds Qualifications */}
-        <h2 className="text-2xl font-bold mb-4 text-blue-400">City & Guilds Qualifications</h2>
-        <div className="space-y-6">
-          {cityAndGuildsQualifications.map((q) => (
-            <button
-              key={q.id}
-              className="w-full text-left bg-neutral-900 rounded-2xl shadow-lg px-6 py-5 flex flex-col gap-2 hover:bg-neutral-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600"
-              onClick={() => handleQualificationClick(q.id)}
-            >
-              <div className="text-xl font-bold leading-tight">{q.title}</div>
-              <div className="text-neutral-400 text-base mb-1">{q.subtitle}</div>
-              <div className="flex items-center justify-between text-xs text-neutral-400 mb-1">
-                <span>{q.progress}% Complete</span>
-                <span>{`0/${q.units} Units`}</span>
-              </div>
-              <div className="w-full h-2 bg-neutral-800 rounded-full overflow-hidden">
-                <div
-                  className="h-2 bg-blue-600 rounded-full transition-all duration-300"
-                  style={{ width: `${q.progress}%` }}
-                ></div>
-              </div>
-            </button>
-          ))}
-        </div>
+
         <BottomNavigation />
         {error && (
           <div className="fixed bottom-32 left-4 right-4 bg-red-900 bg-opacity-80 border border-red-500 rounded-xl py-3 px-4 text-red-100 shadow-lg">

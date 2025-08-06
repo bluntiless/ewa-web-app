@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState, useRef } from 'react';
 import { ewaUnits } from '../data/ewaUnits';
 import { nvqUnits, rplUnits, allUnits } from '../data/units';
-import { units2357 } from '../data/cityAndGuildsUnits';
+
 import { Unit, LearningOutcome, PerformanceCriteria, UnitModel, UnitType } from '../models/Unit';
 import BottomNavigation from '../components/BottomNavigation';
 import { useMsalAuth } from '../lib/useMsalAuth';
@@ -165,22 +165,7 @@ export default function Criteria() {
           case 'rpl':
             selectedUnit = rplUnits.find(u => u.code === unitCode);
             break;
-          case 'cg':
-            // For City & Guilds, we need to adapt the unit to match the Unit interface
-            const cgUnit = units2357.find(u => u.code === unitCode);
-            if (cgUnit) {
-              selectedUnit = {
-                id: cgUnit.id,
-                code: cgUnit.code,
-                displayCode: cgUnit.displayCode,
-                reference: cgUnit.code,
-                title: cgUnit.title,
-                type: cgUnit.isPerformanceUnit ? UnitType.EWA : UnitType.NVQ,
-                progress: cgUnit.progress || 0,
-                learningOutcomes: cgUnit.learningOutcomes || []
-              };
-            }
-            break;
+
           default:
             selectedUnit = allUnits.find(u => u.code === unitCode);
         }
@@ -188,22 +173,7 @@ export default function Criteria() {
         // Search in all units if type is not specified
         selectedUnit = allUnits.find(u => u.code === unitCode);
         
-        // If not found in EAL units, check City & Guilds units
-        if (!selectedUnit) {
-          const cgUnit = units2357.find(u => u.code === unitCode);
-          if (cgUnit) {
-            selectedUnit = {
-              id: cgUnit.id,
-              code: cgUnit.code,
-              displayCode: cgUnit.displayCode,
-              reference: cgUnit.code,
-              title: cgUnit.title,
-              type: cgUnit.isPerformanceUnit ? UnitType.EWA : UnitType.NVQ,
-              progress: cgUnit.progress || 0,
-              learningOutcomes: cgUnit.learningOutcomes || []
-            };
-          }
-        }
+
       }
       
       if (selectedUnit) {

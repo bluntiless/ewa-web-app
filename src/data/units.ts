@@ -1,6 +1,6 @@
 import { Unit, UnitType } from '../models/Unit';
 import { allNVQ1605Units } from './ealUnits';
-import { units2357 } from './cityAndGuildsUnits';
+
 
 // Converted from Swift EALUnits.swift to TypeScript
 export const ewaUnits: Unit[] = [
@@ -84,25 +84,10 @@ export const rplUnits: Unit[] = [
   }
 ];
 
-// Also add City & Guilds units to allUnits
 export const allUnits: Unit[] = [
   ...ewaUnits,
   ...nvqUnits,
-  ...rplUnits,
-  // Add adapted City & Guilds units
-  ...units2357.map(unit => ({
-    id: unit.id,
-    code: unit.code,
-    displayCode: unit.displayCode,
-    reference: unit.code,
-    title: unit.title,
-    type: unit.isPerformanceUnit ? UnitType.EWA : UnitType.NVQ,
-    creditValue: unit.creditValue,
-    glh: unit.glh,
-    description: unit.description,
-    progress: unit.progress || 0,
-    learningOutcomes: unit.learningOutcomes || []
-  }))
+  ...rplUnits
 ];
 
 // Helper function to find units by code

@@ -2,9 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { ewaUnits } from '../data/ewaUnits';
 import { nvqUnits, rplUnits } from '../data/units';
-import { units2357, performanceUnits, knowledgeUnits } from '../data/cityAndGuildsUnits';
 import { Unit, UnitType, UnitModel } from '../models/Unit';
-import type { CityAndGuildsUnit } from '../data/cityAndGuildsUnits';
 import BottomNavigation from '../components/BottomNavigation';
 
 export default function Units() {
@@ -17,9 +15,7 @@ export default function Units() {
     totalCriteria: number;
   };
   const [units, setUnits] = useState<ProcessedUnit[]>([]);
-  const [cgUnits, setCgUnits] = useState<CityAndGuildsUnit[]>([]);
   const [qualificationTitle, setQualificationTitle] = useState('');
-  const [isShowingCG, setIsShowingCG] = useState(false);
   
   useEffect(() => {
     // Get qualification type from query string or default to EWA
@@ -27,9 +23,7 @@ export default function Units() {
     
     // Set units and title based on qualification type
     let unitsToShow: Unit[] = [];
-    let cgUnitsToShow: CityAndGuildsUnit[] = [];
     let title = '';
-    let showingCG = false;
     
     switch(qualificationType) {
       case UnitType.EWA:
@@ -44,47 +38,24 @@ export default function Units() {
         unitsToShow = [...rplUnits];
         title = 'Recognition of Prior Learning';
         break;
-      case 'cg':
-      case 'cg-performance':
-        cgUnitsToShow = [...performanceUnits];
-        title = 'City & Guilds 2357 - Performance Units';
-        showingCG = true;
-        break;
-      case 'cg-knowledge':
-        cgUnitsToShow = [...knowledgeUnits];
-        title = 'City & Guilds 2357 - Knowledge Units';
-        showingCG = true;
-        break;
-      case 'cg-all':
-        cgUnitsToShow = [...units2357];
-        title = 'City & Guilds 2357 Units';
-        showingCG = true;
-        break;
       default:
         unitsToShow = [...ewaUnits];
         title = 'Experienced Worker Assessment';
     }
     
-    setIsShowingCG(showingCG);
-    
-    if (showingCG) {
-      // City & Guilds units
-      setCgUnits(cgUnitsToShow);
-    } else {
-      // Use a local type for processed units
-      const processedUnits: ProcessedUnit[] = unitsToShow.map(unit => {
-        const progress = UnitModel.calculateProgress(unit);
-      return {
-        ...unit,
-          progress: progress.approvedPercent,
-          pendingPercent: progress.pendingPercent,
-          approvedCriteria: progress.approved,
-          pendingCriteria: progress.pending,
-          totalCriteria: progress.total
-      };
-    });
-      setUnits(processedUnits);
-    }
+    // Use a local type for processed units
+    const processedUnits: ProcessedUnit[] = unitsToShow.map(unit => {
+      const progress = UnitModel.calculateProgress(unit);
+    return {
+      ...unit,
+        progress: progress.approvedPercent,
+        pendingPercent: progress.pendingPercent,
+        approvedCriteria: progress.approved,
+        pendingCriteria: progress.pending,
+        totalCriteria: progress.total
+    };
+  });
+    setUnits(processedUnits);
     
     setQualificationTitle(title);
   }, [router.query]);

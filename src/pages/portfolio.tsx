@@ -12,6 +12,7 @@ import React from 'react';
 import { Unit, LearningOutcome, PerformanceCriteria } from '../models/Unit';
 import { ProgressView } from '../components/ProgressView';
 import { AssessmentService } from '../services/AssessmentService';
+import { InlineFileViewer } from '../components/InlineFileViewer';
 
 // Helper function to convert SharePointService.Evidence to Model.Evidence
 const toModelEvidence = (spEvidence: SharePointServiceEvidence): ModelEvidence => {
@@ -190,6 +191,7 @@ export default function PortfolioPage() {
 
   // Add state for viewing evidence details
   const [selectedEvidenceForView, setSelectedEvidenceForView] = useState<ModelEvidence | null>(null);
+  const [viewingFile, setViewingFile] = useState<{ url: string; name: string } | null>(null);
 
   // Function to refresh evidence with latest assessment status from SharePoint
   const refreshEvidenceWithStatus = async () => {
@@ -399,25 +401,27 @@ export default function PortfolioPage() {
               <div className="flex justify-between">
                 <div>
                   {selectedEvidenceForView.fileUrl && (
-                    <a 
-                      href={selectedEvidenceForView.fileUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      onClick={() => setViewingFile({ 
+                        url: selectedEvidenceForView.fileUrl!, 
+                        name: selectedEvidenceForView.title 
+                      })}
                       className="text-blue-400 hover:text-blue-300 mr-4"
                     >
-                      Download
-                    </a>
+                      View File
+                    </button>
                   )}
                   
                   {selectedEvidenceForView.sharePointUrl && (
-                    <a 
-                      href={selectedEvidenceForView.sharePointUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      onClick={() => setViewingFile({ 
+                        url: selectedEvidenceForView.sharePointUrl!, 
+                        name: selectedEvidenceForView.title 
+                      })}
                       className="text-blue-400 hover:text-blue-300"
                     >
                       View in SharePoint
-                    </a>
+                    </button>
                   )}
                 </div>
                 <button
@@ -622,6 +626,15 @@ export default function PortfolioPage() {
               View Compiled Portfolio
             </a>
           </div>
+        )}
+
+        {/* Inline file viewer */}
+        {viewingFile && (
+          <InlineFileViewer
+            fileUrl={viewingFile.url}
+            fileName={viewingFile.name}
+            onClose={() => setViewingFile(null)}
+          />
         )}
       </div>
       

@@ -2,7 +2,7 @@ import { Evidence, AssessmentStatus } from '../models/Evidence';
 import { Unit, LearningOutcome, PerformanceCriteria } from '../models/Unit';
 import { ewaUnits } from '../data/ewaUnits';
 import { ealNVQ1605Units } from '../data/ealUnits';
-import { performanceUnits } from '../data/cityAndGuildsUnits';
+
 
 export class PortfolioCompilationError extends Error {
   constructor(message: string) {
@@ -70,7 +70,7 @@ export class PortfolioCompilationService {
 
   // Get all units from all qualifications
   private getAllUnits(): Unit[] {
-    return [...ewaUnits, ...ealNVQ1605Units, ...performanceUnits] as Unit[];
+    return [...ewaUnits, ...ealNVQ1605Units] as Unit[];
   }
 
   // Find unit by code

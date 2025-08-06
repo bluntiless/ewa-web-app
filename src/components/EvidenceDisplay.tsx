@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Evidence, AssessmentStatus } from '../models/Evidence';
+import { InlineFileViewer } from './InlineFileViewer';
 
 interface EvidenceDisplayProps {
   evidence: Evidence[];
@@ -50,6 +51,7 @@ export const EvidenceDisplay: React.FC<EvidenceDisplayProps> = ({
 }) => {
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [viewingFile, setViewingFile] = useState<{ url: string; name: string } | null>(null);
 
   const handleRefresh = async () => {
     if (!onRefreshEvidence) return;
@@ -235,25 +237,21 @@ export const EvidenceDisplay: React.FC<EvidenceDisplayProps> = ({
                 {/* Action buttons */}
                 <div className="mt-4 flex justify-end space-x-2">
                   {item.fileUrl && (
-                    <a 
-                      href={item.fileUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      onClick={() => setViewingFile({ url: item.fileUrl!, name: item.title })}
                       className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
                     >
-                      Download
-                    </a>
+                      View File
+                    </button>
                   )}
                   
                   {item.sharePointUrl && (
-                    <a 
-                      href={item.sharePointUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      onClick={() => setViewingFile({ url: item.sharePointUrl!, name: item.title })}
                       className="px-3 py-1 text-sm bg-neutral-800 rounded hover:bg-neutral-700"
                     >
                       View in SharePoint
-                    </a>
+                    </button>
                   )}
                   
                   {onDeleteEvidence && (
@@ -293,6 +291,15 @@ export const EvidenceDisplay: React.FC<EvidenceDisplayProps> = ({
             </div>
           </div>
         </div>
+      )}
+
+      {/* Inline file viewer */}
+      {viewingFile && (
+        <InlineFileViewer
+          fileUrl={viewingFile.url}
+          fileName={viewingFile.name}
+          onClose={() => setViewingFile(null)}
+        />
       )}
     </div>
   );

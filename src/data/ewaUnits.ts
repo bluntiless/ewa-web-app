@@ -527,12 +527,5 @@ export const qualifications = [
     units: allNVQ1605Units.length,
     unitsData: allNVQ1605Units
   },
-  {
-    id: 'nvq2357',
-    title: 'Level 3 NVQ Diploma in Installing Electrotechnical Systems and Equipment',
-    subtitle: 'City & Guilds 2357 Qualification',
-    progress: 0,
-    units: 17,
-    unitsData: [] // To be populated later
-  }
+
 ]; 

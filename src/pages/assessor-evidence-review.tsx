@@ -4,6 +4,7 @@ import { SharePointService, AssessmentStatus, EvidenceMetadata } from '../servic
 import { AssessmentService } from '../services/AssessmentService';
 import BottomNavigation from '../components/BottomNavigation';
 import { useMsalAuth } from '../lib/useMsalAuth';
+import { InlineFileViewer } from '../components/InlineFileViewer';
 
 export default function AssessorEvidenceReview() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function AssessorEvidenceReview() {
   const [status, setStatus] = useState<AssessmentStatus>(AssessmentStatus.Pending);
   const [feedback, setFeedback] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [viewingFile, setViewingFile] = useState<{ url: string; name: string } | null>(null);
 
   const { evidenceId, candidateName, unitCode, criteriaCode } = router.query;
 
@@ -165,14 +167,15 @@ export default function AssessorEvidenceReview() {
                     <p className="text-gray-400 mt-1">{evidence.description}</p>
                   )}
                 </div>
-                <a
-                  href={evidence.downloadUrl || evidence.webUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={() => setViewingFile({ 
+                    url: evidence.downloadUrl || evidence.webUrl, 
+                    name: evidence.name 
+                  })}
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
                 >
                   View File
-                </a>
+                </button>
               </div>
             </div>
 
@@ -249,6 +252,15 @@ export default function AssessorEvidenceReview() {
           </div>
         )}
       </div>
+      
+      {/* Inline file viewer */}
+      {viewingFile && (
+        <InlineFileViewer
+          fileUrl={viewingFile.url}
+          fileName={viewingFile.name}
+          onClose={() => setViewingFile(null)}
+        />
+      )}
       
       <BottomNavigation />
     </div>
