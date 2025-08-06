@@ -4,7 +4,8 @@ import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, Clock, MapPin, User, CheckCircle, AlertCircle } from "lucide-react"
+import { Calendar, Clock, MapPin, User, CheckCircle, AlertCircle } from 'lucide-react'
+import React from 'react';
 
 interface Assessment {
   id: string
@@ -54,7 +55,7 @@ const mockAssessments: Assessment[] = [
   },
 ]
 
-export default function AssessmentsPage() {
+const AssessmentsPage: React.FC = () => {
   const [selectedType, setSelectedType] = useState<"all" | "EWA" | "NVQ" | "RPL">("all")
 
   const filteredAssessments =
@@ -191,3 +192,5 @@ export default function AssessmentsPage() {
     </div>
   )
 }
+
+export default AssessmentsPage;

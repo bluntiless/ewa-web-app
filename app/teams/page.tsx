@@ -1,5 +1,6 @@
 "use client"
 
+import React from 'react';
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -7,20 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import {
-  Users,
-  MessageCircle,
-  Video,
-  Settings,
-  Search,
-  Send,
-  Phone,
-  Mail,
-  MapPin,
-  Clock,
-  LogOut,
-  LogIn,
-} from "lucide-react"
+import { Users, MessageCircle, Video, Settings, Search, Send, Phone, Mail, MapPin, Clock, LogOut, LogIn } from 'lucide-react'
 import BottomNavigation from "../../components/BottomNavigation"
 import { useMsalAuth } from "../../hooks/useMsalAuth"
 
@@ -53,7 +41,7 @@ interface Message {
   avatar?: string
 }
 
-export default function TeamsPage() {
+const TeamsPage: React.FC = () => {
   const { account, loading, error: msalError, login, logout } = useMsalAuth()
   const [activeTab, setActiveTab] = useState<"teams" | "groups" | "messages">("teams")
   const [searchQuery, setSearchQuery] = useState("")
@@ -483,3 +471,5 @@ export default function TeamsPage() {
     </div>
   )
 }
+
+export default TeamsPage;

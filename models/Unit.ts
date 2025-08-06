@@ -3,7 +3,7 @@ export interface Unit {
   code: string
   title: string
   description: string
-  qualification: string
+  qualification: "EWA" | "NVQ"
   type: string
   creditValue: number
   guidedLearningHours: number
@@ -27,5 +27,4 @@ export interface PerformanceCriteria {
   id: string
   code: string
   description: string
-  status?: 'completed' | 'in_progress' | 'not_started'
 }

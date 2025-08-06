@@ -3,8 +3,9 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle, Clock, AlertTriangle, BookOpen } from "lucide-react"
+import { CheckCircle, Clock, AlertTriangle, BookOpen } from 'lucide-react'
 import type { Unit } from "@/models/Unit"
+import React from 'react';
 
 interface ProgressViewProps {
   units: Unit[]

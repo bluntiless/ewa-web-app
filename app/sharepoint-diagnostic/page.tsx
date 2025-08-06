@@ -5,18 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import {
-  CheckCircle,
-  XCircle,
-  AlertTriangle,
-  Loader2,
-  RefreshCw,
-  Globe,
-  Shield,
-  Database,
-  FileText,
-  Settings,
-} from "lucide-react"
+import { CheckCircle, XCircle, AlertTriangle, Loader2, RefreshCw, Globe, Shield, Database, FileText, Settings } from 'lucide-react'
 import { msalInstance, loginRequest } from "@/lib/msalInstance"
 import { SharePointService } from "@/services/SharePointService"
 
@@ -200,8 +189,8 @@ export default function SharePointDiagnosticPage() {
         throw new Error("Not authenticated")
       }
 
-      const sharePointService = new SharePointService()
-      const sites = await sharePointService.searchSites("EWA")
+      const sharePointService = SharePointService.getInstance()
+      const sites = await sharePointService.getAllAccessibleSites() // Changed to getAllAccessibleSites
 
       updateTest(testId, {
         status: "passed",
@@ -223,19 +212,23 @@ export default function SharePointDiagnosticPage() {
         throw new Error("Not authenticated")
       }
 
-      const sharePointService = new SharePointService()
-      const sites = await sharePointService.searchSites("EWA")
+      const sharePointService = SharePointService.getInstance()
+      const sites = await sharePointService.getAllAccessibleSites() // Changed to getAllAccessibleSites
 
       if (sites.length === 0) {
         throw new Error("No SharePoint sites found")
       }
 
-      const drives = await sharePointService.getSiteDrives(sites[0].id)
-
+      // Assuming the first site found has a drive
+      const siteId = sites[0].id
+      // SharePointService does not have getSiteDrives directly, it's internal to getDriveId
+      // For diagnostic purposes, we can try to get a drive ID
+      const driveId = await sharePointService['getDriveId'](sites[0].webUrl); // Accessing private method for testing
+      
       updateTest(testId, {
         status: "passed",
-        result: `Found ${drives.length} document libraries`,
-        details: { drives: drives.slice(0, 3) },
+        result: `Successfully accessed a document library (Drive ID: ${driveId.substring(0, 8)}...)`,
+        details: { driveId: driveId },
       })
     } catch (error) {
       updateTest(testId, {
@@ -252,24 +245,13 @@ export default function SharePointDiagnosticPage() {
         throw new Error("Not authenticated")
       }
 
-      const sharePointService = new SharePointService()
-      const sites = await sharePointService.searchSites("EWA")
-
-      if (sites.length === 0) {
-        throw new Error("No SharePoint sites found")
-      }
-
-      const drives = await sharePointService.getSiteDrives(sites[0].id)
-      if (drives.length === 0) {
-        throw new Error("No document libraries found")
-      }
-
-      const files = await sharePointService.getDriveItems(drives[0].id)
+      const sharePointService = SharePointService.getInstance()
+      const evidence = await sharePointService.getEvidence() // Using getEvidence
 
       updateTest(testId, {
         status: "passed",
-        result: `Found ${files.length} files in document library`,
-        details: { files: files.slice(0, 5) },
+        result: `Found ${evidence.length} evidence files`,
+        details: { files: evidence.slice(0, 5) },
       })
     } catch (error) {
       updateTest(testId, {

@@ -1,106 +1,151 @@
-import type { Evidence } from "@/models/Evidence"
-import type { Unit } from "@/models/Unit"
-
-export interface PortfolioSection {
-  id: string
-  title: string
-  description: string
-  evidence: Evidence[]
-  completionStatus: "complete" | "incomplete" | "partial"
-}
-
-export interface CompiledPortfolio {
-  id: string
-  studentId: string
-  qualificationType: "EWA" | "NVQ" | "RPL"
-  createdDate: string
-  lastModified: string
-  sections: PortfolioSection[]
-  overallCompletionPercentage: number
-  status: "draft" | "submitted" | "under_review" | "approved" | "rejected"
-}
+import { Evidence } from "@/models/Evidence"
+import { Unit } from "@/models/Unit"
 
 export class PortfolioCompilationService {
-  static async compilePortfolio(
-    studentId: string,
-    qualificationType: "EWA" | "NVQ" | "RPL",
-    units: Unit[],
-    evidence: Evidence[],
-  ): Promise<CompiledPortfolio> {
-    // Group evidence by units and learning outcomes
-    const sections: PortfolioSection[] = units.map((unit) => {
-      const unitEvidence = evidence.filter((e) => e.unitId === unit.id)
+  /**
+   * Compiles a portfolio for a given qualification.
+   * This is a mock implementation. In a real application, this would
+   * involve fetching and organizing actual evidence.
+   * @param qualification The qualification type (e.g., "EWA", "NVQ").
+   * @returns A promise resolving to a compiled portfolio object.
+   */
+  static async compilePortfolio(qualification: "EWA" | "NVQ"): Promise<any> {
+    console.log(`Compiling portfolio for ${qualification} qualification...`)
 
-      return {
-        id: unit.id,
-        title: `${unit.code}: ${unit.title}`,
-        description: unit.description,
-        evidence: unitEvidence,
-        completionStatus: this.calculateSectionCompletionStatus(unit, unitEvidence),
-      }
-    })
+    // Simulate API call delay
+    await new Promise((resolve) => setTimeout(resolve, 1500))
 
-    const overallCompletionPercentage = this.calculateOverallCompletion(sections)
+    // Mock data for compiled portfolio
+    const mockPortfolio = {
+      qualification: qualification,
+      status: "Draft",
+      lastCompiled: new Date().toISOString(),
+      summary: `This is a summary of the ${qualification} portfolio. It includes all collected evidence for the required units and criteria.`,
+      units: [
+        {
+          code: "EWA_U1", // Example unit
+          title: "Health and Safety in the Workplace",
+          progress: "80%",
+          evidenceCount: 5,
+          criteria: [
+            {
+              code: "EWA_U1_PC1.1",
+              status: "Approved",
+              evidence: [
+                {
+                  id: "ev1",
+                  title: "Safety Induction Certificate",
+                  dateUploaded: "2023-01-15",
+                  webUrl: "#",
+                  downloadUrl: "#",
+                  assessmentStatus: "approved",
+                  criteriaCode: "EWA_U1_PC1.1",
+                  unitCode: "EWA_U1",
+                  description: "Certificate of completion for safety induction.",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          code: "NVQ_U5", // Example NVQ unit
+          title: "Testing and Commissioning Electrical Equipment",
+          progress: "50%",
+          evidenceCount: 3,
+          criteria: [
+            {
+              code: "NVQ_U5_PC1.1",
+              status: "Pending",
+              evidence: [
+                {
+                  id: "ev2",
+                  title: "Commissioning Report",
+                  dateUploaded: "2023-03-20",
+                  webUrl: "#",
+                  downloadUrl: "#",
+                  assessmentStatus: "pending",
+                  criteriaCode: "NVQ_U5_PC1.1",
+                  unitCode: "NVQ_U5",
+                  description: "Report detailing commissioning tests.",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    }
 
-    return {
-      id: `portfolio_${Date.now()}`,
-      studentId,
-      qualificationType,
-      createdDate: new Date().toISOString(),
-      lastModified: new Date().toISOString(),
-      sections,
-      overallCompletionPercentage,
-      status: "draft",
+    console.log("Portfolio compiled successfully:", mockPortfolio)
+    return mockPortfolio
+  }
+
+  /**
+   * Submits a compiled portfolio for assessment.
+   * This is a mock implementation.
+   * @param portfolio The compiled portfolio object.
+   * @returns A promise resolving to the submission status.
+   */
+  static async submitPortfolioForAssessment(portfolio: any): Promise<{ success: boolean; message: string }> {
+    console.log("Submitting portfolio for assessment:", portfolio)
+
+    // Simulate API call delay
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+
+    // Simulate success or failure
+    const success = Math.random() > 0.1 // 90% success rate
+    if (success) {
+      return { success: true, message: "Portfolio submitted successfully for assessment." }
+    } else {
+      throw new Error("Failed to submit portfolio. Please try again.")
     }
   }
 
-  private static calculateSectionCompletionStatus(
-    unit: Unit,
-    evidence: Evidence[],
-  ): "complete" | "incomplete" | "partial" {
-    const requiredOutcomes = unit.learningOutcomes.length
-    const completedOutcomes = unit.learningOutcomes.filter((outcome) =>
-      evidence.some((e) => e.learningOutcomeId === outcome.id && e.status === "approved"),
-    ).length
+  /**
+   * Generates a PDF version of the portfolio.
+   * This is a mock implementation.
+   * @param portfolio The compiled portfolio object.
+   * @returns A promise resolving to a URL of the generated PDF.
+   */
+  static async generatePortfolioPdf(portfolio: any): Promise<string> {
+    console.log("Generating PDF for portfolio:", portfolio)
 
-    if (completedOutcomes === 0) return "incomplete"
-    if (completedOutcomes === requiredOutcomes) return "complete"
-    return "partial"
+    // Simulate PDF generation delay
+    await new Promise((resolve) => setTimeout(resolve, 3000))
+
+    const mockPdfUrl = `/placeholder.pdf?portfolioId=${portfolio.qualification}_${Date.now()}`
+    console.log("PDF generated:", mockPdfUrl)
+    return mockPdfUrl
   }
 
-  private static calculateOverallCompletion(sections: PortfolioSection[]): number {
-    if (sections.length === 0) return 0
+  /**
+   * Retrieves a list of all compiled portfolios.
+   * This is a mock implementation.
+   * @returns A promise resolving to an array of compiled portfolios.
+   */
+  static async getCompiledPortfolios(): Promise<any[]> {
+    console.log("Fetching compiled portfolios...")
 
-    const completedSections = sections.filter((s) => s.completionStatus === "complete").length
-    return Math.round((completedSections / sections.length) * 100)
-  }
+    // Simulate API call delay
+    await new Promise((resolve) => setTimeout(resolve, 1000))
 
-  static async generatePortfolioReport(portfolioId: string): Promise<Blob> {
-    // Mock implementation - would generate PDF report
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const mockPdfContent = "Mock PDF content for portfolio report"
-        const blob = new Blob([mockPdfContent], { type: "application/pdf" })
-        resolve(blob)
-      }, 2000)
-    })
-  }
+    const mockPortfolios = [
+      {
+        id: "portfolio-ewa-1",
+        qualification: "EWA",
+        status: "Submitted",
+        lastCompiled: "2024-05-01T10:00:00Z",
+        summary: "EWA portfolio submitted on May 1st.",
+      },
+      {
+        id: "portfolio-nvq-1",
+        qualification: "NVQ",
+        status: "Draft",
+        lastCompiled: "2024-04-20T14:30:00Z",
+        summary: "NVQ portfolio in draft stage, awaiting final evidence.",
+      },
+    ]
 
-  static async submitPortfolio(portfolioId: string): Promise<void> {
-    // Mock implementation - would submit to assessment system
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve()
-      }, 1500)
-    })
-  }
-
-  static async getPortfolioStatus(portfolioId: string): Promise<CompiledPortfolio["status"]> {
-    // Mock implementation
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve("under_review")
-      }, 500)
-    })
+    console.log("Fetched compiled portfolios:", mockPortfolios)
+    return mockPortfolios
   }
 }

@@ -1,24 +1,40 @@
-export interface Evidence {
-  id: string
-  title: string
-  description: string
-  type: "document" | "image" | "video" | "audio" | "other"
-  fileName: string
-  fileSize: number
-  uploadDate: string
-  unitId: string
-  learningOutcomeId: string
-  status: "pending" | "approved" | "rejected" | "needs_revision"
-  assessorComments?: string
-  tags: string[]
-  isConfidential: boolean
+export enum AssessmentStatus {
+  NotStarted = "not-started",
+  Pending = "pending",
+  Approved = "approved",
+  Rejected = "rejected",
+  NeedsRevision = "needs-revision",
 }
 
-export interface EvidenceSubmission {
-  evidenceId: string
-  unitId: string
-  learningOutcomeId: string
-  submissionDate: string
-  status: "submitted" | "under_review" | "approved" | "rejected"
+export interface Evidence {
+  id: string
+  criteriaCode: string
+  unitCode: string
+  title: string
+  description: string
+  dateUploaded: string
+  assessmentStatus: AssessmentStatus
   assessorFeedback?: string
+  assessorName?: string
+  assessmentDate?: string
+  webUrl: string
+  downloadUrl?: string
+}
+
+export interface EvidenceMetadata {
+  id: string
+  name: string
+  webUrl?: string
+  downloadUrl?: string
+  size: number
+  mimeType: string
+  createdDateTime: Date
+  lastModifiedDateTime: Date
+  assessmentStatus?: AssessmentStatus
+  assessorFeedback?: string
+  assessorName?: string
+  assessmentDate?: Date | string | null
+  criteriaCode?: string
+  unitCode?: string
+  description?: string
 }

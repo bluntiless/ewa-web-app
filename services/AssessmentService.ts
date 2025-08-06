@@ -1,151 +1,131 @@
-export interface AssessmentBooking {
-  id: string
-  studentId: string
-  assessorId: string
-  unitIds: string[]
-  scheduledDate: string
-  scheduledTime: string
-  location: string
-  type: "practical" | "portfolio_review" | "interview" | "observation"
-  status: "scheduled" | "completed" | "cancelled" | "rescheduled"
-  notes?: string
-}
+import { Evidence, AssessmentStatus } from "@/models/Evidence"
 
-export interface AssessmentResult {
-  id: string
-  bookingId: string
-  unitId: string
-  learningOutcomeId: string
-  result: "competent" | "not_yet_competent" | "referred"
-  assessorComments: string
-  evidenceReviewed: string[]
+export interface AssessorFeedback {
+  evidenceId: string
+  assessorName: string
+  feedback: string
+  status: AssessmentStatus
   assessmentDate: string
-  assessorId: string
-}
-
-export interface AssessmentFeedback {
-  id: string
-  studentId: string
-  assessorId: string
-  unitId: string
-  overallFeedback: string
-  strengths: string[]
-  areasForImprovement: string[]
-  nextSteps: string[]
-  grade?: string
-  dateProvided: string
 }
 
 export class AssessmentService {
-  static async bookAssessment(booking: Omit<AssessmentBooking, "id" | "status">): Promise<AssessmentBooking> {
-    // Mock implementation
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          ...booking,
-          id: `booking_${Date.now()}`,
-          status: "scheduled",
-        })
-      }, 1000)
-    })
+  /**
+   * Submits feedback for a piece of evidence.
+   * This is a mock implementation.
+   * @param feedback The feedback object.
+   * @returns A promise resolving to the updated evidence.
+   */
+  static async submitEvidenceFeedback(feedback: AssessorFeedback): Promise<Evidence> {
+    console.log("Submitting evidence feedback:", feedback)
+
+    // Simulate API call delay
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
+    // Mock update to evidence
+    const updatedEvidence: Evidence = {
+      id: feedback.evidenceId,
+      criteriaCode: "MOCK_CRITERIA", // Placeholder
+      unitCode: "MOCK_UNIT", // Placeholder
+      title: "Mock Evidence Title", // Placeholder
+      description: "Mock Evidence Description", // Placeholder
+      dateUploaded: new Date().toISOString(), // Placeholder
+      webUrl: "#", // Placeholder
+      downloadUrl: "#", // Placeholder
+      assessmentStatus: feedback.status,
+      assessorFeedback: feedback.feedback,
+      assessorName: feedback.assessorName,
+      assessmentDate: feedback.assessmentDate,
+    }
+
+    console.log("Evidence feedback submitted successfully:", updatedEvidence)
+    return updatedEvidence
   }
 
-  static async getAvailableSlots(assessorId: string, date: string): Promise<string[]> {
-    // Mock implementation - return available time slots
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"])
-      }, 500)
-    })
+  /**
+   * Retrieves all evidence pending review for an assessor.
+   * This is a mock implementation.
+   * @param assessorId The ID of the assessor.
+   * @returns A promise resolving to an array of evidence.
+   */
+  static async getPendingEvidence(assessorId: string): Promise<Evidence[]> {
+    console.log(`Fetching pending evidence for assessor: ${assessorId}...`)
+
+    // Simulate API call delay
+    await new Promise((resolve) => setTimeout(resolve, 1500))
+
+    const mockPendingEvidence: Evidence[] = [
+      {
+        id: "pending_ev1",
+        criteriaCode: "EWA_U1_PC1.1",
+        unitCode: "EWA_U1",
+        title: "Safety Training Certificate",
+        description: "Certificate of completion for mandatory safety training.",
+        dateUploaded: "2024-07-20T10:00:00Z",
+        assessmentStatus: AssessmentStatus.Pending,
+        webUrl: "/placeholder.pdf?query=safety-certificate",
+        downloadUrl: "/placeholder.pdf?query=safety-certificate",
+      },
+      {
+        id: "pending_ev2",
+        criteriaCode: "NVQ_U2_PC2.1",
+        unitCode: "NVQ_U2",
+        title: "Fault Diagnosis Report - Motor",
+        description: "Report detailing diagnosis of a faulty motor.",
+        dateUploaded: "2024-07-22T14:30:00Z",
+        assessmentStatus: AssessmentStatus.Pending,
+        webUrl: "/placeholder.docx?query=fault-report",
+        downloadUrl: "/placeholder.docx?query=fault-report",
+      },
+    ]
+
+    console.log("Fetched pending evidence:", mockPendingEvidence)
+    return mockPendingEvidence
   }
 
-  static async getAssessmentHistory(studentId: string): Promise<AssessmentBooking[]> {
-    // Mock implementation
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve([
-          {
-            id: "booking_1",
-            studentId,
-            assessorId: "assessor_1",
-            unitIds: ["unit_1", "unit_2"],
-            scheduledDate: "2024-01-15",
-            scheduledTime: "09:00",
-            location: "Workshop A",
-            type: "practical",
-            status: "completed",
-            notes: "Practical assessment for electrical installation units",
-          },
-        ])
-      }, 800)
-    })
-  }
+  /**
+   * Retrieves all evidence that has been reviewed.
+   * This is a mock implementation.
+   * @param assessorId Optional: The ID of the assessor to filter by.
+   * @returns A promise resolving to an array of evidence.
+   */
+  static async getReviewedEvidence(assessorId?: string): Promise<Evidence[]> {
+    console.log(`Fetching reviewed evidence for assessor: ${assessorId || "all"}...`)
 
-  static async submitAssessmentResults(results: Omit<AssessmentResult, "id">[]): Promise<AssessmentResult[]> {
-    // Mock implementation
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const assessmentResults = results.map((result) => ({
-          ...result,
-          id: `result_${Date.now()}_${Math.random()}`,
-        }))
-        resolve(assessmentResults)
-      }, 1200)
-    })
-  }
+    // Simulate API call delay
+    await new Promise((resolve) => setTimeout(resolve, 1200))
 
-  static async getAssessmentResults(studentId: string, unitId?: string): Promise<AssessmentResult[]> {
-    // Mock implementation
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve([
-          {
-            id: "result_1",
-            bookingId: "booking_1",
-            unitId: "unit_1",
-            learningOutcomeId: "lo_1",
-            result: "competent",
-            assessorComments: "Excellent demonstration of electrical safety procedures",
-            evidenceReviewed: ["evidence_1", "evidence_2"],
-            assessmentDate: "2024-01-15T09:00:00Z",
-            assessorId: "assessor_1",
-          },
-        ])
-      }, 600)
-    })
-  }
+    const mockReviewedEvidence: Evidence[] = [
+      {
+        id: "reviewed_ev1",
+        criteriaCode: "EWA_U1_PC1.2",
+        unitCode: "EWA_U1",
+        title: "Risk Assessment - Working at Height",
+        description: "Completed risk assessment for working at height.",
+        dateUploaded: "2024-07-18T09:00:00Z",
+        assessmentStatus: AssessmentStatus.Approved,
+        assessorFeedback: "Well-documented and thorough assessment.",
+        assessorName: "Jane Doe",
+        assessmentDate: "2024-07-20T11:00:00Z",
+        webUrl: "/placeholder.pdf?query=risk-assessment",
+        downloadUrl: "/placeholder.pdf?query=risk-assessment",
+      },
+      {
+        id: "reviewed_ev2",
+        criteriaCode: "NVQ_U3_PC1.1",
+        unitCode: "NVQ_U3",
+        title: "Maintenance Schedule - HVAC",
+        description: "HVAC system preventative maintenance schedule.",
+        dateUploaded: "2024-07-15T11:00:00Z",
+        assessmentStatus: AssessmentStatus.NeedsRevision,
+        assessorFeedback: "Needs more detail on specific component checks.",
+        assessorName: "John Smith",
+        assessmentDate: "2024-07-17T16:00:00Z",
+        webUrl: "/placeholder.xlsx?query=maintenance-schedule",
+        downloadUrl: "/placeholder.xlsx?query=maintenance-schedule",
+      },
+    ]
 
-  static async provideFeedback(feedback: Omit<AssessmentFeedback, "id">): Promise<AssessmentFeedback> {
-    // Mock implementation
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          ...feedback,
-          id: `feedback_${Date.now()}`,
-        })
-      }, 800)
-    })
-  }
-
-  static async getFeedback(studentId: string, unitId?: string): Promise<AssessmentFeedback[]> {
-    // Mock implementation
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve([
-          {
-            id: "feedback_1",
-            studentId,
-            assessorId: "assessor_1",
-            unitId: "unit_1",
-            overallFeedback: "Strong performance in practical skills demonstration",
-            strengths: ["Safety awareness", "Technical competency", "Problem-solving"],
-            areasForImprovement: ["Documentation", "Time management"],
-            nextSteps: ["Complete portfolio evidence", "Schedule final assessment"],
-            grade: "Pass",
-            dateProvided: "2024-01-15T16:00:00Z",
-          },
-        ])
-      }, 700)
-    })
+    console.log("Fetched reviewed evidence:", mockReviewedEvidence)
+    return mockReviewedEvidence
   }
 }

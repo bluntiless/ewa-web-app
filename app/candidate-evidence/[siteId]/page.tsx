@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { SharePointService } from "../../../services/SharePointService"
+import React from 'react';
 
 interface EvidenceItem {
   id: string
@@ -18,7 +19,7 @@ interface EvidenceItem {
   assessmentDate?: string
 }
 
-export default function CandidateEvidencePage() {
+const CandidateEvidencePage: React.FC = () => {
   const params = useParams()
   const siteId = params.siteId as string
 
@@ -382,5 +383,7 @@ export default function CandidateEvidencePage() {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
+
+export default CandidateEvidencePage;

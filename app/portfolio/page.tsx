@@ -1,20 +1,21 @@
 "use client"
 
-import type React from "react"
+import React from "react"
+import type { ReactNode } from "react"
 
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Upload, FileText, ImageIcon, Video, Download, Eye, Filter } from "lucide-react"
+import { Upload, FileText, ImageIcon, Video, Download, Eye, Filter } from 'lucide-react'
 import PendingEvidenceView from "@/components/PendingEvidenceView"
 import ProgressView from "@/components/ProgressView"
 import { useEvidence } from "@/hooks/useEvidence"
 import { ewaUnits } from "@/data/ewaUnits"
 import { nvqUnits } from "@/data/ealUnits"
 
-export default function PortfolioPage() {
+const PortfolioPage: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState("overview")
   const { evidence, loading, uploadEvidence } = useEvidence()
 
@@ -215,3 +216,5 @@ export default function PortfolioPage() {
     </div>
   )
 }
+
+export default PortfolioPage

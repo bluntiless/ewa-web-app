@@ -1,41 +1,41 @@
-"use client"
+'use client'
 
-import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { Home, FolderOpen, User, Users, ClipboardCheck } from "lucide-react"
-
-const navigation = [
-  { name: "Qualifications", href: "/", icon: Home },
-  { name: "Portfolio", href: "/portfolio", icon: FolderOpen },
-  { name: "Profile", href: "/profile", icon: User },
-  { name: "Teams", href: "/teams", icon: Users },
-  { name: "Assessor Review", href: "/assessor-review", icon: ClipboardCheck },
-]
+import { usePathname } from "next/navigation"
+import { Home, BookOpen, Folder, Users, FileText } from 'lucide-react'
+import { cn } from "@/lib/utils"
 
 export default function BottomNavigation() {
   const pathname = usePathname()
 
-  return (
-    <div className="fixed bottom-0 left-0 right-0 bg-neutral-900 border-t border-neutral-800 safe-area-inset-bottom">
-      <div className="flex justify-around items-center py-2 px-4">
-        {navigation.map((item) => {
-          const isActive = pathname === item.href
-          const Icon = item.icon
+  const navItems = [
+    { name: "Home", href: "/", icon: Home },
+    { name: "Units", href: "/units", icon: BookOpen },
+    { name: "Portfolio", href: "/portfolio", icon: Folder },
+    { name: "Assessments", href: "/assessments", icon: FileText },
+    { name: "Teams", href: "/teams", icon: Users },
+  ]
 
+  return (
+    <nav className="fixed bottom-0 left-0 right-0 bg-neutral-900 border-t border-neutral-800 shadow-lg z-50">
+      <div className="max-w-full mx-auto h-16 flex items-center justify-around px-2">
+        {navItems.map((item) => {
+          const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
           return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`flex flex-col items-center justify-center min-w-0 flex-1 py-2 px-1 text-xs font-medium transition-colors ${
-                isActive ? "text-blue-500" : "text-neutral-400 hover:text-neutral-200"
-              }`}
-            >
-              <Icon className={`w-5 h-5 mb-1 ${isActive ? "text-blue-500" : "text-neutral-400"}`} />
-              <span className="truncate">{item.name}</span>
+            <Link key={item.name} href={item.href} passHref>
+              <div
+                className={cn(
+                  "flex flex-col items-center justify-center p-2 rounded-md transition-colors duration-200",
+                  isActive ? "text-blue-500" : "text-neutral-400 hover:text-neutral-200"
+                )}
+              >
+                <item.icon className="h-6 w-6 mb-1" />
+                <span className="text-xs font-medium">{item.name}</span>
+              </div>
             </Link>
           )
         })}
       </div>
-    </div>
+    </nav>
   )
 }
