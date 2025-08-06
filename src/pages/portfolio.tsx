@@ -250,7 +250,9 @@ export default function PortfolioPage() {
       }
       
       console.log(`Portfolio: Refreshed ${allEvidence.length} evidence items`);
-      setEvidenceItems(allEvidence);
+      // Convert EvidenceMetadata[] to Evidence[] using the helper function
+      const convertedEvidence = allEvidence.map(metadataToModelEvidence);
+      setEvidenceItems(convertedEvidence);
       
     } catch (error) {
       console.error('Portfolio: Error refreshing evidence:', error);
