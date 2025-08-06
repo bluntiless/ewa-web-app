@@ -302,7 +302,7 @@ export default function CandidateCheckClientPage() {
           <p className="text-lg text-gray-700 leading-relaxed mb-8">
             The IE/ME EWA mirrors the content of the Level 3 Installation & Maintenance Electrician Apprenticeship
             Standard and is designed for currently practising electricians with{" "}
-            <span className="font-semibold">5 or more years’ experience</span> working in the industry, not including
+            <span className="font-semibold">5 or more years' experience</span> working in the industry, not including
             time spent in education or training.
           </p>
           <p className="text-sm text-gray-600 mb-8">
@@ -601,14 +601,14 @@ export default function CandidateCheckClientPage() {
               <p className="text-gray-700 leading-relaxed mb-6">
                 To pass the IE/ME EWA you will need to demonstrate breadth and depth of knowledge and practical skills,
                 covering all the areas listed in this Skills Scan. Be honest with yourself when completing it - if you
-                cannot confidently tick “Adequate” as a minimum for every statement in terms of both Knowledge and
-                Practical Experience, it’s highly unlikely that you will be able to provide the evidence required to
+                cannot confidently tick "Adequate" as a minimum for every statement in terms of both Knowledge and
+                Practical Experience, it's highly unlikely that you will be able to provide the evidence required to
                 pass the IE/ME EWA. Once you enrol on the IE/ME EWA you will have a maximum 18 months to complete the
-                process. It’s important to ensure before enrolling that you will be able to undertake the range of work
+                process. It's important to ensure before enrolling that you will be able to undertake the range of work
                 required to provide the evidence required for the performance assessments.
               </p>
               <p className="text-gray-700 leading-relaxed mb-6">
-                If you are not regularly working across the full breadth of work in the tables below, it’s unlikely you
+                If you are not regularly working across the full breadth of work in the tables below, it's unlikely you
                 will be able to complete the EWA within 18 months. Do not enrol until you are confident you can provide
                 the evidence within that timescale, or consider an alternative training route - visit{" "}
                 <a
@@ -622,10 +622,10 @@ export default function CandidateCheckClientPage() {
                 for more information.
               </p>
               <p className="text-gray-700 leading-relaxed mb-6">
-                <span className="font-semibold">Remember:</span> You’ll only be able to use evidence for the IE/ME EWA
-                performance assessments that is generated after you enrol on the IE/ME EWA - so you’ll need to be
+                <span className="font-semibold">Remember:</span> You'll only be able to use evidence for the IE/ME EWA
+                performance assessments that is generated after you enrol on the IE/ME EWA - so you'll need to be
                 currently working day-to-day on activity that covers the breadth of what is required. You may have
-                evidence from past work that will confirm that you’re a suitable candidate for IE/ME EWA, but you’d
+                evidence from past work that will confirm that you're a suitable candidate for IE/ME EWA, but you'd
                 still need to be currently working as an electrician in order to create evidence for the practical
                 units.
               </p>
@@ -636,7 +636,7 @@ export default function CandidateCheckClientPage() {
                   {section.description && <p className="text-gray-700 leading-relaxed mb-6">{section.description}</p>}
                   <div className="overflow-x-auto">
                     <table className="w-full text-left table-fixed">
-                      <thead>
+                      <thead className="hidden md:table-header-group">
                         <tr className="border-b border-gray-300">
                           <th className="py-2 pr-4 text-sm font-semibold text-gray-700 w-[40%]">
                             For each item please tick one box in the&nbsp;Knowledge section and one box in
@@ -832,7 +832,7 @@ export default function CandidateCheckClientPage() {
                   <ul className="list-disc list-inside space-y-1">
                     <li>This suggests the IE/ME EWA is right for you.</li>
                     <li>
-                      Think about the boxes where you can’t tick Adequate - if the gaps are around Knowledge, you may be
+                      Think about the boxes where you can't tick Adequate - if the gaps are around Knowledge, you may be
                       able to do some self-study or training to top up. If the gap is in terms of Practical Experience,
                       think about whether there are options within your current role to cover these areas.
                     </li>
@@ -870,7 +870,7 @@ export default function CandidateCheckClientPage() {
                         You might need to undertake some further training or study in order to fill these before you can
                         take the IE/ME EWA.
                       </li>
-                      <li>If you’re not sure what would be required, talk to a training provider.</li>
+                      <li>If you're not sure what would be required, talk to a training provider.</li>
                       <li>
                         Make sure that any recommended training or qualifications can be recognized as meeting the IE/ME
                         EWA requirements. A list of accepted qualifications is contained within the Skills Scan.
@@ -901,7 +901,7 @@ export default function CandidateCheckClientPage() {
                     </h3>
                     <ul className="list-disc list-inside space-y-1">
                       <li>
-                        If it’s likely to take at least 12 months to obtain sufficient practical experience, you should
+                        If it's likely to take at least 12 months to obtain sufficient practical experience, you should
                         consider enrolling on an apprenticeship. There are no age restrictions and any training and the
                         cost of the end assessment will be funded. You can find more details at{" "}
                         <a
@@ -915,12 +915,12 @@ export default function CandidateCheckClientPage() {
                         .
                       </li>
                       <li>
-                        If you don’t meet the requirements for an apprenticeship, think about whether it’s possible to
+                        If you don't meet the requirements for an apprenticeship, think about whether it's possible to
                         gain the experience by taking on different tasks within your work.
                       </li>
                       <li>
-                        If you’re employed, talk to your employer about possible options. If you’re self-employed,
-                        consider whether it’s possible to broaden the work you undertake to fill the gaps.
+                        If you're employed, talk to your employer about possible options. If you're self-employed,
+                        consider whether it's possible to broaden the work you undertake to fill the gaps.
                       </li>
                     </ul>
                   </div>
