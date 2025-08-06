@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getMsalInstance } from '../lib/msalInstance';
+import { msalInstance } from '../lib/msalInstance';
 import { AccountInfo } from '@azure/msal-browser';
 
 export default function TestLogin() {
@@ -8,20 +8,18 @@ export default function TestLogin() {
   useEffect(() => {
     const login = async () => {
       try {
-        const msal = await getMsalInstance();
-
         // Explicitly initialize MSAL if it has an initialize method
-        if (typeof msal.initialize === 'function') {
-          await msal.initialize();
+        if (typeof msalInstance.initialize === 'function') {
+          await msalInstance.initialize();
         }
 
-        await msal.handleRedirectPromise();
+        await msalInstance.handleRedirectPromise();
 
-        const accounts = msal.getAllAccounts();
+        const accounts = msalInstance.getAllAccounts();
         if (accounts.length > 0) {
           setAccount(accounts[0]);
         } else {
-          const response = await msal.loginPopup({
+          const response = await msalInstance.loginPopup({
             scopes: ['User.Read'],
             prompt: 'select_account',
           });
