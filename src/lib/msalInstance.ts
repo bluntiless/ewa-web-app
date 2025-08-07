@@ -4,7 +4,7 @@ export const msalConfig: Configuration = {
   auth: {
     clientId: '4dee2fb0-16a8-417e-99e0-182238406716',
     authority: 'https://login.microsoftonline.com/f06bb1fd-4f8d-4dd6-bed9-8ae702c632b9',
-    redirectUri: 'http://localhost:3000'
+    redirectUri: 'https://ewa-web-app-vqh2-f5cplzp51-wayne-anthony-wrights-projects.vercel.app'
   },
   cache: {
     cacheLocation: 'localStorage',
