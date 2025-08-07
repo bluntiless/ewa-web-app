@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { SharePointService, AssessmentStatus, EvidenceMetadata } from '../services/SharePointService';
@@ -6,7 +7,8 @@ import BottomNavigation from '../components/BottomNavigation';
 import { useMsalAuth } from '../lib/useMsalAuth';
 import { InlineFileViewer } from '../components/InlineFileViewer';
 
-export default function AssessorEvidenceReview() {
+// Client-side only component
+function AssessorEvidenceReviewClient() {
   const router = useRouter();
   const { account, loading, error: msalError } = useMsalAuth();
   const [evidence, setEvidence] = useState<EvidenceMetadata | null>(null);
@@ -270,4 +272,16 @@ export default function AssessorEvidenceReview() {
       <BottomNavigation />
     </div>
   );
-} 
+}
+
+// Export as dynamic component with SSR disabled
+export default dynamic(() => Promise.resolve(AssessorEvidenceReviewClient), {
+  ssr: false,
+  loading: () => (
+    <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center">
+      <div className="text-center">
+        <p className="text-lg">Loading...</p>
+      </div>
+    </div>
+  )
+}); 

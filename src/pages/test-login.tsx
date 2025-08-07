@@ -1,8 +1,10 @@
+import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { msalInstance } from '../lib/msalInstance';
 import { AccountInfo } from '@azure/msal-browser';
 
-export default function TestLogin() {
+// Client-side only component
+function TestLoginClient() {
   const [account, setAccount] = useState<AccountInfo | null>(null);
 
   useEffect(() => {
@@ -39,3 +41,14 @@ export default function TestLogin() {
     </div>
   );
 }
+
+// Export as dynamic component with SSR disabled
+export default dynamic(() => Promise.resolve(TestLoginClient), {
+  ssr: false,
+  loading: () => (
+    <div style={{ padding: 40 }}>
+      <h1>Test Login</h1>
+      <p>Loading...</p>
+    </div>
+  )
+});

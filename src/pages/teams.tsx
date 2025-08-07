@@ -1,6 +1,8 @@
+import dynamic from 'next/dynamic';
 import { useMsalAuth } from '../lib/useMsalAuth';
 
-export default function TeamsPage() {
+// Client-side only component
+function TeamsPageClient() {
   const { account, loading, error } = useMsalAuth();
 
   if (loading) {
@@ -22,3 +24,14 @@ export default function TeamsPage() {
     </div>
   );
 }
+
+// Export as dynamic component with SSR disabled
+export default dynamic(() => Promise.resolve(TeamsPageClient), {
+  ssr: false,
+  loading: () => (
+    <div>
+      <h1>Teams Page</h1>
+      <p>Loading...</p>
+    </div>
+  )
+});

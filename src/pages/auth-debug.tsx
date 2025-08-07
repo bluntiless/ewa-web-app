@@ -1,7 +1,9 @@
+import dynamic from 'next/dynamic';
 import { useMsal } from '@azure/msal-react';
 import { loginRequest } from '../lib/msalInstance';
 
-export default function AuthDebug() {
+// Client-side only component
+function AuthDebugClient() {
   const { instance, accounts } = useMsal();
 
   const handleLogin = async () => {
@@ -70,4 +72,17 @@ export default function AuthDebug() {
       </div>
     </div>
   );
-} 
+}
+
+// Export as dynamic component with SSR disabled
+export default dynamic(() => Promise.resolve(AuthDebugClient), {
+  ssr: false,
+  loading: () => (
+    <div className="min-h-screen bg-black text-white p-8">
+      <div className="max-w-2xl mx-auto">
+        <h1 className="text-3xl font-bold mb-8">MSAL Authentication Debug</h1>
+        <p>Loading...</p>
+      </div>
+    </div>
+  )
+}); 
