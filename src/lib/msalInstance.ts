@@ -39,7 +39,7 @@ export const msalConfig: Configuration = {
 };
 
 // Create MSAL instance only on client side to avoid SSR issues
-let msalInstance: PublicClientApplication | null = null;
+let _msalInstance: PublicClientApplication | null = null;
 
 export const getMsalInstance = (): PublicClientApplication => {
   // Check if we're on the client side
@@ -56,9 +56,9 @@ export const getMsalInstance = (): PublicClientApplication => {
   }
   
   // Client side - create the real instance
-  if (!msalInstance) {
+  if (!_msalInstance) {
     try {
-      msalInstance = new PublicClientApplication(msalConfig);
+      _msalInstance = new PublicClientApplication(msalConfig);
     } catch (error) {
       console.error('Failed to create MSAL instance:', error);
       // Return a minimal mock instance as fallback
@@ -73,7 +73,7 @@ export const getMsalInstance = (): PublicClientApplication => {
     }
   }
   
-  return msalInstance;
+  return _msalInstance;
 };
 
 // Export the instance for backward compatibility (but this will be the mock on SSR)
