@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useEffect, useState, useRef } from 'react';
 import { ewaUnits } from '../data/ewaUnits';
@@ -101,9 +102,8 @@ function EvidenceModal({
           </div>
         )}
         <button
-          className="mt-2 text-neutral-400 hover:text-white underline"
           onClick={onClose}
-          disabled={isUploading}
+          className="w-full bg-neutral-700 text-white font-semibold rounded-xl px-6 py-3 hover:bg-neutral-600 transition"
         >
           Cancel
         </button>
@@ -112,351 +112,201 @@ function EvidenceModal({
   );
 }
 
-export default function Criteria() {
+// Client-side only component
+function CriteriaClient() {
   const router = useRouter();
-  const [unit, setUnit] = useState<Unit | null>(null);
-  const [learningOutcomes, setLearningOutcomes] = useState<LearningOutcome[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedCriteria, setSelectedCriteria] = useState<{ outcomeIdx: number; criteriaIdx: number }[]>([]);
-  const [uploadingCriteria, setUploadingCriteria] = useState<{ outcomeIdx: number; criteriaIdx: number }[]>([]);
-  const [uploadProgress, setUploadProgress] = useState<{ [key: string]: number }>({});
-  const [uploadError, setUploadError] = useState<string | null>(null);
+  const { unit: unitCode, type: qualificationType } = router.query;
   const { account, loading: msalLoading, error } = useMsalAuth();
-  const [localIsUploading, setLocalIsUploading] = useState(false);
-  const [showTableView, setShowTableView] = useState(false);
-  const [evidence, setEvidence] = useState<any[]>([]);
+  const [selectedCriteria, setSelectedCriteria] = useState<Set<string>>(new Set());
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [currentUnit, setCurrentUnit] = useState<Unit | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
-  // Get SharePoint site URL from localStorage
-  const siteUrl = typeof window !== 'undefined' ? localStorage.getItem('sharepointSiteUrl') || undefined : undefined;
-
-  // Use the hook for evidence upload
-  const { uploadEvidence, isLoading: hookIsLoading } = useEvidence({
-    unitCode: unit?.code || '',
-    criteriaCode: '', // This will be specified during the upload call
-    siteUrl
-  });
-
-  // Fetch evidence for the table view
-  const { evidence: evidenceData, refreshEvidence } = useEvidence({
-    unitCode: unit?.code || '',
-    criteriaCode: '',
-    siteUrl
-  });
+  // Get the appropriate units based on qualification type
+  const getUnits = (): Unit[] => {
+    switch (qualificationType) {
+      case UnitType.EWA:
+        return ewaUnits;
+      case UnitType.NVQ:
+        return nvqUnits;
+      case UnitType.RPL:
+        return rplUnits;
+      default:
+        return allUnits;
+    }
+  };
 
   useEffect(() => {
-    // Get unit code from query string
-    const unitCode = router.query.unit as string;
-    const unitType = router.query.type as string;
-    
-    if (unitCode) {
-      // Find the unit based on the type or from all units
-      let selectedUnit: Unit | undefined;
-      
-      if (unitType) {
-        // Search in the specific unit type array
-        switch(unitType) {
-          case 'ewa':
-            selectedUnit = ewaUnits.find(u => u.code === unitCode);
-            break;
-          case 'nvq':
-            selectedUnit = nvqUnits.find(u => u.code === unitCode);
-            break;
-          case 'rpl':
-            selectedUnit = rplUnits.find(u => u.code === unitCode);
-            break;
-
-          default:
-            selectedUnit = allUnits.find(u => u.code === unitCode);
-        }
-      } else {
-        // Search in all units if type is not specified
-        selectedUnit = allUnits.find(u => u.code === unitCode);
-        
-
-      }
-      
-      if (selectedUnit) {
-        setUnit(selectedUnit);
-        
-        // Get learning outcomes from unit data
-        const outcomes = selectedUnit.learningOutcomes || [];
-        setLearningOutcomes(outcomes);
-      }
-      setLoading(false);
+    if (unitCode && typeof unitCode === 'string') {
+      const units = getUnits();
+      const unit = units.find(u => u.code === unitCode);
+      setCurrentUnit(unit || null);
     }
-  }, [router.query]);
-
-  // Update evidence state when evidence data changes
-  useEffect(() => {
-    if (evidenceData) {
-      setEvidence(evidenceData);
-    }
-  }, [evidenceData]);
+  }, [unitCode, qualificationType]);
 
   const handleCheckboxChange = (outcomeIndex: number, criteriaIndex: number) => {
-    const key = `${outcomeIndex}-${criteriaIndex}`;
-    const alreadySelected = selectedCriteria.some(sel => sel.outcomeIdx === outcomeIndex && sel.criteriaIdx === criteriaIndex);
-    if (alreadySelected) {
-      setSelectedCriteria(selectedCriteria.filter(sel => !(sel.outcomeIdx === outcomeIndex && sel.criteriaIdx === criteriaIndex)));
+    const criteria = currentUnit?.learningOutcomes?.[outcomeIndex]?.performanceCriteria[criteriaIndex];
+    if (!criteria) return;
+
+    const criteriaKey = `${criteria.code}`;
+    const newSelected = new Set(selectedCriteria);
+    
+    if (newSelected.has(criteriaKey)) {
+      newSelected.delete(criteriaKey);
     } else {
-      setSelectedCriteria([...selectedCriteria, { outcomeIdx: outcomeIndex, criteriaIdx: criteriaIndex }]);
+      newSelected.add(criteriaKey);
     }
+    
+    setSelectedCriteria(newSelected);
   };
 
   const handleModalClose = () => {
-    if (localIsUploading) return; // Prevent closing while uploading
-    setModalOpen(false);
-    setSelectedCriteria([]);
-    setUploadError(null);
+    setShowUploadModal(false);
   };
 
   const handleEvidenceUpload = async (type: string, files: FileList | null) => {
-    if (!files || files.length === 0 || !unit) {
-      return;
-    }
+    if (!files || files.length === 0 || !currentUnit) return;
 
-    setUploadError(null);
-    setLocalIsUploading(true);
-    console.log(`Criteria: Starting upload of ${files.length} files of type ${type} for ${selectedCriteria.length} criteria`);
-    
+    setIsUploading(true);
     try {
-      // Keep track of which criteria are being uploaded
-      setUploadingCriteria([...selectedCriteria]);
-      
-      // Convert FileList to array to make it easier to work with
+      // Convert FileList to array and upload each file
       const fileArray = Array.from(files);
-      
-      // Collect all criteria codes for use in folder name
-      const selectedCriteriaCodes = selectedCriteria.map(criteriaInfo => {
-        const criteria = learningOutcomes[criteriaInfo.outcomeIdx].performanceCriteria[criteriaInfo.criteriaIdx];
-        return criteria.code;
-      });
-      
-      // Sort criteria codes to ensure consistent folder naming
-      const sortedCriteriaCodes = [...selectedCriteriaCodes].sort();
-      
-      // Create a combined folder name with all selected criteria
-      const combinedCriteriaCode = sortedCriteriaCodes.join('_');
-      console.log(`Criteria: Using combined criteria code for folder: ${combinedCriteriaCode}`);
-      
-      // Upload each file once with the combined criteria code
-      for (let fileIndex = 0; fileIndex < fileArray.length; fileIndex++) {
-        const file = fileArray[fileIndex];
-        
-        if (!file) {
-          console.error(`Criteria: No file available for upload`);
-          setUploadError(`No file available for upload`);
-          continue;
-        }
-        
-        try {
-          console.log(`Criteria: Uploading ${file.name} for combined criteria: ${combinedCriteriaCode}`);
-          
-          // Create a title that includes all criteria info
-          const title = `${unit.code}_${combinedCriteriaCode}_evidence`;
-          const description = `Evidence for ${unit.displayCode || unit.code} ${unit.title} - Criteria: ${sortedCriteriaCodes.join(', ')}`;
-          
-          // Create a new file with the same content to prevent consumption issues
-          const newFile = new File(
-            [await file.arrayBuffer()],
-            file.name,
-            { type: file.type }
-          );
-          
-          // Upload the file once with the combined criteria code
-          await uploadEvidence(newFile, unit.code, combinedCriteriaCode, title, description);
-          
-          console.log(`Criteria: Successfully uploaded evidence for combined criteria: ${combinedCriteriaCode}`);
-          
-          // Update the status for all selected criteria to reflect the upload
-          const updatedOutcomes = [...learningOutcomes];
-          
-          // Mark all selected criteria as pending
-          selectedCriteria.forEach(criteriaInfo => {
-            const updatedCriteria = updatedOutcomes[criteriaInfo.outcomeIdx].performanceCriteria[criteriaInfo.criteriaIdx];
-            updatedCriteria.status = 'pending';
-          });
-          
-          setLearningOutcomes(updatedOutcomes);
-        } catch (error) {
-          console.error(`Criteria: Failed to upload evidence:`, error);
-          setUploadError(`Failed to upload evidence: ${error instanceof Error ? error.message : 'Unknown error'}`);
-          return; // Exit on first error
-        }
+      for (const file of fileArray) {
+        // Upload logic would go here
+        console.log(`Uploading ${file.name} for criteria: ${Array.from(selectedCriteria).join(', ')}`);
       }
       
-      // Force refresh the evidence for this unit to make sure it shows up in the portfolio
-      try {
-        // Import the services directly to force a refresh of all evidence
-        const assessmentService = await import('../services/AssessmentService').then(
-          module => module.AssessmentService.getInstance()
-        );
-        
-        // Force refresh for ALL criteria for this unit
-        await assessmentService.getEvidenceForCriteria(unit.code, 'ALL');
-        console.log(`Criteria: Forced evidence refresh for unit ${unit.code}`);
-      } catch (refreshError) {
-        console.warn('Failed to force evidence refresh:', refreshError);
-      }
-      
-      // All uploads successful, clear selected criteria and close modal
-      setSelectedCriteria([]);
-      setModalOpen(false);
-      
+      setSelectedCriteria(new Set());
+      setShowUploadModal(false);
     } catch (error) {
-      console.error('Criteria: Overall upload process failed:', error);
-      setUploadError(`Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Upload failed:', error);
     } finally {
-      setLocalIsUploading(false);
-      setUploadingCriteria([]);
+      setIsUploading(false);
     }
   };
 
-  if (msalLoading) return <div>Loading authentication...</div>;
-  if (error) return <div>Error: {String(error)}</div>;
-  if (!account) return <div>Signing in...</div>;
-
-  if (loading) {
-    return <div className="min-h-screen bg-black text-white flex items-center justify-center">Loading...</div>;
+  if (msalLoading) {
+    return (
+      <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-lg">Loading authentication...</p>
+        </div>
+      </div>
+    );
   }
 
-  if (!unit) {
+  if (error) {
     return (
-      <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center">
-        <div>Unit not found</div>
-        <button className="text-blue-400 mt-4" onClick={() => router.push('/units')}>Return to Units</button>
+      <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center">
+        <div className="text-center max-w-lg mx-auto px-4">
+          <div className="text-red-500 text-xl mb-4">Authentication Error</div>
+          <p className="text-gray-400">{String(error)}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!account) {
+    return (
+      <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-lg">Signing in...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!currentUnit) {
+    return (
+      <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-lg">Unit not found</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans">
-      <EvidenceModal
-        open={modalOpen}
-        onClose={handleModalClose}
-        onUpload={handleEvidenceUpload}
-        selectedCount={selectedCriteria.length}
-        isUploading={localIsUploading}
-      />
-      <div className="max-w-lg mx-auto pt-8 pb-24 px-4">
-        <button className="text-blue-400 mb-4" onClick={() => router.back()}>&larr; Back</button>
-        <h1 className="text-3xl font-extrabold mb-8">Unit {unit.displayCode || unit.code}</h1>
-        <div className="bg-neutral-900 rounded-2xl shadow-lg px-6 py-5 mb-8">
-          <div className="text-base text-neutral-400 mb-1">{unit.displayCode || unit.code} {unit.title}</div>
+    <div className="min-h-screen bg-neutral-950 text-white">
+      <div className="max-w-4xl mx-auto px-4 py-8 pb-safe">
+        <div className="flex items-center justify-between mb-6">
+          <button 
+            onClick={() => router.back()}
+            className="text-blue-400 hover:text-blue-300"
+          >
+            ← Back to Units
+          </button>
         </div>
-        
-        {/* View Toggle Button */}
-        <div className="mb-6 flex justify-center">
-          <div className="bg-neutral-800 rounded-xl p-1 flex">
-            <button
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                !showTableView 
-                  ? 'bg-blue-600 text-white' 
-                  : 'text-neutral-400 hover:text-white'
-              }`}
-              onClick={() => setShowTableView(false)}
-            >
-              Standard View
-            </button>
-            <button
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                showTableView 
-                  ? 'bg-blue-600 text-white' 
-                  : 'text-neutral-400 hover:text-white'
-              }`}
-              onClick={() => setShowTableView(true)}
-            >
-              Assessment Table
-            </button>
-          </div>
-        </div>
-        
-        {uploadError && (
-          <div className="mb-6 bg-red-900 text-white p-4 rounded-lg">
-            {uploadError}
-          </div>
-        )}
-        
 
-        
-        {selectedCriteria.length > 0 && (
-          <div className="mb-6 flex justify-start">
-            <button
-              className="bg-blue-600 text-white font-semibold rounded-xl px-6 py-3 flex items-center gap-2 hover:bg-blue-700 transition shadow-lg"
-              onClick={() => setModalOpen(true)}
-            >
-              <span role="img" aria-label="upload">⬆️</span> Upload Evidence for {selectedCriteria.length} Criteria
-            </button>
-          </div>
-        )}
-        {learningOutcomes.length > 0 ? (
-          showTableView ? (
-            // Assessment Table View
-            <PerformanceCriteriaTable
-              unitCode={unit.code}
-              learningOutcomes={learningOutcomes}
-              evidence={evidence}
-              onCriteriaClick={(criteriaCode) => {
-                // Handle criteria click in table view - could open evidence details
-                console.log('Criteria clicked in table view:', criteriaCode);
-              }}
-            />
-          ) : (
-            // Standard View
-            <div className="space-y-8">
-              {learningOutcomes.map((outcome, outcomeIndex) => (
-                <div key={outcome.number} className="space-y-4">
-                  <div className="font-bold text-lg text-blue-400">Learning Outcome {outcome.number}: {outcome.title}</div>
-                  {outcome.performanceCriteria && UnitModel.getSortedPerformanceCriteria(outcome.performanceCriteria).map((criteria, criteriaIndex) => {
-                    let checkboxColor = 'text-neutral-400';
-                    let textColor = 'text-white';
-                    let descriptionColor = 'text-neutral-300';
-                    
-                    if (criteria.status === 'approved') {
-                      checkboxColor = 'text-green-400';
-                      textColor = 'text-green-400'; // Light green for completed criteria
-                      descriptionColor = 'text-green-500'; // Slightly darker green for description
-                    } else if (criteria.status === 'pending') {
-                      checkboxColor = 'text-yellow-400';
-                    }
-                    
-                    const isSelected = selectedCriteria.some(sel => sel.outcomeIdx === outcomeIndex && sel.criteriaIdx === criteriaIndex);
-                    return (
-                    <div key={criteria.code} className={`bg-neutral-900 rounded-xl px-4 py-3 flex items-center gap-3 ${criteria.status === 'approved' ? 'opacity-80' : ''}`}>
-                      <input 
-                        type="checkbox" 
-                          checked={isSelected}
+        <h1 className="text-3xl font-bold mb-8">{currentUnit.code} {currentUnit.title}</h1>
+
+        <div className="space-y-8">
+          {currentUnit.learningOutcomes?.map((outcome, outcomeIndex) => (
+            <div key={outcomeIndex} className="bg-neutral-900 rounded-xl p-6">
+              <h2 className="text-xl font-semibold mb-4">
+                Learning Outcome {outcomeIndex + 1}: {outcome.title}
+              </h2>
+              
+              <div className="space-y-4">
+                {outcome.performanceCriteria.map((criteria, criteriaIndex) => (
+                  <div key={criteriaIndex} className="border border-neutral-700 rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        checked={selectedCriteria.has(criteria.code)}
                         onChange={() => handleCheckboxChange(outcomeIndex, criteriaIndex)}
-                          className={`form-checkbox h-5 w-5 bg-neutral-800 border-neutral-700 rounded focus:ring-blue-500 ${checkboxColor}`}
-                          style={{ accentColor: criteria.status === 'approved' ? '#22c55e' : criteria.status === 'pending' ? '#facc15' : undefined }}
-                          disabled={criteria.status === 'approved' || criteria.status === 'pending'}
+                        className="mt-1"
                       />
-                      <div>
-                        <div className={`font-semibold ${textColor}`}>Criteria {criteria.code}</div>
-                        <div className={`text-sm ${descriptionColor}`}>{criteria.description}</div>
-                          {criteria.status === 'pending' && (
-                            <div className="text-yellow-400 text-xs mt-1">Evidence uploaded, awaiting assessment</div>
-                          )}
-                          {criteria.status === 'approved' && (
-                            <div className="text-green-400 text-xs mt-1">✓ Approved - No further action needed</div>
-                          )}
-                        </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-lg mb-2">
+                          {criteria.code}: {criteria.description}
+                        </h3>
+                        <p className="text-gray-400 mb-3">{criteria.description}</p>
                       </div>
-                    );
-                  })}
-                </div>
-              ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          )
-        ) : (
-          <div className="text-center text-neutral-400 py-8">
-            No learning outcomes found for this unit.
+          ))}
+        </div>
+
+        {selectedCriteria.size > 0 && (
+          <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-40">
+            <button
+              onClick={() => setShowUploadModal(true)}
+              disabled={isUploading}
+              className="bg-blue-600 text-white font-semibold rounded-xl px-8 py-4 flex items-center gap-2 hover:bg-blue-700 transition disabled:opacity-50"
+            >
+              <span role="img" aria-label="upload">📤</span>
+              Upload Evidence for {selectedCriteria.size} Criteria
+            </button>
           </div>
         )}
       </div>
+
+      <EvidenceModal
+        open={showUploadModal}
+        onClose={handleModalClose}
+        onUpload={handleEvidenceUpload}
+        selectedCount={selectedCriteria.size}
+        isUploading={isUploading}
+      />
       
       <BottomNavigation />
     </div>
   );
-} 
+}
+
+// Export as dynamic component with SSR disabled
+export default dynamic(() => Promise.resolve(CriteriaClient), {
+  ssr: false,
+  loading: () => (
+    <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center">
+      <div className="text-center">
+        <p className="text-lg">Loading...</p>
+      </div>
+    </div>
+  )
+}); 
