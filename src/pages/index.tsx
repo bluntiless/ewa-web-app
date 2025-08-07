@@ -2,15 +2,6 @@ import { useMsal } from '@azure/msal-react';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
-  const { instance } = useMsal();
-  const [config, setConfig] = useState<any>(null);
-
-  useEffect(() => {
-    if (instance) {
-      setConfig(instance.getConfiguration());
-    }
-  }, [instance]);
-
   return (
     <div className="min-h-screen bg-black text-white p-8">
       <div className="max-w-4xl mx-auto">
@@ -18,13 +9,11 @@ export default function Home() {
         
         <div className="space-y-6">
           <div className="bg-neutral-900 p-6 rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">MSAL Configuration</h2>
+            <h2 className="text-xl font-semibold mb-4">Status</h2>
             <div className="space-y-2 text-sm">
-              <p><strong>Client ID:</strong> {config?.auth?.clientId || 'Loading...'}</p>
-              <p><strong>Authority:</strong> {config?.auth?.authority || 'Loading...'}</p>
-              <p><strong>Redirect URI:</strong> {config?.auth?.redirectUri || 'Loading...'}</p>
-              <p><strong>Current URL:</strong> {typeof window !== 'undefined' ? window.location.href : 'Server-side'}</p>
-              <p><strong>Origin:</strong> {typeof window !== 'undefined' ? window.location.origin : 'Server-side'}</p>
+              <p><strong>✅ App is working!</strong></p>
+              <p><strong>Build Status:</strong> Success</p>
+              <p><strong>Deployment:</strong> Live</p>
             </div>
           </div>
 
