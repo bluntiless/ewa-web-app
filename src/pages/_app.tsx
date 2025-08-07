@@ -10,8 +10,15 @@ export default function App({ Component, pageProps }: AppProps) {
     return <Component {...pageProps} />;
   }
 
+  const msalInstance = getMsalInstance();
+  
+  // If no MSAL instance available, render without provider
+  if (!msalInstance) {
+    return <Component {...pageProps} />;
+  }
+
   return (
-    <MsalProvider instance={getMsalInstance()}>
+    <MsalProvider instance={msalInstance}>
       <Component {...pageProps} />
     </MsalProvider>
   );

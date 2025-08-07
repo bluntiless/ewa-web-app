@@ -44,15 +44,8 @@ let _msalInstance: PublicClientApplication | null = null;
 export const getMsalInstance = (): PublicClientApplication => {
   // Check if we're on the client side
   if (typeof window === 'undefined') {
-    // Server-side rendering - return a minimal mock instance
-    return {
-      initialize: async () => {},
-      handleRedirectPromise: async () => null,
-      getAllAccounts: () => [],
-      loginPopup: async () => ({ account: null }),
-      logout: () => {},
-      getConfiguration: () => msalConfig,
-    } as PublicClientApplication;
+    // Server-side rendering - return null and let the app handle it
+    return null as any;
   }
   
   // Client side - create the real instance
@@ -61,22 +54,14 @@ export const getMsalInstance = (): PublicClientApplication => {
       _msalInstance = new PublicClientApplication(msalConfig);
     } catch (error) {
       console.error('Failed to create MSAL instance:', error);
-      // Return a minimal mock instance as fallback
-      return {
-        initialize: async () => {},
-        handleRedirectPromise: async () => null,
-        getAllAccounts: () => [],
-        loginPopup: async () => ({ account: null }),
-        logout: () => {},
-        getConfiguration: () => msalConfig,
-      } as PublicClientApplication;
+      return null as any;
     }
   }
   
   return _msalInstance;
 };
 
-// Export the instance for backward compatibility (but this will be the mock on SSR)
+// Export the instance for backward compatibility (but this will be null on SSR)
 export const msalInstance = getMsalInstance();
 
 // Login request configuration
