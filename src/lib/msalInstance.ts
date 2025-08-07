@@ -38,7 +38,24 @@ export const msalConfig: Configuration = {
   }
 };
 
-export const msalInstance = new PublicClientApplication(msalConfig);
+// Create MSAL instance only on client side to avoid SSR issues
+let msalInstance: PublicClientApplication | null = null;
+
+export const getMsalInstance = (): PublicClientApplication => {
+  if (typeof window === 'undefined') {
+    // Server-side rendering - return a mock instance
+    return {} as PublicClientApplication;
+  }
+  
+  if (!msalInstance) {
+    msalInstance = new PublicClientApplication(msalConfig);
+  }
+  
+  return msalInstance;
+};
+
+// Export the instance for backward compatibility
+export const msalInstance = getMsalInstance();
 
 // Login request configuration
 export const loginRequest: PopupRequest = {
