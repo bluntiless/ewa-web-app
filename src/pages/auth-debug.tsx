@@ -1,23 +1,17 @@
 import { useMsal } from '@azure/msal-react';
 import { loginRequest } from '../lib/msalInstance';
-import { useState } from 'react';
 
 export default function AuthDebug() {
   const { instance, accounts } = useMsal();
-  const [error, setError] = useState<string>('');
-  const [redirectUri, setRedirectUri] = useState<string>('');
 
   const handleLogin = async () => {
     try {
-      setError('');
       console.log('Current redirect URI:', instance.getConfiguration().auth.redirectUri);
-      setRedirectUri(instance.getConfiguration().auth.redirectUri || 'Not set');
       
       const response = await instance.loginPopup(loginRequest);
       console.log('Login response:', response);
     } catch (err: any) {
       console.error('Login error:', err);
-      setError(err.message || 'Unknown error');
     }
   };
 
@@ -36,7 +30,7 @@ export default function AuthDebug() {
             <div className="space-y-2 text-sm">
               <p><strong>Client ID:</strong> {instance.getConfiguration().auth.clientId}</p>
               <p><strong>Authority:</strong> {instance.getConfiguration().auth.authority}</p>
-              <p><strong>Redirect URI:</strong> {redirectUri || instance.getConfiguration().auth.redirectUri || 'Not set'}</p>
+              <p><strong>Redirect URI:</strong> {instance.getConfiguration().auth.redirectUri}</p>
               <p><strong>Current URL:</strong> {typeof window !== 'undefined' ? window.location.href : 'Server-side'}</p>
               <p><strong>Origin:</strong> {typeof window !== 'undefined' ? window.location.origin : 'Server-side'}</p>
             </div>
@@ -72,13 +66,6 @@ export default function AuthDebug() {
               </button>
             </div>
           </div>
-
-          {error && (
-            <div className="bg-red-900 p-6 rounded-lg">
-              <h2 className="text-xl font-semibold mb-4">Error</h2>
-              <p className="text-red-200">{error}</p>
-            </div>
-          )}
         </div>
       </div>
     </div>

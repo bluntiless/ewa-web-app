@@ -1,7 +1,7 @@
 import { Configuration, PublicClientApplication, PopupRequest } from '@azure/msal-browser';
 
-// Static redirect URI for production - this avoids SSR issues
-const redirectUri = 'https://ewa-web-app-vqh2-f5cplzp51-wayne-anthony-wrights-projects.vercel.app/';
+// Use the working version's domain for redirect URI
+const redirectUri = 'https://ewa-web-app-vl9z.vercel.app/';
 
 export const msalConfig: Configuration = {
   auth: {
@@ -38,31 +38,8 @@ export const msalConfig: Configuration = {
   }
 };
 
-// Create MSAL instance only on client side to avoid SSR issues
-let _msalInstance: PublicClientApplication | null = null;
-
-export const getMsalInstance = (): PublicClientApplication => {
-  // Check if we're on the client side
-  if (typeof window === 'undefined') {
-    // Server-side rendering - return null and let the app handle it
-    return null as any;
-  }
-  
-  // Client side - create the real instance
-  if (!_msalInstance) {
-    try {
-      _msalInstance = new PublicClientApplication(msalConfig);
-    } catch (error) {
-      console.error('Failed to create MSAL instance:', error);
-      return null as any;
-    }
-  }
-  
-  return _msalInstance;
-};
-
-// Export the instance for backward compatibility (but this will be null on SSR)
-export const msalInstance = getMsalInstance();
+// Simple MSAL instance creation - let Next.js handle SSR
+export const msalInstance = new PublicClientApplication(msalConfig);
 
 // Login request configuration
 export const loginRequest: PopupRequest = {
