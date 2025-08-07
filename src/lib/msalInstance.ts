@@ -1,4 +1,4 @@
-import { Configuration, PublicClientApplication } from '@azure/msal-browser';
+import { Configuration, PublicClientApplication, PopupRequest } from '@azure/msal-browser';
 
 // Dynamic redirect URI that works in both development and production
 const getRedirectUri = () => {
@@ -51,3 +51,8 @@ export const msalConfig: Configuration = {
 };
 
 export const msalInstance = new PublicClientApplication(msalConfig);
+
+// Login request configuration
+export const loginRequest: PopupRequest = {
+  scopes: ['User.Read', 'Sites.Read.All', 'Files.Read.All']
+};
