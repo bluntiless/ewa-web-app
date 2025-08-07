@@ -1,25 +1,13 @@
 import { Configuration, PublicClientApplication, PopupRequest } from '@azure/msal-browser';
 
-// Dynamic redirect URI that works in both development and production
-const getRedirectUri = () => {
-  if (typeof window !== 'undefined') {
-    // In browser environment
-    const currentUrl = window.location.origin;
-    if (currentUrl.includes('localhost')) {
-      return 'http://localhost:3000';
-    } else {
-      return 'https://ewa-web-app-vqh2-f5cplzp51-wayne-anthony-wrights-projects.vercel.app/';
-    }
-  }
-  // Fallback for server-side rendering
-  return 'https://ewa-web-app-vqh2-f5cplzp51-wayne-anthony-wrights-projects.vercel.app/';
-};
+// Static redirect URI for production - this avoids SSR issues
+const redirectUri = 'https://ewa-web-app-vqh2-f5cplzp51-wayne-anthony-wrights-projects.vercel.app/';
 
 export const msalConfig: Configuration = {
   auth: {
     clientId: '4dee2fb0-16a8-417e-99e0-182238406716',
     authority: 'https://login.microsoftonline.com/f06bb1fd-4f8d-4dd6-bed9-8ae702c632b9',
-    redirectUri: getRedirectUri()
+    redirectUri: redirectUri
   },
   cache: {
     cacheLocation: 'localStorage',
