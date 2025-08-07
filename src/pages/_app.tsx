@@ -5,6 +5,11 @@ import { getMsalInstance } from '../lib/msalInstance';
 import '../styles/globals.css';
 
 export default function App({ Component, pageProps }: AppProps) {
+  // Only render MSAL provider on client side
+  if (typeof window === 'undefined') {
+    return <Component {...pageProps} />;
+  }
+
   return (
     <MsalProvider instance={getMsalInstance()}>
       <Component {...pageProps} />
