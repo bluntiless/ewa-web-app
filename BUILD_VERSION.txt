@@ -1,3 +1,0 @@
-Build Version: 2025-01-27-21-22
-Commit: e321693
-Status: Fixed PortfolioCompilationService getInstance error 
