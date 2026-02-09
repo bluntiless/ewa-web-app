@@ -2,8 +2,6 @@
 
 import type React from "react"
 import { useState } from "react"
-import Image from "next/image"
-import Link from "next/link"
 import { CheckCircle, XCircle } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -13,8 +11,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import SkillRatingRow from "@/components/skill-rating-row"
 import { qualificationsData, skillsScanSections } from "@/lib/skills-scan-data"
-import html2pdf from "html2pdf.js"
-import SiteHeader from "@/components/site-header" // Declare SiteHeader variable
+import SiteHeader from "@/components/site-header"
 
 type Rating = "limited" | "adequate" | "extensive" | "unsure" | ""
 
@@ -137,6 +134,8 @@ export default function CandidateCheckClientPage() {
     setPdfSaveStatus(null)
 
     try {
+      const html2pdfModule = await import("html2pdf.js")
+      const html2pdf = html2pdfModule.default
       // Create a temporary container for PDF content
       const pdfContainer = document.createElement("div")
       pdfContainer.style.position = "absolute"
