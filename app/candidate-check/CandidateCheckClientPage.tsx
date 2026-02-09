@@ -14,6 +14,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import SkillRatingRow from "@/components/skill-rating-row"
 import { qualificationsData, skillsScanSections } from "@/lib/skills-scan-data"
 import html2pdf from "html2pdf.js"
+import SiteHeader from "@/components/site-header" // Declare SiteHeader variable
 
 type Rating = "limited" | "adequate" | "extensive" | "unsure" | ""
 
@@ -364,34 +365,15 @@ export default function CandidateCheckClientPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800">
-      {/* Header/Navigation */}
-      <header className="w-full bg-white shadow-sm py-4 px-6 md:px-8 lg:px-12 flex justify-between items-center">
-        <Link href="/">
-          <Image src="/ewa_logo.png" alt="EWA Tracker Logo" width={120} height={40} className="object-contain" />
-        </Link>
-        <nav className="hidden md:flex space-x-6">
-          <Link href="/" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-            Home
-          </Link>
-          <Link href="/about" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-            About Us
-          </Link>
-          <Link href="/services" className="text-blue-700 font-medium transition-colors">
-            Services
-          </Link>
-          <Link href="/contact" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-            Contact
-          </Link>
-        </nav>
-      </header>
+      <SiteHeader />
 
       <main className="max-w-4xl mx-auto px-4 py-16 md:py-24">
         <section className="bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-6">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 text-balance">
               Installation & Maintenance Electrician EWA: Skills Scan
             </h1>
-            <span className="text-sm text-gray-500">June 2024</span>
+            <span className="text-sm text-gray-500 flex-shrink-0">June 2024</span>
           </div>
           <p className="text-lg text-gray-700 leading-relaxed mb-8">
             This self-assessment Skills Scan is designed to help you decide whether the Installation & Maintenance
@@ -1021,7 +1003,7 @@ export default function CandidateCheckClientPage() {
       <footer className="bg-gray-900 text-gray-300 py-8 text-center">
         <div className="max-w-6xl mx-auto px-4">
           <p>&copy; {new Date().getFullYear()} EWA Tracker Limited. All rights reserved.</p>
-          <p className="mt-2 text-sm">Registered in England and Wales. Company No. 12345678.</p>
+          <p className="mt-2 text-sm">Registered in England and Wales. Company No. 16413190.</p>
           <div className="flex justify-center space-x-4 mt-4">
             <a
               href="https://linkedin.com/company/ewatracker"
