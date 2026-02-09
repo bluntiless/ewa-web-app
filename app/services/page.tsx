@@ -39,8 +39,8 @@ export default function ServicesPage() {
             Comprehensive Electrotechnical Assessment Services
           </h1>
           <p className="text-lg text-gray-700 leading-relaxed mb-8 max-w-3xl mx-auto">
-            EWA Tracker Limited offers a range of EAL-recognised qualifications designed for experienced electrical
-            workers. Explore our pathways to formal certification and career advancement.
+            EWA Tracker Limited offers qualifications designed for experienced electrical workers, with EAL
+            recognition pending. Explore our pathways to formal certification and career advancement.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">

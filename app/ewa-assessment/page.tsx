@@ -56,7 +56,7 @@ export default function EwaAssessmentPage() {
                 Level 3 qualification without needing to go through a full apprenticeship.
               </p>
               <ul className="list-disc list-inside text-gray-700 leading-relaxed space-y-2 mb-6">
-                <li>**Industry Recognition**: EAL-recognised, ensuring your qualification is valued across the UK.</li>
+                <li>**Industry Recognition**: EAL recognition pending, ensuring your qualification will be valued across the UK.</li>
                 <li>**Competence-Based**: Focuses on your proven abilities in real-world electrical installations.</li>
                 <li>**Efficient Pathway**: Designed to fast-track experienced workers to qualified status.</li>
                 <li>**ECS Gold Card Eligibility**: A key step towards obtaining your ECS Gold Card.</li>

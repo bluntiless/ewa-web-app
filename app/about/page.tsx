@@ -37,7 +37,7 @@ export default function AboutPage() {
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 text-center">About EWA Tracker Limited</h1>
           <p className="text-lg text-gray-700 leading-relaxed mb-8 text-center max-w-3xl mx-auto">
             EWA Tracker Limited is dedicated to providing high-quality Electrotechnical Experienced Worker Assessment
-            (EWA) Level 3 qualifications. We are fully recognised by EAL and committed to supporting experienced
+            (EWA) Level 3 qualifications. We are pending recognition by EAL and committed to supporting experienced
             electricians in achieving their professional certifications.
           </p>
 

@@ -41,7 +41,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4 relative z-10 text-center">
           <Image
             src="/ewa_logo_eal_recognised.png"
-            alt="EWA Tracker Logo - EAL Recognised"
+            alt="EWA Tracker Logo - EAL Recognition Pending"
             width={250}
             height={300}
             className="mx-auto mb-8 drop-shadow-lg"
@@ -49,8 +49,8 @@ export default function HomePage() {
           />
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">EWA Tracker Limited</h1>
           <p className="text-lg md:text-xl max-w-3xl mx-auto mb-8 opacity-90">
-            Your trusted partner for Electrotechnical Experienced Worker Assessment (EWA) Level 3 qualification. Fully
-            recognised by EAL.
+            Your trusted partner for Electrotechnical Experienced Worker Assessment (EWA) Level 3 qualification.
+            Pending recognition by EAL.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
@@ -75,7 +75,7 @@ export default function HomePage() {
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Recognised Qualifications</h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              EWA Tracker Limited is proud to offer EAL-recognised qualifications for experienced electrical workers.
+              EWA Tracker Limited offers qualifications for experienced electrical workers, with EAL recognition pending.
             </p>
           </div>
 
