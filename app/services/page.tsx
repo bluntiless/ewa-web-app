@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { Lightbulb, Zap, CreditCard, FilePenLine } from "lucide-react"
+import SiteHeader from "@/components/site-header"
 
 export const metadata: Metadata = {
   title: "Our Services",
@@ -22,26 +23,7 @@ export const metadata: Metadata = {
 export default function ServicesPage() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800">
-      {/* Header/Navigation */}
-      <header className="w-full bg-white shadow-sm py-4 px-6 md:px-8 lg:px-12 flex justify-between items-center">
-        <Link href="/">
-          <Image src="/ewa_logo.png" alt="EWA Tracker Logo" width={120} height={40} className="object-contain" />
-        </Link>
-        <nav className="hidden md:flex space-x-6">
-          <Link href="/" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-            Home
-          </Link>
-          <Link href="/about" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-            About Us
-          </Link>
-          <Link href="/services" className="text-blue-700 font-medium transition-colors">
-            Services
-          </Link>
-          <Link href="/contact" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-            Contact
-          </Link>
-        </nav>
-      </header>
+      <SiteHeader />
 
       <main className="max-w-6xl mx-auto px-4 py-16 md:py-24">
         <section className="bg-white rounded-xl shadow-lg p-8 md:p-12 mb-12 text-center">
