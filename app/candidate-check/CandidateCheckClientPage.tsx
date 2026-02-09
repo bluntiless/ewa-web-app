@@ -1,19 +1,19 @@
 "use client"
 
 import type React from "react"
-import { useState, useRef } from "react"
+import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { CheckCircle, XCircle } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Button } from "@/components/ui/button"
 import SkillRatingRow from "@/components/skill-rating-row"
 import { qualificationsData, skillsScanSections } from "@/lib/skills-scan-data"
-import { CheckCircle, AlertTriangle } from "lucide-react" // Import AlertTriangle icon
-import { MobileNav } from "@/components/mobile-nav"
+import html2pdf from "html2pdf.js"
 
 type Rating = "limited" | "adequate" | "extensive" | "unsure" | ""
 
@@ -81,13 +81,8 @@ export default function CandidateCheckClientPage() {
     furtherExperienceRequired: "",
   })
 
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null)
-  const [outcomeType, setOutcomeType] = useState<
-    "highly_suitable" | "knowledge_gaps" | "experience_gaps" | "significant_gaps" | null
-  >(null)
-
-  const outcomeRef = useRef<HTMLDivElement>(null)
+  const [isPdfGenerating, setIsPdfGenerating] = useState(false)
+  const [pdfSaveStatus, setPdfSaveStatus] = useState<"success" | "error" | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target
@@ -122,7 +117,7 @@ export default function CandidateCheckClientPage() {
     value: Rating,
   ) => {
     setFormData((prev) => ({
-      ...prev, // keep the rest of the state intact
+      ...prev,
       skills: {
         ...prev.skills,
         [sectionId]: {
@@ -136,126 +131,234 @@ export default function CandidateCheckClientPage() {
     }))
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitted(true)
-    setSubmitStatus(null)
-    setOutcomeType(null)
-
-    if (!formData.fullName || !formData.email || !formData.yearsExperience || !formData.declaration) {
-      setSubmitStatus("error")
-      setIsSubmitted(false)
-      return
-    }
+  const handleSaveAsPdf = async () => {
+    setIsPdfGenerating(true)
+    setPdfSaveStatus(null)
 
     try {
-      console.log("Submitting form data:", formData)
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      // Create a temporary container for PDF content
+      const pdfContainer = document.createElement("div")
+      pdfContainer.style.position = "absolute"
+      pdfContainer.style.left = "-9999px"
+      pdfContainer.style.top = "0"
+      pdfContainer.style.width = "210mm" // A4 width
+      pdfContainer.style.backgroundColor = "white"
+      pdfContainer.style.padding = "20mm"
+      pdfContainer.style.fontFamily = "Arial, sans-serif"
+      pdfContainer.style.fontSize = "12px"
+      pdfContainer.style.lineHeight = "1.4"
+      pdfContainer.style.color = "#000"
 
-      const yearsExp = Number.parseInt(formData.yearsExperience)
-      let knowledgeAdequateCount = 0
-      let experienceAdequateCount = 0
-      let totalSkills = 0
-      let hasInvalidQualificationSelected = false
+      // Build PDF content
+      let pdfContent = `
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0;">Installation & Maintenance Electrician EWA: Skills Scan</h1>
+        <p style="font-size: 12px; color: #666; margin: 0;">June 2024</p>
+      </div>
 
-      // Check for selected qualifications with "N/A" in their numbers
-      const allQualifications = [
-        ...qualificationsData.tableA,
-        ...qualificationsData.tableB,
-        ...qualificationsData.tableC,
-      ]
+      <div style="margin-bottom: 25px;">
+        <h2 style="font-size: 16px; font-weight: bold; margin: 0 0 15px 0; border-bottom: 2px solid #000; padding-bottom: 5px;">Candidate Details</h2>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+          <tr>
+            <td style="padding: 8px; border: 1px solid #ccc; font-weight: bold; width: 30%;">Name:</td>
+            <td style="padding: 8px; border: 1px solid #ccc;">${formData.fullName || "Not provided"}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border: 1px solid #ccc; font-weight: bold;">Email:</td>
+            <td style="padding: 8px; border: 1px solid #ccc;">${formData.email || "Not provided"}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border: 1px solid #ccc; font-weight: bold;">Phone:</td>
+            <td style="padding: 8px; border: 1px solid #ccc;">${formData.phone || "Not provided"}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border: 1px solid #ccc; font-weight: bold;">Years of Experience:</td>
+            <td style="padding: 8px; border: 1px solid #ccc;">${formData.yearsExperience || "Not provided"}</td>
+          </tr>
+        </table>
+      </div>
+    `
 
-      for (const tableKey of ["tableA", "tableB", "tableC"] as const) {
-        for (const qualTitle in formData.selectedQualifications[tableKey]) {
-          if (formData.selectedQualifications[tableKey][qualTitle]) {
-            const qual = allQualifications.find((q) => q.title === qualTitle)
-            if (qual && qual.qualificationNumbers.includes("N/A")) {
-              hasInvalidQualificationSelected = true
-              break
-            }
-          }
+      // Add selected qualifications
+      const selectedTableA = Object.entries(formData.selectedQualifications.tableA).filter(([_, selected]) => selected)
+      const selectedTableB = Object.entries(formData.selectedQualifications.tableB).filter(([_, selected]) => selected)
+      const selectedTableC = Object.entries(formData.selectedQualifications.tableC).filter(([_, selected]) => selected)
+
+      if (selectedTableA.length > 0 || selectedTableB.length > 0 || selectedTableC.length > 0) {
+        pdfContent += `
+        <div style="margin-bottom: 25px;">
+          <h2 style="font-size: 16px; font-weight: bold; margin: 0 0 15px 0; border-bottom: 2px solid #000; padding-bottom: 5px;">Selected Qualifications</h2>
+      `
+
+        if (selectedTableA.length > 0) {
+          pdfContent += `
+          <h3 style="font-size: 14px; font-weight: bold; margin: 15px 0 10px 0;">Table A Qualifications:</h3>
+          <ul style="margin: 0 0 15px 20px; padding: 0;">
+        `
+          selectedTableA.forEach(([title]) => {
+            pdfContent += `<li style="margin-bottom: 5px;">${title}</li>`
+          })
+          pdfContent += `</ul>`
         }
-        if (hasInvalidQualificationSelected) break
+
+        if (selectedTableB.length > 0) {
+          pdfContent += `
+          <h3 style="font-size: 14px; font-weight: bold; margin: 15px 0 10px 0;">Table B Qualifications:</h3>
+          <ul style="margin: 0 0 15px 20px; padding: 0;">
+        `
+          selectedTableB.forEach(([title]) => {
+            pdfContent += `<li style="margin-bottom: 5px;">${title}</li>`
+          })
+          pdfContent += `</ul>`
+        }
+
+        if (selectedTableC.length > 0) {
+          pdfContent += `
+          <h3 style="font-size: 14px; font-weight: bold; margin: 15px 0 10px 0;">Table C Qualifications:</h3>
+          <ul style="margin: 0 0 15px 20px; padding: 0;">
+        `
+          selectedTableC.forEach(([title]) => {
+            pdfContent += `<li style="margin-bottom: 5px;">${title}</li>`
+          })
+          pdfContent += `</ul>`
+        }
+
+        if (formData.otherQualifications) {
+          pdfContent += `
+          <h3 style="font-size: 14px; font-weight: bold; margin: 15px 0 10px 0;">Other Qualifications:</h3>
+          <p style="margin: 0 0 15px 0; padding: 10px; background-color: #f9f9f9; border-left: 4px solid #ccc;">${formData.otherQualifications}</p>
+        `
+        }
+
+        pdfContent += `</div>`
       }
 
-      for (const sectionId in formData.skills) {
-        for (const skillId in formData.skills[sectionId]) {
-          totalSkills++
-          if (
-            formData.skills[sectionId][skillId].knowledge === "adequate" ||
-            formData.skills[sectionId][skillId].knowledge === "extensive"
-          ) {
-            knowledgeAdequateCount++
-          }
-          if (
-            formData.skills[sectionId][skillId].experience === "adequate" ||
-            formData.skills[sectionId][skillId].experience === "extensive"
-          ) {
-            experienceAdequateCount++
-          }
+      // Add skills assessment
+      pdfContent += `
+      <div style="margin-bottom: 25px;">
+        <h2 style="font-size: 16px; font-weight: bold; margin: 0 0 15px 0; border-bottom: 2px solid #000; padding-bottom: 5px;">Skills Assessment</h2>
+    `
+
+      skillsScanSections.forEach((section) => {
+        pdfContent += `
+        <div style="margin-bottom: 20px;">
+          <h3 style="font-size: 14px; font-weight: bold; margin: 0 0 10px 0; color: #333;">${section.title}</h3>
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 11px;">
+            <thead>
+              <tr style="background-color: #f0f0f0;">
+                <th style="border: 1px solid #000; padding: 8px; text-align: left; width: 50%;">Skill/Task</th>
+                <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 25%;">Knowledge</th>
+                <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 25%;">Experience</th>
+              </tr>
+            </thead>
+            <tbody>
+      `
+
+        section.items.forEach((item) => {
+          const knowledge = formData.skills[section.id]?.[item.id]?.knowledge || "Not rated"
+          const experience = formData.skills[section.id]?.[item.id]?.experience || "Not rated"
+
+          pdfContent += `
+          <tr>
+            <td style="border: 1px solid #000; padding: 6px; vertical-align: top;">${item.text}</td>
+            <td style="border: 1px solid #000; padding: 6px; text-align: center; vertical-align: top;">${knowledge}</td>
+            <td style="border: 1px solid #000; padding: 6px; text-align: center; vertical-align: top;">${experience}</td>
+          </tr>
+        `
+        })
+
+        pdfContent += `
+            </tbody>
+          </table>
+        </div>
+      `
+      })
+
+      pdfContent += `</div>`
+
+      // Add further requirements if any
+      if (formData.furtherKnowledgeRequired || formData.furtherExperienceRequired) {
+        pdfContent += `
+        <div style="margin-bottom: 25px;">
+          <h2 style="font-size: 16px; font-weight: bold; margin: 0 0 15px 0; border-bottom: 2px solid #000; padding-bottom: 5px;">Further Requirements</h2>
+      `
+
+        if (formData.furtherKnowledgeRequired) {
+          pdfContent += `
+          <h3 style="font-size: 14px; font-weight: bold; margin: 15px 0 10px 0;">Knowledge:</h3>
+          <p style="margin: 0 0 15px 0; padding: 10px; background-color: #f9f9f9; border-left: 4px solid #ccc;">${formData.furtherKnowledgeRequired}</p>
+        `
         }
+
+        if (formData.furtherExperienceRequired) {
+          pdfContent += `
+          <h3 style="font-size: 14px; font-weight: bold; margin: 15px 0 10px 0;">Experience:</h3>
+          <p style="margin: 0 0 15px 0; padding: 10px; background-color: #f9f9f9; border-left: 4px solid #ccc;">${formData.furtherExperienceRequired}</p>
+        `
+        }
+
+        pdfContent += `</div>`
       }
 
-      const knowledgeScore = (knowledgeAdequateCount / totalSkills) * 100
-      const experienceScore = (experienceAdequateCount / totalSkills) * 100
+      // Add background declaration
+      pdfContent += `
+      <div style="margin-bottom: 25px;">
+        <h2 style="font-size: 16px; font-weight: bold; margin: 0 0 15px 0; border-bottom: 2px solid #000; padding-bottom: 5px;">Background Declaration</h2>
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 8px; border: 1px solid #ccc; font-weight: bold; width: 40%;">Criminal Convictions:</td>
+            <td style="padding: 8px; border: 1px solid #ccc;">${formData.criminalConvictions}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border: 1px solid #ccc; font-weight: bold;">Right to Work in UK:</td>
+            <td style="padding: 8px; border: 1px solid #ccc;">${formData.rightToWork}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border: 1px solid #ccc; font-weight: bold;">Declaration Agreed:</td>
+            <td style="padding: 8px; border: 1px solid #ccc;">${formData.declaration ? "Yes" : "No"}</td>
+          </tr>
+        </table>
+      </div>
+    `
 
-      let calculatedOutcome: "highly_suitable" | "knowledge_gaps" | "experience_gaps" | "significant_gaps"
+      pdfContainer.innerHTML = pdfContent
+      document.body.appendChild(pdfContainer)
 
-      if (hasInvalidQualificationSelected) {
-        calculatedOutcome = "significant_gaps" // Force unsuitable if N/A qualification is selected
-      } else if (yearsExp >= 5) {
-        if (knowledgeScore >= 80 && experienceScore >= 80) {
-          calculatedOutcome = "highly_suitable"
-        } else if (knowledgeScore < 80 && experienceScore >= 80) {
-          calculatedOutcome = "knowledge_gaps"
-        } else if (knowledgeScore >= 80 && experienceScore < 80) {
-          calculatedOutcome = "experience_gaps"
-        } else {
-          calculatedOutcome = "significant_gaps"
-        }
-      } else {
-        calculatedOutcome = "significant_gaps"
+      // Configure html2pdf options for better formatting
+      const opt = {
+        margin: [15, 15, 15, 15], // Top, Right, Bottom, Left margins in mm
+        filename: `EWA_Skills_Scan_${formData.fullName.replace(/\s+/g, "_") || "Candidate"}_${new Date().toISOString().split("T")[0]}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          letterRendering: true,
+          allowTaint: false,
+        },
+        jsPDF: {
+          unit: "mm",
+          format: "a4",
+          orientation: "portrait",
+          compress: true,
+        },
+        pagebreak: {
+          mode: ["avoid-all", "css", "legacy"],
+          before: ".page-break-before",
+          after: ".page-break-after",
+        },
       }
 
-      setOutcomeType(calculatedOutcome)
-      setSubmitStatus("success")
-      console.log("Calculated Outcome:", calculatedOutcome)
+      await html2pdf().set(opt).from(pdfContainer).save()
 
-      setTimeout(() => {
-        outcomeRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
-      }, 100)
+      // Clean up
+      document.body.removeChild(pdfContainer)
+
+      setPdfSaveStatus("success")
     } catch (error) {
-      console.error("Form submission error:", error)
-      setSubmitStatus("error")
+      console.error("Error generating PDF:", error)
+      setPdfSaveStatus("error")
     } finally {
-      setIsSubmitted(false)
-    }
-  }
-
-  const getOutcomeStyling = (outcome: typeof outcomeType) => {
-    switch (outcome) {
-      case "highly_suitable":
-        return "bg-green-100 border-green-500 text-green-800"
-      case "knowledge_gaps":
-      case "experience_gaps":
-        return "bg-orange-100 border-orange-500 text-orange-800"
-      case "significant_gaps":
-        return "bg-red-100 border-red-500 text-red-800"
-      default:
-        return ""
-    }
-  }
-
-  const getOutcomeIcon = (outcome: typeof outcomeType) => {
-    switch (outcome) {
-      case "highly_suitable":
-        return <CheckCircle className="w-8 h-8 text-green-600 flex-shrink-0" />
-      case "knowledge_gaps":
-      case "experience_gaps":
-      case "significant_gaps":
-        return <AlertTriangle className="w-8 h-8 text-current flex-shrink-0" /> // text-current will use the parent's text color
-      default:
-        return null
+      setIsPdfGenerating(false)
     }
   }
 
@@ -266,23 +369,20 @@ export default function CandidateCheckClientPage() {
         <Link href="/">
           <Image src="/ewa_logo.png" alt="EWA Tracker Logo" width={120} height={40} className="object-contain" />
         </Link>
-        <div className="flex items-center">
-          <nav className="hidden md:flex space-x-6">
-            <Link href="/" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-              Home
-            </Link>
-            <Link href="/about" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-              About Us
-            </Link>
-            <Link href="/services" className="text-blue-700 font-medium transition-colors">
-              Services
-            </Link>
-            <Link href="/contact" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-              Contact
-            </Link>
-          </nav>
-          <MobileNav className="md:hidden" />
-        </div>
+        <nav className="hidden md:flex space-x-6">
+          <Link href="/" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
+            Home
+          </Link>
+          <Link href="/about" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
+            About Us
+          </Link>
+          <Link href="/services" className="text-blue-700 font-medium transition-colors">
+            Services
+          </Link>
+          <Link href="/contact" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
+            Contact
+          </Link>
+        </nav>
       </header>
 
       <main className="max-w-4xl mx-auto px-4 py-16 md:py-24">
@@ -294,10 +394,11 @@ export default function CandidateCheckClientPage() {
             <span className="text-sm text-gray-500">June 2024</span>
           </div>
           <p className="text-lg text-gray-700 leading-relaxed mb-8">
-            This online self-assessment Skills Scan is a tool designed to help you check your suitability for the
-            Installation & Maintenance Electrician Experienced Worker Assessment (IE/ME EWA) by reviewing your knowledge
-            and skills against the IE/ME EWA requirements. Upon completion, you will receive an immediate outcome and
-            guidance.
+            This self-assessment Skills Scan is designed to help you decide whether the Installation & Maintenance
+            Electrician Experienced Worker Assessment (IE/ME EWA) is right for you by reviewing your knowledge and
+            skills against the IE/ME EWA requirement. If you decide to enrol on the IE/ME EWA, your chosen provider will
+            review the Skills Scan with you and will verify the information. The Skills Scan and supporting records must
+            be retained by the provider for quality auditing purposes.
           </p>
           <p className="text-lg text-gray-700 leading-relaxed mb-8">
             The IE/ME EWA mirrors the content of the Level 3 Installation & Maintenance Electrician Apprenticeship
@@ -310,16 +411,8 @@ export default function CandidateCheckClientPage() {
             Maintenance Electrician apprenticeship standard.
           </p>
 
-          {/* Important Note about PDF version */}
-          <div className="mb-8 p-4 bg-blue-100 border-l-4 border-blue-500 text-blue-800 rounded">
-            <p className="font-semibold">Important Note:</p>
-            <p className="text-sm">
-              This online tool provides an initial suitability check. You will still be required to complete and submit
-              the official PDF version of the Skills Scan and Candidate Background Form before being formally enrolled.
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-12">
+          {/* Form Content */}
+          <div className="space-y-12">
             {/* Personal Details */}
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">Candidate Details</h2>
@@ -635,8 +728,9 @@ export default function CandidateCheckClientPage() {
                   <h3 className="text-xl font-bold text-gray-900 mb-4">{section.title}</h3>
                   {section.description && <p className="text-gray-700 leading-relaxed mb-6">{section.description}</p>}
                   <div className="overflow-x-auto">
+                    {/* Use table-fixed for consistent column widths */}
                     <table className="w-full text-left table-fixed">
-                      <thead className="hidden md:table-header-group">
+                      <thead>
                         <tr className="border-b border-gray-300">
                           <th className="py-2 pr-4 text-sm font-semibold text-gray-700 w-[40%]">
                             For each item please tick one box in the&nbsp;Knowledge section and one box in
@@ -759,7 +853,7 @@ export default function CandidateCheckClientPage() {
             </div>
 
             {/* Declaration */}
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 mt-8">
               <Checkbox
                 id="declaration"
                 checked={formData.declaration}
@@ -774,61 +868,14 @@ export default function CandidateCheckClientPage() {
               </Label>
             </div>
 
-            <Button type="submit" className="w-full py-3 text-lg" disabled={isSubmitted}>
-              {isSubmitted ? "Submitting..." : "Submit Skills Scan"}
-            </Button>
-
-            {submitStatus === "error" && (
-              <div className="mt-4 text-center text-red-600">
-                Please fill in all required fields and accept the declaration.
-              </div>
-            )}
-
-            {/* Understanding my Results - Conditional Outcome Display */}
-            {outcomeType && (
-              <div ref={outcomeRef} className="mt-16 pt-8 border-t border-gray-200">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Understanding Your Results</h2>
-                <div className={`${getOutcomeStyling(outcomeType)} p-4 mb-6 rounded-md flex items-center space-x-3`}>
-                  {getOutcomeIcon(outcomeType)}
-                  <div>
-                    {outcomeType === "highly_suitable" && (
-                      <>
-                        <h3 className="text-2xl font-bold text-green-900 mb-1">SUITABLE</h3>
-                        <p className="text-lg">
-                          Based on your responses, you appear to be highly suitable for the IE/ME EWA. Your experience
-                          and knowledge align well with the qualification requirements.
-                        </p>
-                      </>
-                    )}
-                    {outcomeType === "knowledge_gaps" && (
-                      <>
-                        <h3 className="text-2xl font-bold text-orange-900 mb-1">KNOWLEDGE GAPS IDENTIFIED</h3>
-                        <p className="text-lg">
-                          Based on your responses, it appears you have some gaps in your knowledge.
-                        </p>
-                      </>
-                    )}
-                    {outcomeType === "experience_gaps" && (
-                      <>
-                        <h3 className="text-2xl font-bold text-orange-900 mb-1">EXPERIENCE GAPS IDENTIFIED</h3>
-                        <p className="text-lg">
-                          Based on your responses, it appears you have some gaps in your practical experience.
-                        </p>
-                      </>
-                    )}
-                    {outcomeType === "significant_gaps" && (
-                      <>
-                        <h3 className="text-2xl font-bold text-red-900 mb-1">NOT SUITABLE AT THIS TIME</h3>
-                        <p className="text-lg">
-                          Based on your responses, it appears you have significant gaps in both knowledge and/or
-                          experience, or you have selected a qualification that is not sufficient for the EWA.
-                        </p>
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                {outcomeType === "highly_suitable" && (
+            {/* Understanding my Results */}
+            <div className="mt-16 pt-8 border-t border-gray-200">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Understanding my Results</h2>
+              <div className="space-y-6 text-gray-700 leading-relaxed">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    I'VE TICKED ADEQUATE IN ALL, OR NEARLY ALL, OF THE BOXES:
+                  </h3>
                   <ul className="list-disc list-inside space-y-1">
                     <li>This suggests the IE/ME EWA is right for you.</li>
                     <li>
@@ -858,133 +905,147 @@ export default function CandidateCheckClientPage() {
                       verified.
                     </li>
                   </ul>
-                )}
+                </div>
 
-                {outcomeType === "knowledge_gaps" && (
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      I SEEM TO HAVE QUITE A FEW GAPS AROUND KNOWLEDGE:
-                    </h3>
-                    <ul className="list-disc list-inside space-y-1">
-                      <li>
-                        You might need to undertake some further training or study in order to fill these before you can
-                        take the IE/ME EWA.
-                      </li>
-                      <li>If you're not sure what would be required, talk to a training provider.</li>
-                      <li>
-                        Make sure that any recommended training or qualifications can be recognized as meeting the IE/ME
-                        EWA requirements. A list of accepted qualifications is contained within the Skills Scan.
-                      </li>
-                      <li>
-                        If the Knowledge gaps are significant, and you also need additional practical experience which
-                        is likely to take at least 12 months to obtain, you should consider enrolling on an
-                        apprenticeship. There are no age restrictions and any training and the cost of the end
-                        assessment will be funded. You can find more details at{" "}
-                        <a
-                          href="https://www.electricalcareers.co.uk/ewa-info"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:underline"
-                        >
-                          www.electricalcareers.co.uk/ewa-info
-                        </a>
-                        .
-                      </li>
-                    </ul>
-                  </div>
-                )}
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    I SEEM TO HAVE QUITE A FEW GAPS AROUND KNOWLEDGE:
+                  </h3>
+                  <ul className="list-disc list-inside space-y-1">
+                    <li>
+                      You might need to undertake some further training or study in order to fill these before you can
+                      take the IE/ME EWA.
+                    </li>
+                    <li>If you're not sure what would be required, talk to a training provider.</li>
+                    <li>
+                      Make sure that any recommended training or qualifications can be recognized as meeting the IE/ME
+                      EWA requirements. A list of accepted qualifications is contained within the Skills Scan.
+                    </li>
+                    <li>
+                      If the Knowledge gaps are significant, and you also need additional practical experience which is
+                      likely to take at least 12 months to obtain, you should consider enrolling on an apprenticeship.
+                      There are no age restrictions and any training and the cost of the end assessment will be funded.
+                      You can find more details at{" "}
+                      <a
+                        href="https://www.electricalcareers.co.uk/ewa-info"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline"
+                      >
+                        www.electricalcareers.co.uk/ewa-info
+                      </a>
+                      .
+                    </li>
+                  </ul>
+                </div>
 
-                {outcomeType === "experience_gaps" && (
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      I SEEM TO HAVE QUITE A FEW GAPS AROUND PRACTICAL EXPERIENCE:
-                    </h3>
-                    <ul className="list-disc list-inside space-y-1">
-                      <li>
-                        If it's likely to take at least 12 months to obtain sufficient practical experience, you should
-                        consider enrolling on an apprenticeship. There are no age restrictions and any training and the
-                        cost of the end assessment will be funded. You can find more details at{" "}
-                        <a
-                          href="https://www.electricalcareers.co.uk/ewa-info"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:underline"
-                        >
-                          www.electricalcareers.co.uk/ewa-info
-                        </a>
-                        .
-                      </li>
-                      <li>
-                        If you don't meet the requirements for an apprenticeship, think about whether it's possible to
-                        gain the experience by taking on different tasks within your work.
-                      </li>
-                      <li>
-                        If you're employed, talk to your employer about possible options. If you're self-employed,
-                        consider whether it's possible to broaden the work you undertake to fill the gaps.
-                      </li>
-                    </ul>
-                  </div>
-                )}
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    I SEEM TO HAVE QUITE A FEW GAPS AROUND PRACTICAL EXPERIENCE:
+                  </h3>
+                  <ul className="list-disc list-inside space-y-1">
+                    <li>
+                      If it's likely to take at least 12 months to obtain sufficient practical experience, you should
+                      consider enrolling on an apprenticeship. There are no age restrictions and any training and the
+                      cost of the end assessment will be funded. You can find more details at{" "}
+                      <a
+                        href="https://www.electricalcareers.co.uk/ewa-info"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline"
+                      >
+                        www.electricalcareers.co.uk/ewa-info
+                      </a>
+                      .
+                    </li>
+                    <li>
+                      If you don't meet the requirements for an apprenticeship, think about whether it's possible to
+                      gain the experience by taking on different tasks within your work.
+                    </li>
+                    <li>
+                      If you're employed, talk to your employer about possible options. If you're self-employed,
+                      consider whether it's possible to broaden the work you undertake to fill the gaps.
+                    </li>
+                  </ul>
+                </div>
+              </div>
 
-                {outcomeType === "significant_gaps" && (
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      Based on your responses, it appears you have significant gaps in both knowledge and/or experience.
-                    </h3>
-                    <p className="text-gray-700 leading-relaxed mb-4">
-                      It is highly recommended that you consider an alternative training route before pursuing the IE/ME
-                      EWA. The IE/ME EWA is designed for experienced electricians who can confidently demonstrate
-                      breadth and depth of knowledge and practical skills across all areas.
-                    </p>
-                    <ul className="list-disc list-inside space-y-1">
-                      <li>
-                        If you have less than 5 years of experience, or significant gaps in both knowledge and practical
-                        experience, an apprenticeship might be a more suitable pathway. There are no age restrictions,
-                        and training and end assessment costs may be funded. You can find more details at{" "}
-                        <a
-                          href="https://www.electricalcareers.co.uk/ewa-info"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:underline"
-                        >
-                          www.electricalcareers.co.uk/ewa-info
-                        </a>
-                        .
-                      </li>
-                      <li>
-                        Alternatively, consider undertaking further training or study to fill knowledge gaps, and
-                        actively seek opportunities to gain more practical experience in the areas identified.
-                      </li>
-                    </ul>
-                  </div>
-                )}
+              {/* Next Steps */}
+              <div className="mt-8 pt-8 border-t border-gray-200">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">Next Steps</h2>
+                <p className="text-gray-700 leading-relaxed">
+                  Once you've completed the Skills Scan, save the document - if you wish to register on the IE/ME EWA
+                  you will need it for the discussion with a training provider. If the IE/ME EWA isn't the right route
+                  for you, it provides a useful record of the gaps you will need to fill if you intend to take the IE/ME
+                  EWA in the future.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* PDF Save Button and Status */}
+          <div className="mt-8">
+            <Button
+              type="button"
+              onClick={handleSaveAsPdf}
+              className="w-full py-3 text-lg bg-purple-600 hover:bg-purple-700"
+              disabled={isPdfGenerating}
+            >
+              {isPdfGenerating ? "Generating PDF..." : "Save as PDF"}
+            </Button>
+
+            {pdfSaveStatus === "success" && (
+              <div className="mt-4 flex items-center justify-center text-green-600 font-semibold">
+                <CheckCircle className="w-5 h-5 mr-2" />
+                PDF generated and saved to your device!
               </div>
             )}
-
-            {/* Next Steps */}
-            <div className="mt-8 pt-8 border-t border-gray-200">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Next Steps</h2>
-              <p className="text-gray-700 leading-relaxed">
-                This Skills Scan provides a useful record of the gaps you may need to fill if you intend to take the
-                IE/ME EWA in the future. If the IE/ME EWA seems right for you based on this outcome, you can now
-                complete the Candidate Background form available from the EWA website and choose a training provider.
-              </p>
-            </div>
-          </form>
+            {pdfSaveStatus === "error" && (
+              <div className="mt-4 flex items-center justify-center text-red-600 font-semibold">
+                <XCircle className="w-5 h-5 mr-2" />
+                Failed to generate PDF. Please try again.
+              </div>
+            )}
+            <p className="text-sm text-gray-600 mt-4 text-center">
+              Please save the generated PDF and email it manually to{" "}
+              <a href="mailto:info@ewatracker.co.uk" className="text-blue-600 hover:underline">
+                info@ewatracker.co.uk
+              </a>
+              .
+            </p>
+          </div>
         </section>
       </main>
+
+      {/* Footer */}
       <footer className="bg-gray-900 text-gray-300 py-8 text-center">
         <div className="max-w-6xl mx-auto px-4">
           <p>&copy; {new Date().getFullYear()} EWA Tracker Limited. All rights reserved.</p>
-          <p className="mt-2 text-sm">Registered in England and Wales. Company&nbsp;No.&nbsp;16413190.</p>
+          <p className="mt-2 text-sm">Registered in England and Wales. Company No. 12345678.</p>
           <div className="flex justify-center space-x-4 mt-4">
             <a
-              href="https://www.instagram.com/ewa_tracker_ltd/"
+              href="https://linkedin.com/company/ewatracker"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-white transition-colors"
             >
-              Instagram
+              LinkedIn
+            </a>
+            <a
+              href="https://twitter.com/ewatracker"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              Twitter
+            </a>
+            <a
+              href="https://github.com/ewatracker"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              GitHub
             </a>
           </div>
         </div>

@@ -18,46 +18,29 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: "https://ewatracker.co.uk/services",
       lastModified: new Date(),
       changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
-      url: "https://ewatracker.co.uk/contact",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.7,
+      priority: 0.8,
     },
     {
       url: "https://ewatracker.co.uk/ewa-assessment",
       lastModified: new Date(),
       changeFrequency: "monthly",
-      priority: 0.8,
+      priority: 0.9, // Higher priority for key service page
     },
+
     {
       url: "https://ewatracker.co.uk/ecs-gold-card-route",
       lastModified: new Date(),
       changeFrequency: "monthly",
-      priority: 0.8,
+      priority: 0.9, // Higher priority for key service page
     },
     {
-      url: "https://ewatracker.co.uk/eal-level-3-ewa",
+      url: "https://ewatracker.co.uk/candidate-check", // New page
       lastModified: new Date(),
       changeFrequency: "monthly",
-      priority: 0.8,
+      priority: 0.7,
     },
     {
-      url: "https://ewatracker.co.uk/nvq-level-3-1605",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: "https://ewatracker.co.uk/candidate-check",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: "https://ewatracker.co.uk/bridging-exam-check",
+      url: "https://ewatracker.co.uk/contact",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,

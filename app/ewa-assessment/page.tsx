@@ -1,14 +1,13 @@
 import Image from "next/image"
 import Link from "next/link"
-import { Lightbulb, FileText, Award } from "lucide-react"
-import { MobileNav } from "@/components/mobile-nav"
+import { Lightbulb, Award, BookOpen } from "lucide-react"
 
 export const metadata = {
-  title: "EWA Assessment - EWA Tracker Limited",
+  title: "EWA Electrician Assessment UK - Electrotechnical Experienced Worker Qualification",
   description:
-    "Learn about the Electrotechnical Experienced Worker Assessment (EWA) Level 3 qualification process offered by EWA Tracker Limited.",
+    "EWA Tracker Limited offers the Electrotechnical Experienced Worker Assessment (EWA) for electricians in the UK. Fast-track your Level 3 qualification and achieve your ECS Gold Card.",
   keywords:
-    "EWA, Experienced Worker Assessment, electrical qualification, Level 3 electrician, UK electrical assessment",
+    "EWA electrician assessment UK, EWA qualification, experienced worker assessment, Level 3 electrician, EAL EWA, electrotechnical assessment",
 }
 
 export default function EwaAssessmentPage() {
@@ -19,104 +18,95 @@ export default function EwaAssessmentPage() {
         <Link href="/">
           <Image src="/ewa_logo.png" alt="EWA Tracker Logo" width={120} height={40} className="object-contain" />
         </Link>
-        <div className="flex items-center">
-          <nav className="hidden md:flex space-x-6">
-            <Link href="/" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-              Home
-            </Link>
-            <Link href="/about" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-              About Us
-            </Link>
-            <Link href="/services" className="text-blue-700 font-medium transition-colors">
-              Services
-            </Link>
-            <Link href="/contact" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-              Contact
-            </Link>
-          </nav>
-          <MobileNav className="md:hidden" />
-        </div>
+        <nav className="hidden md:flex space-x-6">
+          <Link href="/" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
+            Home
+          </Link>
+          <Link href="/about" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
+            About Us
+          </Link>
+          <Link href="/services" className="text-blue-700 font-medium transition-colors">
+            Services
+          </Link>
+          <Link href="/contact" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
+            Contact
+          </Link>
+        </nav>
       </header>
 
       <main className="max-w-6xl mx-auto px-4 py-16 md:py-24">
-        <section className="bg-white rounded-xl shadow-lg p-8 md:p-12 mb-12 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Electrotechnical Experienced Worker Assessment (EWA)
+        <section className="bg-white rounded-xl shadow-lg p-8 md:p-12 mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 text-center">
+            Electrotechnical Experienced Worker Assessment (EWA) in the UK
           </h1>
-          <p className="text-lg text-gray-700 leading-relaxed mb-8 max-w-3xl mx-auto">
-            The EWA is designed for experienced electricians who have been working in the industry for several years but
-            do not hold a formal Level 3 qualification. It provides a pathway to gain the industry-recognized
-            qualification based on your existing skills and knowledge.
+          <p className="text-lg text-gray-700 leading-relaxed mb-8 text-center max-w-3xl mx-auto">
+            The EWA is a vital qualification for experienced electricians who have been working in the industry but may
+            not hold a formal Level 3 qualification. It provides a pathway to demonstrate your competence and achieve
+            the industry-standard certification.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
-            <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Key Features of the EWA</h2>
-              <div className="flex items-start space-x-4">
-                <Award className="w-8 h-8 text-blue-600 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900">Industry Recognition</h3>
-                  <p className="text-gray-600 mt-2">
-                    Achieve a nationally recognized Level 3 qualification, essential for career progression and ECS Gold
-                    Card eligibility.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-4">
-                <Lightbulb className="w-8 h-8 text-blue-600 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900">Assessment of Prior Learning</h3>
-                  <p className="text-gray-600 mt-2">
-                    Your existing experience and skills are formally assessed, reducing the need for extensive
-                    retraining.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-4">
-                <FileText className="w-8 h-8 text-blue-600 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900">Comprehensive Assessment</h3>
-                  <p className="text-gray-600 mt-2">
-                    Includes practical assessments, professional discussions, and a portfolio of evidence to cover all
-                    required units.
-                  </p>
-                </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                <Award className="w-6 h-6 mr-2 text-blue-600" /> What is the EWA?
+              </h2>
+              <p className="text-gray-700 leading-relaxed mb-4">
+                The EWA is an assessment process designed by EAL to evaluate the skills, knowledge, and experience of
+                electricians who have gained their expertise on the job. It's a practical route to gaining a recognised
+                Level 3 qualification without needing to go through a full apprenticeship.
+              </p>
+              <ul className="list-disc list-inside text-gray-700 leading-relaxed space-y-2 mb-6">
+                <li>**Industry Recognition**: EAL recognition pending, ensuring your qualification will be valued across the UK.</li>
+                <li>**Competence-Based**: Focuses on your proven abilities in real-world electrical installations.</li>
+                <li>**Efficient Pathway**: Designed to fast-track experienced workers to qualified status.</li>
+                <li>**ECS Gold Card Eligibility**: A key step towards obtaining your ECS Gold Card.</li>
+              </ul>
+
+              <div className="mt-6 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 rounded">
+                <p className="font-semibold">IMPORTANT NOTE:</p>
+                <p className="text-sm">
+                  From 04.09.23, Learners MUST already possess as a minimum a Level 2 qualification, as detailed in the
+                  TESP skills scan, to take this qualification. Please also see Section 5 of the qualification manual.
+                </p>
               </div>
             </div>
 
-            <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Who is the EWA for?</h2>
-              <ul className="list-disc list-inside text-gray-700 leading-relaxed space-y-3">
+            <div className="bg-blue-50 rounded-xl p-8 shadow-inner">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                <BookOpen className="w-6 h-6 mr-2 text-blue-700" /> The Assessment Process
+              </h2>
+              <p className="text-gray-700 leading-relaxed mb-6">
+                Our EWA process is structured to be as straightforward as possible, allowing you to demonstrate your
+                competence effectively.
+              </p>
+              <ul className="list-decimal list-inside text-gray-700 leading-relaxed space-y-3">
                 <li>
-                  Experienced electricians who have worked in the industry for 5+ years but lack a formal Level 3
-                  qualification.
+                  **Initial Skills Scan**: We'll assess your existing qualifications and experience to ensure the EWA is
+                  the right route for you.
                 </li>
                 <li>
-                  Individuals who have completed relevant Level 2 and Level 3 qualifications (e.g., C&G 2365) but need
-                  to achieve the full NVQ.
+                  **Evidence Collection**: You'll gather evidence of your work, which can be conveniently uploaded via
+                  our iOS mobile app or secure SharePoint platform.
                 </li>
-                <li>Electricians seeking to apply for the ECS Gold Card.</li>
+                <li>
+                  **Practical Assessment**: Demonstrations of your practical skills in a controlled environment or
+                  through on-site observations.
+                </li>
+                <li>
+                  **Knowledge Assessment**: Evaluation of your theoretical understanding of electrotechnical principles
+                  and regulations.
+                </li>
+                <li>**Certification**: Upon successful completion, you will receive your EAL Level 3 qualification.</li>
               </ul>
-              <div className="bg-blue-50 rounded-lg p-6 mt-6 shadow-inner">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Ready to Start?</h3>
-                <p className="text-gray-700 leading-relaxed">
-                  Take our online Skills Scan to get an initial indication of your suitability for the EWA.
-                </p>
-                <Link
-                  href="/candidate-check"
-                  className="inline-flex items-center px-6 py-2 rounded-full text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-colors mt-4"
-                >
-                  Start Skills Scan <span className="ml-2">&rarr;</span>
-                </Link>
-              </div>
             </div>
           </div>
         </section>
 
         <section className="bg-blue-700 text-white rounded-xl shadow-lg p-8 md:p-12 text-center">
-          <h2 className="text-3xl font-bold mb-6">Contact Us for More Information</h2>
+          <h2 className="text-3xl font-bold mb-6">Ready to Start Your EWA Journey?</h2>
           <p className="text-lg opacity-90 max-w-3xl mx-auto mb-8">
-            Our team is ready to guide you through the EWA process and answer any questions you may have.
+            Contact EWA Tracker Limited today to discuss your eligibility and begin your path to a recognised Level 3
+            qualification and ECS Gold Card.
           </p>
           <Link
             href="/contact"
@@ -131,15 +121,31 @@ export default function EwaAssessmentPage() {
       <footer className="bg-gray-900 text-gray-300 py-8 text-center">
         <div className="max-w-6xl mx-auto px-4">
           <p>&copy; {new Date().getFullYear()} EWA Tracker Limited. All rights reserved.</p>
-          <p className="mt-2 text-sm">Registered in England and Wales. Company No. 16413190.</p>
+          <p className="mt-2 text-sm">Registered in England and Wales. Company No. 12345678.</p>
           <div className="flex justify-center space-x-4 mt-4">
             <a
-              href="https://www.instagram.com/ewa_tracker_ltd/"
+              href="https://linkedin.com/company/ewatracker"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-white transition-colors"
             >
-              Instagram
+              LinkedIn
+            </a>
+            <a
+              href="https://twitter.com/ewatracker"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              Twitter
+            </a>
+            <a
+              href="https://github.com/ewatracker"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              GitHub
             </a>
           </div>
         </div>

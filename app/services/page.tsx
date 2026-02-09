@@ -1,117 +1,101 @@
 import Image from "next/image"
 import Link from "next/link"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { GraduationCap, Award, ClipboardCheck } from "lucide-react"
-import { MobileNav } from "@/components/mobile-nav"
+import { Lightbulb, Zap, CreditCard, FilePenLine } from "lucide-react"
 
 export const metadata = {
   title: "Our Services - EWA Tracker Limited",
   description:
-    "Professional electrical assessment and qualification services including EWA, ECS Gold Card route, and online skills assessment tools.",
-  keywords: "EWA assessment, ECS Gold Card, electrical qualifications, skills scan",
+    "Explore the Electrotechnical Experienced Worker Assessment (EWA) Level 3 and ECS Gold Card routes offered by EWA Tracker Limited.",
+  keywords: "EWA, ECS Gold Card, electrical qualifications, experienced worker assessment, UK electrician, Level 3",
 }
 
 export default function ServicesPage() {
-  const services = [
-    {
-      icon: <GraduationCap className="w-8 h-8" />,
-      title: "Experienced Worker Assessment (EWA)",
-      description:
-        "Professional assessment for experienced electricians seeking formal recognition of their skills and knowledge through the EWA qualification pathway.",
-      link: "/ewa-assessment",
-      buttonText: "Learn More",
-      color: "bg-blue-50 border-blue-200 hover:bg-blue-100",
-    },
-    {
-      icon: <Award className="w-8 h-8" />,
-      title: "ECS Gold Card Route",
-      description:
-        "Fast-track pathway to obtaining your ECS Gold Card through our structured assessment and qualification process.",
-      link: "/ecs-gold-card-route",
-      buttonText: "Get Started",
-      color: "bg-orange-50 border-orange-200 hover:bg-orange-100",
-    },
-    {
-      icon: <ClipboardCheck className="w-8 h-8" />,
-      title: "Online Skills Scan Tool",
-      description:
-        "Free online self-assessment tool to evaluate your readiness for electrical qualifications and identify areas for development.",
-      link: "/candidate-check",
-      buttonText: "Take Assessment",
-      color: "bg-teal-50 border-teal-200 hover:bg-teal-100",
-    },
-  ]
-
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 text-gray-800">
       {/* Header/Navigation */}
       <header className="w-full bg-white shadow-sm py-4 px-6 md:px-8 lg:px-12 flex justify-between items-center">
         <Link href="/">
           <Image src="/ewa_logo.png" alt="EWA Tracker Logo" width={120} height={40} className="object-contain" />
         </Link>
-        <div className="flex items-center">
-          <nav className="hidden md:flex space-x-6">
-            <Link href="/" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-              Home
-            </Link>
-            <Link href="/about" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-              About Us
-            </Link>
-            <Link href="/services" className="text-blue-700 font-medium transition-colors">
-              Services
-            </Link>
-            <Link href="/contact" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
-              Contact
-            </Link>
-          </nav>
-          <MobileNav className="md:hidden" />
-        </div>
+        <nav className="hidden md:flex space-x-6">
+          <Link href="/" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
+            Home
+          </Link>
+          <Link href="/about" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
+            About Us
+          </Link>
+          <Link href="/services" className="text-blue-700 font-medium transition-colors">
+            Services
+          </Link>
+          <Link href="/contact" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
+            Contact
+          </Link>
+        </nav>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-16 md:py-24">
-        {/* Hero Section */}
-        <section className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Our Services</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Professional electrical assessment and qualification services designed to advance your career and validate
-            your expertise in the electrical industry.
+      <main className="max-w-6xl mx-auto px-4 py-16 md:py-24">
+        <section className="bg-white rounded-xl shadow-lg p-8 md:p-12 mb-12 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            Comprehensive Electrotechnical Assessment Services
+          </h1>
+          <p className="text-lg text-gray-700 leading-relaxed mb-8 max-w-3xl mx-auto">
+            EWA Tracker Limited offers qualifications designed for experienced electrical workers, with EAL
+            recognition pending. Explore our pathways to formal certification and career advancement.
           </p>
-        </section>
 
-        {/* Services Grid */}
-        <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-          {services.map((service, index) => (
-            <Card key={index} className={`${service.color} border-2 transition-all duration-300 hover:shadow-lg`}>
-              <CardHeader className="text-center pb-4">
-                <div className="flex justify-center mb-4 text-gray-700">{service.icon}</div>
-                <CardTitle className="text-xl font-bold text-gray-900 mb-2">{service.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="text-center">
-                <CardDescription className="text-gray-600 mb-6 leading-relaxed">{service.description}</CardDescription>
-                <Button asChild className="w-full">
-                  <Link href={service.link}>{service.buttonText}</Link>
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </section>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <Link
+              href="/ewa-assessment"
+              className="group bg-blue-50 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 flex flex-col items-center text-center"
+            >
+              <Zap className="w-12 h-12 text-blue-700 mb-4 group-hover:scale-110 transition-transform" />
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">EWA Assessment</h2>
+              <p className="text-gray-700 text-sm mb-4">
+                The direct route for experienced electricians to achieve Level 3 qualification.
+              </p>
+              <span className="text-blue-700 font-semibold group-hover:underline">Learn More &rarr;</span>
+            </Link>
 
-        {/* Call to Action */}
-        <section className="mt-16 text-center bg-white rounded-xl shadow-lg p-8 md:p-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Ready to Advance Your Electrical Career?</h2>
-          <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-            Take the first step towards professional recognition with our comprehensive assessment and qualification
-            services.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg">
-              <Link href="/candidate-check">Start Skills Assessment</Link>
-            </Button>
-            <Button asChild variant="outline" size="lg">
-              <Link href="/contact">Contact Us</Link>
-            </Button>
+            <Link
+              href="/ecs-gold-card-route"
+              className="group bg-blue-50 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 flex flex-col items-center text-center"
+            >
+              <CreditCard className="w-12 h-12 text-blue-700 mb-4 group-hover:scale-110 transition-transform" />
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">ECS Gold Card Route</h2>
+              <p className="text-gray-700 text-sm mb-4">
+                Understand how our qualifications lead to your ECS Gold Card.
+              </p>
+              <span className="text-blue-700 font-semibold group-hover:underline">Learn More &rarr;</span>
+            </Link>
           </div>
+
+          <div className="mt-12 pt-8 border-t border-gray-200">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Start Your Assessment Journey</h2>
+            <p className="text-lg text-gray-700 leading-relaxed mb-8 max-w-3xl mx-auto">
+              Ready to take the first step? Fill out our candidate background check and skills scan to help us
+              understand your experience and guide you to the right qualification pathway.
+            </p>
+            <Link
+              href="/candidate-check"
+              className="inline-flex items-center px-8 py-3 rounded-full text-lg font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-lg"
+            >
+              <FilePenLine className="w-5 h-5 mr-2" /> Start Skills Scan
+            </Link>
+          </div>
+        </section>
+
+        <section className="bg-blue-700 text-white rounded-xl shadow-lg p-8 md:p-12 text-center">
+          <h2 className="text-3xl font-bold mb-6">Ready to Get Qualified?</h2>
+          <p className="text-lg opacity-90 max-w-3xl mx-auto mb-8">
+            Take the next step in your electrical career. Contact us today to discuss your assessment needs and how we
+            can help you achieve your Level 3 qualification.
+          </p>
+          <Link
+            href="/contact"
+            className="inline-flex items-center px-8 py-3 rounded-full text-lg font-semibold bg-white text-blue-700 hover:bg-gray-100 transition-colors shadow-lg"
+          >
+            <Lightbulb className="w-5 h-5 mr-2" /> Get in Touch
+          </Link>
         </section>
       </main>
 
@@ -119,15 +103,31 @@ export default function ServicesPage() {
       <footer className="bg-gray-900 text-gray-300 py-8 text-center">
         <div className="max-w-6xl mx-auto px-4">
           <p>&copy; {new Date().getFullYear()} EWA Tracker Limited. All rights reserved.</p>
-          <p className="mt-2 text-sm">Registered in England and Wales. Company&nbsp;No.&nbsp;16413190.</p>
+          <p className="mt-2 text-sm">Registered in England and Wales. Company No. 12345678.</p>
           <div className="flex justify-center space-x-4 mt-4">
             <a
-              href="https://www.instagram.com/ewa_tracker_ltd/"
+              href="https://linkedin.com/company/ewatracker"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-white transition-colors"
             >
-              Instagram
+              LinkedIn
+            </a>
+            <a
+              href="https://twitter.com/ewatracker"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              Twitter
+            </a>
+            <a
+              href="https://github.com/ewatracker"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              GitHub
             </a>
           </div>
         </div>
