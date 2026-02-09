@@ -40,10 +40,10 @@ export default function HomePage() {
         </div>
         <div className="max-w-6xl mx-auto px-4 relative z-10 text-center">
           <Image
-            src="/ewa_logo_eal_recognised.png"
-            alt="EWA Tracker Logo - EAL Recognition Pending"
+            src="/ewa_logo.png"
+            alt="EWA Tracker Logo"
             width={250}
-            height={300}
+            height={100}
             className="mx-auto mb-8 drop-shadow-lg"
             priority
           />
