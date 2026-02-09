@@ -194,9 +194,8 @@ export default function DocumentManager() {
               <div className="flex items-center justify-between">
                 <span className="text-xs text-gray-500">Updated: {new Date(doc.lastUpdated).toLocaleDateString()}</span>
                 <a
-                  href={`/documents/${doc.filename}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href={`/api/download/${doc.filename}`}
+                  download={doc.filename}
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center"
                 >
                   <Download className="w-4 h-4 mr-2" /> Download
