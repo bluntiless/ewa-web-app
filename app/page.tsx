@@ -1,7 +1,17 @@
+import type { Metadata } from "next"
 import Image from "next/image"
-import Link from "next/link" // Import Link for navigation
+import Link from "next/link"
 import { Apple, Download, Info, CheckCircle, Lightbulb, Cloud, Smartphone, Award } from "lucide-react"
 import DocumentManager from "@/components/document-manager"
+
+export const metadata: Metadata = {
+  title: "Home",
+  description:
+    "EWA Tracker Limited - Your trusted partner for the Electrotechnical Experienced Worker Assessment (EWA) Level 3 qualification and ECS Gold Card route for experienced electricians across the UK.",
+  alternates: {
+    canonical: "https://ewatracker.co.uk",
+  },
+}
 
 export default function HomePage() {
   return (
@@ -32,10 +42,9 @@ export default function HomePage() {
         <div className="absolute inset-0 opacity-10">
           <Image
             src="/electrical-images/ewa-advert.png"
-            alt="Background pattern"
-            layout="fill"
-            objectFit="cover"
-            className="mix-blend-multiply"
+            alt=""
+            fill
+            className="object-cover mix-blend-multiply"
           />
         </div>
         <div className="max-w-6xl mx-auto px-4 relative z-10 text-center">
@@ -115,9 +124,8 @@ export default function HomePage() {
               <Image
                 src="/electrical-images/ewa-advert.png"
                 alt="EWA Qualification Overview"
-                layout="fill"
-                objectFit="cover"
-                className="object-center"
+                fill
+                className="object-cover object-center"
               />
             </div>
           </div>
@@ -221,8 +229,8 @@ export default function HomePage() {
                 <Image
                   src="/app-screenshots/qualifications.png"
                   alt="Qualifications Overview"
-                  layout="fill"
-                  objectFit="contain"
+                  fill
+                  style={{ objectFit: "contain" }}
                   className="rounded-lg border border-gray-200 shadow-inner"
                 />
               </div>
@@ -238,8 +246,8 @@ export default function HomePage() {
                 <Image
                   src="/app-screenshots/units-overview.png"
                   alt="Units Overview"
-                  layout="fill"
-                  objectFit="contain"
+                  fill
+                  style={{ objectFit: "contain" }}
                   className="rounded-lg border border-gray-200 shadow-inner"
                 />
               </div>
@@ -255,8 +263,8 @@ export default function HomePage() {
                 <Image
                   src="/app-screenshots/learning-outcomes.png"
                   alt="Learning Outcomes"
-                  layout="fill"
-                  objectFit="contain"
+                  fill
+                  style={{ objectFit: "contain" }}
                   className="rounded-lg border border-gray-200 shadow-inner"
                 />
               </div>
@@ -272,8 +280,8 @@ export default function HomePage() {
                 <Image
                   src="/app-screenshots/upload-options.png"
                   alt="Upload Options"
-                  layout="fill"
-                  objectFit="contain"
+                  fill
+                  style={{ objectFit: "contain" }}
                   className="rounded-lg border border-gray-200 shadow-inner"
                 />
               </div>
@@ -289,8 +297,8 @@ export default function HomePage() {
                 <Image
                   src="/app-screenshots/photo-upload.png"
                   alt="Photo Upload"
-                  layout="fill"
-                  objectFit="contain"
+                  fill
+                  style={{ objectFit: "contain" }}
                   className="rounded-lg border border-gray-200 shadow-inner"
                 />
               </div>
@@ -307,8 +315,8 @@ export default function HomePage() {
                 <Image
                   src="/app-screenshots/profile.png"
                   alt="Profile and SharePoint Settings"
-                  layout="fill"
-                  objectFit="contain"
+                  fill
+                  style={{ objectFit: "contain" }}
                   className="rounded-lg border border-gray-200 shadow-inner"
                 />
               </div>

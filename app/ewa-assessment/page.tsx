@@ -1,13 +1,29 @@
+import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { Lightbulb, Award, BookOpen } from "lucide-react"
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "EWA Electrician Assessment UK - Electrotechnical Experienced Worker Qualification",
   description:
     "EWA Tracker Limited offers the Electrotechnical Experienced Worker Assessment (EWA) for electricians in the UK. Fast-track your Level 3 qualification and achieve your ECS Gold Card.",
-  keywords:
-    "EWA electrician assessment UK, EWA qualification, experienced worker assessment, Level 3 electrician, EAL EWA, electrotechnical assessment",
+  keywords: [
+    "EWA electrician assessment UK",
+    "EWA qualification",
+    "experienced worker assessment",
+    "Level 3 electrician",
+    "EAL EWA",
+    "electrotechnical assessment",
+  ],
+  alternates: {
+    canonical: "https://ewatracker.co.uk/ewa-assessment",
+  },
+  openGraph: {
+    title: "EWA Electrician Assessment UK - Electrotechnical Experienced Worker Qualification",
+    description:
+      "Fast-track your Level 3 qualification and achieve your ECS Gold Card with EWA Tracker Limited.",
+    url: "https://ewatracker.co.uk/ewa-assessment",
+  },
 }
 
 export default function EwaAssessmentPage() {

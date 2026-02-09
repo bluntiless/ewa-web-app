@@ -1,11 +1,21 @@
+import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { Mail, Phone } from "lucide-react"
 
-export const metadata = {
-  title: "Contact Us - EWA Tracker Limited",
+export const metadata: Metadata = {
+  title: "Contact Us",
   description:
     "Get in touch with EWA Tracker Limited for inquiries about our electrotechnical qualifications and assessment services.",
+  alternates: {
+    canonical: "https://ewatracker.co.uk/contact",
+  },
+  openGraph: {
+    title: "Contact Us - EWA Tracker Limited",
+    description:
+      "Get in touch with EWA Tracker Limited for inquiries about our electrotechnical qualifications and assessment services.",
+    url: "https://ewatracker.co.uk/contact",
+  },
 }
 
 export default function ContactPage() {

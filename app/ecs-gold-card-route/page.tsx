@@ -1,13 +1,28 @@
+import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { Lightbulb, CreditCard, ShieldCheck } from "lucide-react"
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "ECS Gold Card through EWA - Qualified Electrician Route UK",
   description:
     "Learn how to obtain your ECS Gold Card as a qualified electrician through the Electrotechnical Experienced Worker Assessment (EWA) with EWA Tracker Limited.",
-  keywords:
-    "ECS Gold Card through EWA, ECS Gold Card route, qualified electrician UK, ECS card assessment, EWA ECS Gold Card",
+  keywords: [
+    "ECS Gold Card through EWA",
+    "ECS Gold Card route",
+    "qualified electrician UK",
+    "ECS card assessment",
+    "EWA ECS Gold Card",
+  ],
+  alternates: {
+    canonical: "https://ewatracker.co.uk/ecs-gold-card-route",
+  },
+  openGraph: {
+    title: "ECS Gold Card through EWA - Qualified Electrician Route UK",
+    description:
+      "Obtain your ECS Gold Card through the EWA with EWA Tracker Limited.",
+    url: "https://ewatracker.co.uk/ecs-gold-card-route",
+  },
 }
 
 export default function EcsGoldCardRoutePage() {
