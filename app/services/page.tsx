@@ -1,12 +1,22 @@
+import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { Lightbulb, Zap, CreditCard, FilePenLine } from "lucide-react"
 
-export const metadata = {
-  title: "Our Services - EWA Tracker Limited",
+export const metadata: Metadata = {
+  title: "Our Services",
   description:
     "Explore the Electrotechnical Experienced Worker Assessment (EWA) Level 3 and ECS Gold Card routes offered by EWA Tracker Limited.",
-  keywords: "EWA, ECS Gold Card, electrical qualifications, experienced worker assessment, UK electrician, Level 3",
+  keywords: ["EWA", "ECS Gold Card", "electrical qualifications", "experienced worker assessment", "UK electrician", "Level 3"],
+  alternates: {
+    canonical: "https://ewatracker.co.uk/services",
+  },
+  openGraph: {
+    title: "Our Services - EWA Tracker Limited",
+    description:
+      "Explore the EWA Level 3 and ECS Gold Card routes offered by EWA Tracker Limited.",
+    url: "https://ewatracker.co.uk/services",
+  },
 }
 
 export default function ServicesPage() {

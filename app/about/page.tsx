@@ -1,11 +1,21 @@
+import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
-import { Mail, Users, Briefcase, Star } from "lucide-react" // Import Star icon
+import { Mail, Users, Briefcase, Star } from "lucide-react"
 
-export const metadata = {
-  title: "About Us - EWA Tracker Limited",
+export const metadata: Metadata = {
+  title: "About Us",
   description:
-    "Learn more about EWA Tracker Limited, our mission, and our commitment to quality electrotechnical assessments.",
+    "Learn more about EWA Tracker Limited, our mission, and our commitment to quality electrotechnical assessments for experienced electricians across the UK.",
+  alternates: {
+    canonical: "https://ewatracker.co.uk/about",
+  },
+  openGraph: {
+    title: "About Us - EWA Tracker Limited",
+    description:
+      "Learn more about EWA Tracker Limited, our mission, and our commitment to quality electrotechnical assessments.",
+    url: "https://ewatracker.co.uk/about",
+  },
 }
 
 export default function AboutPage() {
