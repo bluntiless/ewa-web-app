@@ -1,12 +1,12 @@
-import CandidateCheckClientPage from "./CandidateCheckClientPage"
+import CandidateCheckClientWrapper from "./client-wrapper"
 
 export const metadata = {
-  title: "Skills Scan & Candidate Check - EWA Tracker Limited",
+  title: "Candidate Background Check & Skills Scan - EWA Tracker Limited",
   description:
-    "Use our online tool to assess your suitability for the Electrotechnical Experienced Worker Assessment (EWA) or NVQ Level 3 (1605) qualification.",
-  keywords: "skills scan, candidate check, EWA suitability, NVQ 1605, electrical assessment, online tool",
+    "Complete your candidate background check and skills scan with EWA Tracker Limited to start your electrotechnical qualification journey.",
+  keywords: "candidate background check, skills scan, electrician assessment, EWA eligibility, electrical experience",
 }
 
 export default function CandidateCheckPage() {
-  return <CandidateCheckClientPage />
+  return <CandidateCheckClientWrapper />
 }
