@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "EWA Tracker Limited",
   description:
     "EWA Tracker Limited - Electrotechnical Experienced Worker Assessment (EWA) Level 3 qualification provider",
-  keywords: "EWA, Electrotechnical, Assessment, Level 3, EAL, Qualification, ECS Gold Card, NVQ Electrical",
+  keywords: "EWA, Electrotechnical, Assessment, Level 3, EAL, Qualification, ECS Gold Card, Experienced Worker",
   metadataBase: new URL("https://ewatracker.co.uk"), // Add this line if you have a base URL
   verification: {
     google: "mmueoWkgAP-JvLhbIwiftFJkfO4DHOPFEUV2P44_fnE",

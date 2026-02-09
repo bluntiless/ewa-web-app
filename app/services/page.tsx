@@ -1,12 +1,12 @@
 import Image from "next/image"
 import Link from "next/link"
-import { Lightbulb, Zap, GraduationCap, CreditCard, FilePenLine } from "lucide-react" // Import FilePenLine
+import { Lightbulb, Zap, CreditCard, FilePenLine } from "lucide-react"
 
 export const metadata = {
   title: "Our Services - EWA Tracker Limited",
   description:
-    "Explore the Electrotechnical Experienced Worker Assessment (EWA) Level 3, NVQ Level 3 1605, and ECS Gold Card routes offered by EWA Tracker Limited.",
-  keywords: "EWA, NVQ Level 3, ECS Gold Card, electrical qualifications, experienced worker assessment, UK electrician",
+    "Explore the Electrotechnical Experienced Worker Assessment (EWA) Level 3 and ECS Gold Card routes offered by EWA Tracker Limited.",
+  keywords: "EWA, ECS Gold Card, electrical qualifications, experienced worker assessment, UK electrician, Level 3",
 }
 
 export default function ServicesPage() {
@@ -43,7 +43,7 @@ export default function ServicesPage() {
             workers. Explore our pathways to formal certification and career advancement.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <Link
               href="/ewa-assessment"
               className="group bg-blue-50 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 flex flex-col items-center text-center"
@@ -57,27 +57,15 @@ export default function ServicesPage() {
             </Link>
 
             <Link
-              href="/nvq-level-3-electrical"
-              className="group bg-green-50 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 flex flex-col items-center text-center"
-            >
-              <GraduationCap className="w-12 h-12 text-green-700 mb-4 group-hover:scale-110 transition-transform" />
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">NVQ Level 3 Electrical</h2>
-              <p className="text-gray-700 text-sm mb-4">
-                Comprehensive vocational qualification for a wide range of electrotechnical skills.
-              </p>
-              <span className="text-green-700 font-semibold group-hover:underline">Learn More &rarr;</span>
-            </Link>
-
-            <Link
               href="/ecs-gold-card-route"
-              className="group bg-purple-50 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 flex flex-col items-center text-center"
+              className="group bg-blue-50 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 flex flex-col items-center text-center"
             >
-              <CreditCard className="w-12 h-12 text-purple-700 mb-4 group-hover:scale-110 transition-transform" />
+              <CreditCard className="w-12 h-12 text-blue-700 mb-4 group-hover:scale-110 transition-transform" />
               <h2 className="text-2xl font-bold text-gray-900 mb-2">ECS Gold Card Route</h2>
               <p className="text-gray-700 text-sm mb-4">
                 Understand how our qualifications lead to your ECS Gold Card.
               </p>
-              <span className="text-purple-700 font-semibold group-hover:underline">Learn More &rarr;</span>
+              <span className="text-blue-700 font-semibold group-hover:underline">Learn More &rarr;</span>
             </Link>
           </div>
 

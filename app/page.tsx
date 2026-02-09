@@ -93,16 +93,7 @@ export default function HomePage() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-start space-x-4">
-                <Award className="w-8 h-8 text-blue-600 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900">NVQ Level 3 1605 Qualification</h3>
-                  <p className="text-gray-600 mt-2">
-                    We are also approved to deliver the NVQ Level 3 1605 qualification, providing robust
-                    electrotechnical assessment solutions.
-                  </p>
-                </div>
-              </div>
+
               <div className="bg-blue-50 rounded-lg p-6 mt-6 shadow-inner">
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">Flexible Evidence Submission</h3>
                 <p className="text-gray-700 leading-relaxed">

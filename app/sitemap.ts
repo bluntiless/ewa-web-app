@@ -26,12 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.9, // Higher priority for key service page
     },
-    {
-      url: "https://ewatracker.co.uk/nvq-level-3-electrical",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.9, // Higher priority for key service page
-    },
+
     {
       url: "https://ewatracker.co.uk/ecs-gold-card-route",
       lastModified: new Date(),

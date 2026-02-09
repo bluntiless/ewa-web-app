@@ -81,7 +81,7 @@ export default function AboutPage() {
                 <Star className="w-5 h-5 fill-current" />
               </div>
               <p className="text-lg text-gray-700 italic mb-4">
-                “My assessor Wayne was very helpful and guided me through my NVQ Level 3. He made the whole process
+                “My assessor Wayne was very helpful and guided me through my EWA Level 3. He made the whole process
                 smooth and clear. Highly recommend!”
               </p>
               <p className="text-sm font-semibold text-gray-600">— Google Review</p>
