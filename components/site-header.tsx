@@ -25,7 +25,7 @@ export default function SiteHeader() {
             alt="EWA Tracker Logo"
             width={120}
             height={40}
-            className="object-contain"
+            className="object-contain w-[120px] h-auto"
             priority
           />
         </Link>

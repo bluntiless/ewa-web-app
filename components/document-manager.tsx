@@ -208,7 +208,7 @@ export default function DocumentManager() {
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-500">Updated: {new Date(doc.lastUpdated).toLocaleDateString()}</span>
+                <span className="text-xs text-gray-500" suppressHydrationWarning>Updated: {new Date(doc.lastUpdated).toLocaleDateString("en-GB")}</span>
                 <a
                   href={doc.downloadUrl}
                   target="_blank"
