@@ -36,8 +36,7 @@ export default function HomePage() {
             alt="EWA Tracker Logo"
             width={250}
             height={100}
-            className="mx-auto mb-8 drop-shadow-lg"
-            style={{ width: "auto", height: "auto" }}
+            className="mx-auto mb-8 drop-shadow-lg w-[250px] h-auto"
             priority
           />
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">EWA Tracker Limited</h1>
