@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Apple, Download, Info, CheckCircle, Lightbulb, Cloud, Smartphone, Award } from "lucide-react"
 import DocumentManager from "@/components/document-manager"
 import SiteHeader from "@/components/site-header"
+import SiteFooter from "@/components/site-footer"
 
 export const metadata: Metadata = {
   title: "Home",
@@ -46,13 +47,13 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
-              href="/services" // Changed to link to services page
+              href="/services"
               className="bg-white text-blue-700 px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg"
             >
               Explore Qualifications
             </Link>
             <Link
-              href="/contact" // Changed to link to contact page
+              href="/contact"
               className="border border-white text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-white hover:text-blue-700 transition-colors shadow-lg"
             >
               Contact Us
@@ -397,39 +398,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-gray-300 py-8 text-center">
-        <div className="max-w-6xl mx-auto px-4">
-          <p>&copy; {new Date().getFullYear()} EWA Tracker Limited. All rights reserved.</p>
-          <p className="mt-2 text-sm">Registered in England and Wales. Company No. 16413190.</p>
-          <div className="flex justify-center space-x-4 mt-4">
-            <a
-              href="https://linkedin.com/company/ewatracker"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-400 hover:text-white transition-colors"
-            >
-              LinkedIn
-            </a>
-            <a
-              href="https://twitter.com/ewatracker"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-400 hover:text-white transition-colors"
-            >
-              Twitter
-            </a>
-            <a
-              href="https://github.com/ewatracker"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-400 hover:text-white transition-colors"
-            >
-              GitHub
-            </a>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   )
 }
