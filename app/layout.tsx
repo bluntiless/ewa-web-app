@@ -15,11 +15,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://ewatracker.co.uk"),
   title: {
-    default: "EWA Tracker Limited | Electrotechnical Experienced Worker Assessment",
-    template: "%s | EWA Tracker Limited",
+    default: "EWA Tracker Ltd | Electrotechnical Experienced Worker Assessment",
+    template: "%s | EWA Tracker Ltd",
   },
   description:
-    "EWA Tracker Limited is a specialist provider of the Electrotechnical Experienced Worker Assessment (EWA) Level 3 qualification and ECS Gold Card route for experienced electricians across the UK.",
+    "EWA Tracker Ltd is a specialist provider of the Electrotechnical Experienced Worker Assessment (EWA) Level 3 qualification and ECS Gold Card route for experienced electricians across the UK.",
   keywords: [
     "EWA",
     "Electrotechnical Experienced Worker Assessment",
@@ -31,9 +31,9 @@ export const metadata: Metadata = {
     "Electrical Assessment",
     "EWA Tracker",
   ],
-  authors: [{ name: "EWA Tracker Limited" }],
-  creator: "EWA Tracker Limited",
-  publisher: "EWA Tracker Limited",
+  authors: [{ name: "EWA Tracker Ltd" }],
+  creator: "EWA Tracker Ltd",
+  publisher: "EWA Tracker Ltd",
   verification: {
     google: "mmueoWkgAP-JvLhbIwiftFJkfO4DHOPFEUV2P44_fnE",
   },
@@ -41,8 +41,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_GB",
     url: "https://ewatracker.co.uk",
-    siteName: "EWA Tracker Limited",
-    title: "EWA Tracker Limited | Electrotechnical Experienced Worker Assessment",
+    siteName: "EWA Tracker Ltd",
+    title: "EWA Tracker Ltd | Electrotechnical Experienced Worker Assessment",
     description:
       "Specialist provider of the Electrotechnical Experienced Worker Assessment (EWA) Level 3 qualification and ECS Gold Card route for experienced electricians across the UK.",
     images: [
@@ -50,13 +50,13 @@ export const metadata: Metadata = {
         url: "/ewa_logo.png",
         width: 600,
         height: 200,
-        alt: "EWA Tracker Limited Logo",
+        alt: "EWA Tracker Ltd Logo",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "EWA Tracker Limited | Electrotechnical Experienced Worker Assessment",
+    title: "EWA Tracker Ltd | Electrotechnical Experienced Worker Assessment",
     description:
       "Specialist provider of the EWA Level 3 qualification and ECS Gold Card route for experienced electricians across the UK.",
     images: ["/ewa_logo.png"],
@@ -86,7 +86,7 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
-    name: "EWA Tracker Limited",
+    name: "EWA Tracker Ltd",
     url: "https://ewatracker.co.uk",
     logo: "https://ewatracker.co.uk/ewa_logo.png",
     description:

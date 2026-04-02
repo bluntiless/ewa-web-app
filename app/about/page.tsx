@@ -8,14 +8,14 @@ import SiteFooter from "@/components/site-footer"
 export const metadata: Metadata = {
   title: "About Us",
   description:
-    "Learn more about EWA Tracker Limited, our mission, and our commitment to quality electrotechnical assessments for experienced electricians across the UK.",
+    "Learn more about EWA Tracker Ltd, an EAL approved centre for the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1).",
   alternates: {
     canonical: "https://ewatracker.co.uk/about",
   },
   openGraph: {
-    title: "About Us - EWA Tracker Limited",
+    title: "About Us - EWA Tracker Ltd",
     description:
-      "Learn more about EWA Tracker Limited, our mission, and our commitment to quality electrotechnical assessments.",
+      "Learn more about EWA Tracker Ltd, an EAL approved centre delivering the full-scope EWA qualification.",
     url: "https://ewatracker.co.uk/about",
   },
 }
@@ -27,11 +27,11 @@ export default function AboutPage() {
 
       <main className="max-w-6xl mx-auto px-4 py-16 md:py-24">
         <section className="bg-white rounded-xl shadow-lg p-8 md:p-12 mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 text-center">About EWA Tracker Limited</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 text-center">About EWA Tracker Ltd</h1>
           <p className="text-lg text-gray-700 leading-relaxed mb-8 text-center max-w-3xl mx-auto">
-            EWA Tracker Limited is dedicated to providing high-quality Electrotechnical Experienced Worker Assessment
-            (EWA) Level 3 qualifications. We are pending recognition by EAL and committed to supporting experienced
-            electricians in achieving their professional certifications.
+            EWA Tracker Ltd is an EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker 
+            Qualification (603/5982/1). We are committed to supporting experienced electricians in achieving their 
+            professional certifications through the full-scope EWA qualification.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

@@ -8,14 +8,14 @@ import SiteFooter from "@/components/site-footer"
 export const metadata: Metadata = {
   title: "Contact Us",
   description:
-    "Get in touch with EWA Tracker Limited for inquiries about our electrotechnical qualifications and assessment services.",
+    "Get in touch with EWA Tracker Ltd, an EAL approved centre for the Level 3 Electrotechnical Experienced Worker Qualification.",
   alternates: {
     canonical: "https://ewatracker.co.uk/contact",
   },
   openGraph: {
-    title: "Contact Us - EWA Tracker Limited",
+    title: "Contact Us - EWA Tracker Ltd",
     description:
-      "Get in touch with EWA Tracker Limited for inquiries about our electrotechnical qualifications and assessment services.",
+      "Get in touch with EWA Tracker Ltd for inquiries about our EAL approved electrotechnical qualification.",
     url: "https://ewatracker.co.uk/contact",
   },
 }
