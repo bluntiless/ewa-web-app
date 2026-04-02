@@ -181,7 +181,7 @@ export default function DocumentManager() {
       <div className="bg-white rounded-xl shadow-lg p-8">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Policies & Procedures</h2>
-          <p className="text-lg text-gray-600">Access our comprehensive policies and procedures documentation</p>
+          <p className="text-lg text-gray-600">Access our comprehensive policies and procedures</p>
         </div>
 
         {/* Search Bar */}
