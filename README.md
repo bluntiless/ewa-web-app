@@ -1,6 +1,6 @@
-# EWA & NVQ E-Portfolio Web Application
+# EWA Tracker Ltd - EAL Approved Centre
 
-A modern web application for managing EWA and NVQ portfolios, built with Next.js, TypeScript, and Tailwind CSS.
+A modern web application for EWA Tracker Ltd, an EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1). Built with Next.js, TypeScript, and Tailwind CSS.
 
 ## Features
 

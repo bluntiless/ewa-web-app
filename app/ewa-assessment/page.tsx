@@ -8,7 +8,7 @@ import SiteFooter from "@/components/site-footer"
 export const metadata: Metadata = {
   title: "EWA Electrician Assessment UK - Electrotechnical Experienced Worker Qualification",
   description:
-    "EWA Tracker Limited offers the Electrotechnical Experienced Worker Assessment (EWA) for electricians in the UK. Fast-track your Level 3 qualification and achieve your ECS Gold Card.",
+    "EWA Tracker Ltd is an EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1). Fast-track your qualification and achieve your ECS Gold Card.",
   keywords: [
     "EWA electrician assessment UK",
     "EWA qualification",
@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     "Level 3 electrician",
     "EAL EWA",
     "electrotechnical assessment",
+    "EAL approved centre",
   ],
   alternates: {
     canonical: "https://ewatracker.co.uk/ewa-assessment",
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "EWA Electrician Assessment UK - Electrotechnical Experienced Worker Qualification",
     description:
-      "Fast-track your Level 3 qualification and achieve your ECS Gold Card with EWA Tracker Limited.",
+      "Fast-track your Level 3 qualification and achieve your ECS Gold Card with EWA Tracker Ltd, an EAL approved centre.",
     url: "https://ewatracker.co.uk/ewa-assessment",
   },
 }
@@ -55,7 +56,7 @@ export default function EwaAssessmentPage() {
                 Level 3 qualification without needing to go through a full apprenticeship.
               </p>
               <ul className="list-disc list-inside text-gray-700 leading-relaxed space-y-2 mb-6">
-                <li>**Industry Recognition**: EAL recognition pending, ensuring your qualification will be valued across the UK.</li>
+                <li>**Industry Recognition**: EAL approved qualification, ensuring your certification is valued across the UK.</li>
                 <li>**Competence-Based**: Focuses on your proven abilities in real-world electrical installations.</li>
                 <li>**Efficient Pathway**: Designed to fast-track experienced workers to qualified status.</li>
                 <li>**ECS Gold Card Eligibility**: A key step towards obtaining your ECS Gold Card.</li>
@@ -104,8 +105,8 @@ export default function EwaAssessmentPage() {
         <section className="bg-blue-700 text-white rounded-xl shadow-lg p-8 md:p-12 text-center">
           <h2 className="text-3xl font-bold mb-6">Ready to Start Your EWA Journey?</h2>
           <p className="text-lg opacity-90 max-w-3xl mx-auto mb-8">
-            Contact EWA Tracker Limited today to discuss your eligibility and begin your path to a recognised Level 3
-            qualification and ECS Gold Card.
+            Contact EWA Tracker Ltd today to discuss your eligibility and begin your path to the EAL Level 3 
+            Electrotechnical Experienced Worker Qualification (603/5982/1) and ECS Gold Card.
           </p>
           <Link
             href="/contact"

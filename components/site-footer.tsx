@@ -3,7 +3,7 @@ export default function SiteFooter() {
     <footer className="bg-gray-900 text-gray-300 py-8 text-center">
       <div className="max-w-6xl mx-auto px-4">
         <p suppressHydrationWarning>
-          &copy; {new Date().getFullYear()} EWA Tracker Limited. All rights reserved.
+          &copy; {new Date().getFullYear()} EWA Tracker Ltd. All rights reserved.
         </p>
         <p className="mt-2 text-sm">Registered in England and Wales. Company No. 16413190.</p>
         <div className="flex justify-center gap-4 mt-4">

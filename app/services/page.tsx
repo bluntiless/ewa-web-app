@@ -8,15 +8,15 @@ import SiteFooter from "@/components/site-footer"
 export const metadata: Metadata = {
   title: "Our Services",
   description:
-    "Explore the Electrotechnical Experienced Worker Assessment (EWA) Level 3 and ECS Gold Card routes offered by EWA Tracker Limited.",
-  keywords: ["EWA", "ECS Gold Card", "electrical qualifications", "experienced worker assessment", "UK electrician", "Level 3"],
+    "EWA Tracker Ltd is an EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1) and ECS Gold Card route.",
+  keywords: ["EWA", "ECS Gold Card", "electrical qualifications", "experienced worker assessment", "UK electrician", "Level 3", "EAL approved centre"],
   alternates: {
     canonical: "https://ewatracker.co.uk/services",
   },
   openGraph: {
-    title: "Our Services - EWA Tracker Limited",
+    title: "Our Services - EWA Tracker Ltd",
     description:
-      "Explore the EWA Level 3 and ECS Gold Card routes offered by EWA Tracker Limited.",
+      "EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification and ECS Gold Card route.",
     url: "https://ewatracker.co.uk/services",
   },
 }
@@ -32,8 +32,8 @@ export default function ServicesPage() {
             Comprehensive Electrotechnical Assessment Services
           </h1>
           <p className="text-lg text-gray-700 leading-relaxed mb-8 max-w-3xl mx-auto">
-            EWA Tracker Limited offers qualifications designed for experienced electrical workers, with EAL
-            recognition pending. Explore our pathways to formal certification and career advancement.
+            EWA Tracker Ltd is an EAL approved centre specialising in the Experienced Worker Assessment route for qualified electricians.
+            We deliver the full-scope EAL Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1).
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
