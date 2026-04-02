@@ -670,7 +670,7 @@ export default function CandidateCheckClientPage() {
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">STEP TWO: COMPLETING THIS DOCUMENT</h2>
               <p className="text-gray-700 leading-relaxed mb-6">
-                You only should complete this section if you have determined in Step 1 that you are eligible and hold
+                You should only complete this section if you have determined in Step 1 that you are eligible and hold
                 the relevant qualifications.
               </p>
               <p className="text-gray-700 leading-relaxed mb-6">
