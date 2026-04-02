@@ -51,12 +51,14 @@ export default function HomePage() {
             >
               Explore Qualifications
             </Link>
-            <Link
-              href="/contact"
+            <a
+              href="https://calendly.com/ewatracker-info/30min"
+              target="_blank"
+              rel="noopener noreferrer"
               className="border border-white text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-white hover:text-blue-700 transition-colors shadow-lg"
             >
-              Start Your EWA
-            </Link>
+              Book Your EWA Assessment Call
+            </a>
           </div>
         </div>
       </section>
