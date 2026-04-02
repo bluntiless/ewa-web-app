@@ -1,6 +1,5 @@
 import type { Metadata } from "next"
 import Image from "next/image"
-import Link from "next/link"
 import { Lightbulb, Award, BookOpen } from "lucide-react"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
@@ -108,12 +107,14 @@ export default function EwaAssessmentPage() {
             Contact EWA Tracker Ltd today to discuss your eligibility and begin your path to the EAL Level 3 
             Electrotechnical Experienced Worker Qualification (603/5982/1) and ECS Gold Card.
           </p>
-          <Link
-            href="/contact"
+          <a
+            href="https://calendly.com/ewatracker-info/30min"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center px-8 py-3 rounded-full text-lg font-semibold bg-white text-blue-700 hover:bg-gray-100 transition-colors shadow-lg"
           >
-            <Lightbulb className="w-5 h-5 mr-2" /> Get in Touch
-          </Link>
+            <Lightbulb className="w-5 h-5 mr-2" /> Book Your EWA Assessment Call
+          </a>
         </section>
       </main>
 

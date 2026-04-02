@@ -52,13 +52,19 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <div className="bg-blue-50 rounded-lg p-6 shadow-inner">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Send Us a Message</h2>
-            <p className="text-gray-700 mb-6">
-              For specific inquiries, please use the contact methods above. We do not currently offer a direct contact
-              form on this website.
+          <div className="bg-blue-700 text-white rounded-lg p-8 shadow-lg">
+            <h2 className="text-2xl font-bold mb-4">Book Your EWA Assessment Call</h2>
+            <p className="opacity-90 mb-6">
+              Ready to start your EWA journey? Schedule a free 30-minute consultation to discuss your eligibility and next steps.
             </p>
-            {/* A contact form could be added here in the future */}
+            <a
+              href="https://calendly.com/ewatracker-info/30min"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-8 py-3 rounded-full text-lg font-semibold bg-white text-blue-700 hover:bg-gray-100 transition-colors shadow-lg"
+            >
+              Book Your EWA Assessment Call
+            </a>
           </div>
         </section>
       </main>
