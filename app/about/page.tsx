@@ -77,7 +77,7 @@ export default function AboutPage() {
                 “My assessor Wayne was very helpful and guided me through my EWA Level 3. He made the whole process
                 smooth and clear. Highly recommend!”
               </p>
-              <p className="text-sm font-semibold text-gray-600">— Google Review</p>
+<p className="text-sm font-semibold text-gray-600">— Electrician, London</p>
             </div>
 
             {/* Testimonial 2 */}
@@ -90,10 +90,26 @@ export default function AboutPage() {
                 <Star className="w-5 h-5 fill-current" />
               </div>
               <p className="text-lg text-gray-700 italic mb-4">
-                “Wayne is brilliant! His knowledge and approach made a stressful process much easier. Thanks again for
-                the support!”
+                "Wayne is brilliant! His knowledge and approach made a stressful process much easier. Thanks again for
+                the support!"
               </p>
-              <p className="text-sm font-semibold text-gray-600">— Google Review</p>
+              <p className="text-sm font-semibold text-gray-600">— Electrician, Manchester</p>
+            </div>
+
+            {/* Testimonial 3 */}
+            <div className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center">
+              <div className="flex text-yellow-500 mb-3">
+                <Star className="w-5 h-5 fill-current" />
+                <Star className="w-5 h-5 fill-current" />
+                <Star className="w-5 h-5 fill-current" />
+                <Star className="w-5 h-5 fill-current" />
+                <Star className="w-5 h-5 fill-current" />
+              </div>
+              <p className="text-lg text-gray-700 italic mb-4">
+                "Couldn't have done it without Wayne. Very knowledgeable and approachable assessor. Would recommend to
+                anyone doing their EWA."
+              </p>
+              <p className="text-sm font-semibold text-gray-600">— Electrician, Birmingham</p>
             </div>
 
             {/* Testimonial 3 */}

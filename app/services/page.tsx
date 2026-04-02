@@ -32,7 +32,7 @@ export default function ServicesPage() {
             Comprehensive Electrotechnical Assessment Services
           </h1>
           <p className="text-lg text-gray-700 leading-relaxed mb-8 max-w-3xl mx-auto">
-            EWA Tracker Ltd is an EAL approved centre specialising in the Experienced Worker Assessment route for qualified electricians.
+            EWA Tracker Ltd is an EAL approved centre specialising in the Experienced Worker Assessment route for experienced electricians seeking formal qualification.
             We deliver the full-scope EAL Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1).
           </p>
 

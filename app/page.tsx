@@ -9,7 +9,7 @@ import SiteFooter from "@/components/site-footer"
 export const metadata: Metadata = {
   title: "Home",
   description:
-    "EWA Tracker Ltd is an EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1). Your trusted partner for experienced electricians across the UK.",
+    "EWA Tracker Ltd is an EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1) for experienced electricians seeking formal qualification across the UK.",
   alternates: {
     canonical: "https://ewatracker.co.uk",
   },
@@ -42,7 +42,7 @@ export default function HomePage() {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">EWA Tracker Ltd</h1>
           <p className="text-lg md:text-xl max-w-3xl mx-auto mb-8 opacity-90">
             EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1).
-            Your trusted partner for the full-scope EWA qualification.
+            Now enrolling experienced electricians for fast-track EWA completion.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
@@ -55,7 +55,7 @@ export default function HomePage() {
               href="/contact"
               className="border border-white text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-white hover:text-blue-700 transition-colors shadow-lg"
             >
-              Contact Us
+              Start Your EWA
             </Link>
           </div>
         </div>
@@ -67,7 +67,7 @@ export default function HomePage() {
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our EAL Approved Qualification</h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              EWA Tracker Ltd is an EAL approved centre specialising in the Experienced Worker Assessment route for qualified electricians.
+              EWA Tracker Ltd is an EAL approved centre specialising in the Experienced Worker Assessment route for experienced electricians seeking formal qualification.
             </p>
           </div>
 
@@ -184,9 +184,9 @@ export default function HomePage() {
                 className="w-full h-48 object-cover"
               />
               <div className="p-5">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">EWA Qualification Journey</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">EWA Assessment Process</h3>
                 <p className="text-gray-600 text-sm">
-                  An overview of the Electrotechnical Experienced Worker Assessment (EWA) qualification process.
+                  Overview of the EAL Level 3 Electrotechnical Experienced Worker Qualification assessment process.
                 </p>
               </div>
             </div>
@@ -270,7 +270,7 @@ export default function HomePage() {
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Multiple Upload Types</h3>
               <p className="text-gray-600 text-sm">
-                Submit photos, videos, and documents as evidence for each criteria with intuitive color-coded buttons.
+                Submit photos, videos, and documents as evidence for each criterion with intuitive colour-coded buttons.
               </p>
             </div>
 
