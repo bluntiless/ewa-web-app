@@ -80,14 +80,13 @@ export default function ServicesPage() {
         <section className="bg-blue-700 text-white rounded-xl shadow-lg p-8 md:p-12 text-center">
           <h2 className="text-3xl font-bold mb-6">Ready to Get Qualified?</h2>
           <p className="text-lg opacity-90 max-w-3xl mx-auto mb-8">
-            Take the next step in your electrical career. Contact us today to discuss your assessment needs and how we
-            can help you achieve your Level 3 qualification.
+            Take the next step in your electrical career. Start your EWA journey today and achieve your Level 3 qualification.
           </p>
           <Link
             href="/contact"
             className="inline-flex items-center px-8 py-3 rounded-full text-lg font-semibold bg-white text-blue-700 hover:bg-gray-100 transition-colors shadow-lg"
           >
-            <Lightbulb className="w-5 h-5 mr-2" /> Get in Touch
+            <Lightbulb className="w-5 h-5 mr-2" /> Start Your EWA
           </Link>
         </section>
       </main>

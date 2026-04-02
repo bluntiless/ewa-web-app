@@ -39,7 +39,7 @@ export default function EcsGoldCardRoutePage() {
             ECS Gold Card Route for Experienced Electricians
           </h1>
           <p className="text-lg text-gray-700 leading-relaxed mb-8 text-center max-w-3xl mx-auto">
-            The ECS Gold Card is the industry's most recognised credential for qualified electricians in the UK,
+            The ECS Gold Card is the industry's most recognised credential for formally qualified electricians in the UK,
             signifying a high level of competence and professionalism. EWA Tracker Ltd is an EAL approved centre providing a clear pathway to
             achieving this essential card through the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1).
           </p>
