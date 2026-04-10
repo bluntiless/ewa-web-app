@@ -287,15 +287,14 @@ export default function HomePage() {
               <div className="relative max-w-3xl w-full">
                 {/* iPad Frame */}
                 <div className="bg-gray-900 rounded-[1.5rem] md:rounded-[2rem] p-2 md:p-3 shadow-2xl">
-                  <div className="bg-black rounded-[1rem] md:rounded-[1.5rem] overflow-hidden">
-                    <div className="relative aspect-[4/3]">
-                      <Image
-                        src="/app-screenshots/ipad-qualifications.png"
-                        alt="EWA Tracker iPad - Experienced Worker Assessment"
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
+                  <div className="bg-gray-900 rounded-[1rem] md:rounded-[1.5rem] overflow-hidden">
+                    <Image
+                      src="/app-screenshots/ipad-qualifications.png"
+                      alt="EWA Tracker iPad - Experienced Worker Assessment"
+                      width={1200}
+                      height={900}
+                      className="w-full h-auto"
+                    />
                   </div>
                 </div>
               </div>
