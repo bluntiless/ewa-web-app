@@ -190,9 +190,6 @@ export default function HomePage() {
           </div>
 
           <div className="mt-10 text-center">
-            <p className="text-sm text-gray-400 mb-4">
-              Most candidates complete within 8–12 weeks while continuing normal work.
-            </p>
             <a
               href="https://calendly.com/ewatracker-info/30min"
               target="_blank"
