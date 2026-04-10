@@ -208,171 +208,122 @@ export default function HomePage() {
       </section>
 
       {/* iOS App Showcase Section */}
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-20 md:py-28 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our iOS Mobile Application</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Empowering learners to track progress, upload evidence, and manage EWA qualifications seamlessly on the
-              go.
+          <div className="text-center mb-16">
+            <p className="text-sm font-medium text-blue-600 uppercase tracking-wider mb-3">Mobile App</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">EWA Tracker for iOS</h2>
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+              Track progress, upload evidence, and manage your qualification journey from anywhere.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Qualifications Overview */}
-            <div className="bg-gray-50 rounded-xl shadow-md p-6 flex flex-col items-center text-center">
-              <div className="mb-4 w-full max-w-[200px] h-[400px] relative">
-                <Image
-                  src="/app-screenshots/qualifications.png"
-                  alt="Qualifications Overview"
-                  fill
-                  style={{ objectFit: "contain" }}
-                  className="rounded-lg border border-gray-200 shadow-inner"
-                />
+          {/* Premium iPhone Showcase */}
+          <div className="relative mb-20">
+            {/* Main 3 phones display */}
+            <div className="flex justify-center items-end gap-4 md:gap-8">
+              {/* Left phone - tilted */}
+              <div className="hidden md:block transform -rotate-6 translate-y-8">
+                <div className="relative w-[180px]">
+                  <div className="bg-gray-900 rounded-[2.5rem] p-2 shadow-2xl">
+                    <div className="bg-black rounded-[2rem] overflow-hidden">
+                      <div className="relative aspect-[9/19.5]">
+                        <Image
+                          src="/app-screenshots/units-overview.png"
+                          alt="Unit Progress"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-center mt-4 text-xs text-gray-400">Unit Progress</p>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Qualifications Overview</h3>
-              <p className="text-gray-600 text-sm">
-                View all available EWA qualifications and track completion progress across multiple units.
-              </p>
-            </div>
 
-            {/* Units and Progress */}
-            <div className="bg-gray-50 rounded-xl shadow-md p-6 flex flex-col items-center text-center">
-              <div className="mb-4 w-full max-w-[200px] h-[400px] relative">
-                <Image
-                  src="/app-screenshots/units-overview.png"
-                  alt="Units Overview"
-                  fill
-                  style={{ objectFit: "contain" }}
-                  className="rounded-lg border border-gray-200 shadow-inner"
-                />
+              {/* Center phone - main focus */}
+              <div className="relative z-10">
+                <div className="relative w-[220px] md:w-[260px]">
+                  <div className="bg-gray-900 rounded-[2.5rem] p-2 shadow-2xl ring-1 ring-gray-800">
+                    <div className="bg-black rounded-[2rem] overflow-hidden">
+                      <div className="relative aspect-[9/19.5]">
+                        <Image
+                          src="/app-screenshots/qualifications.png"
+                          alt="Qualifications Overview"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-center mt-4 text-sm font-medium text-gray-600">Qualifications</p>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Unit Progress Tracking</h3>
-              <p className="text-gray-600 text-sm">
-                Monitor progress across NETP3 units including Health & Safety, Electrical Installation, and more.
-              </p>
-            </div>
 
-            {/* Learning Outcomes */}
-            <div className="bg-gray-50 rounded-xl shadow-md p-6 flex flex-col items-center text-center">
-              <div className="mb-4 w-full max-w-[200px] h-[400px] relative">
-                <Image
-                  src="/app-screenshots/learning-outcomes.png"
-                  alt="Learning Outcomes"
-                  fill
-                  style={{ objectFit: "contain" }}
-                  className="rounded-lg border border-gray-200 shadow-inner"
-                />
+              {/* Right phone - tilted */}
+              <div className="hidden md:block transform rotate-6 translate-y-8">
+                <div className="relative w-[180px]">
+                  <div className="bg-gray-900 rounded-[2.5rem] p-2 shadow-2xl">
+                    <div className="bg-black rounded-[2rem] overflow-hidden">
+                      <div className="relative aspect-[9/19.5]">
+                        <Image
+                          src="/app-screenshots/upload-options.png"
+                          alt="Upload Evidence"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-center mt-4 text-xs text-gray-400">Upload Evidence</p>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Learning Outcomes</h3>
-              <p className="text-gray-600 text-sm">
-                Detailed breakdown of learning outcomes and criteria with checkbox tracking for completion.
-              </p>
-            </div>
-
-            {/* Upload Options */}
-            <div className="bg-gray-50 rounded-xl shadow-md p-6 flex flex-col items-center text-center">
-              <div className="mb-4 w-full max-w-[200px] h-[400px] relative">
-                <Image
-                  src="/app-screenshots/upload-options.png"
-                  alt="Upload Options"
-                  fill
-                  style={{ objectFit: "contain" }}
-                  className="rounded-lg border border-gray-200 shadow-inner"
-                />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Multiple Upload Types</h3>
-              <p className="text-gray-600 text-sm">
-                Submit photos, videos, and documents as evidence for each criterion with intuitive colour-coded buttons.
-              </p>
-            </div>
-
-            {/* Photo Upload */}
-            <div className="bg-gray-50 rounded-xl shadow-md p-6 flex flex-col items-center text-center">
-              <div className="mb-4 w-full max-w-[200px] h-[400px] relative">
-                <Image
-                  src="/app-screenshots/photo-upload.png"
-                  alt="Photo Upload"
-                  fill
-                  style={{ objectFit: "contain" }}
-                  className="rounded-lg border border-gray-200 shadow-inner"
-                />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Evidence Upload</h3>
-              <p className="text-gray-600 text-sm">
-                Easily select and upload multiple photos showing real workplace electrical installations and safety
-                procedures.
-              </p>
-            </div>
-
-            {/* Profile & SharePoint */}
-            <div className="bg-gray-50 rounded-xl shadow-md p-6 flex flex-col items-center text-center">
-              <div className="mb-4 w-full max-w-[200px] h-[400px] relative">
-                <Image
-                  src="/app-screenshots/profile.png"
-                  alt="Profile and SharePoint Settings"
-                  fill
-                  style={{ objectFit: "contain" }}
-                  className="rounded-lg border border-gray-200 shadow-inner"
-                />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Profile & SharePoint Integration</h3>
-              <p className="text-gray-600 text-sm">
-                Manage personal information and configure SharePoint integration for seamless evidence storage.
-              </p>
             </div>
           </div>
 
-          {/* Key Features */}
-          <div className="mt-16 bg-blue-700 text-white rounded-xl shadow-lg p-8 md:p-10">
-            <h3 className="text-2xl md:text-3xl font-bold mb-8 text-center">Key App Features</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="flex items-start space-x-4">
-                <Lightbulb className="w-7 h-7 text-blue-200 flex-shrink-0 mt-1" />
-                <div>
-                  <h4 className="font-semibold text-xl">Real-time Progress Tracking</h4>
-                  <p className="text-blue-100 text-base mt-1">
-                    Monitor completion status across all NETP3 units and criteria.
-                  </p>
-                </div>
+          {/* Feature Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+            <div className="text-center">
+              <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <Lightbulb className="w-5 h-5 text-blue-600" />
               </div>
-              <div className="flex items-start space-x-4">
-                <Smartphone className="w-7 h-7 text-blue-200 flex-shrink-0 mt-1" />
-                <div>
-                  <h4 className="font-semibold text-xl">Multi-format Evidence Upload</h4>
-                  <p className="text-blue-100 text-base mt-1">
-                    Submit photos, videos, and documents directly from your device.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-4">
-                <Cloud className="w-7 h-7 text-blue-200 flex-shrink-0 mt-1" />
-                <div>
-                  <h4 className="font-semibold text-xl">SharePoint Integration</h4>
-                  <p className="text-blue-100 text-base mt-1">
-                    Secure cloud storage with enterprise-grade SharePoint platform.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-4">
-                <Info className="w-7 h-7 text-blue-200 flex-shrink-0 mt-1" />
-                <div>
-                  <h4 className="font-semibold text-xl">Assessment Management</h4>
-                  <p className="text-blue-100 text-base mt-1">Track evidence approval status and assessor feedback.</p>
-                </div>
-              </div>
+              <h4 className="text-sm font-semibold text-gray-900 mb-1">Progress Tracking</h4>
+              <p className="text-xs text-gray-400">Monitor completion across all units</p>
             </div>
-            <div className="mt-10 text-center">
-              <a
-                href="https://apps.apple.com/gb/app/ewa-tracker/id6740567747"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center px-8 py-4 rounded-full shadow-lg font-bold text-blue-700 bg-white hover:bg-gray-100 transition-colors text-lg"
-              >
-                <Apple className="w-6 h-6 mr-3" />
-                Download on the App&nbsp;Store
-              </a>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <Smartphone className="w-5 h-5 text-green-600" />
+              </div>
+              <h4 className="text-sm font-semibold text-gray-900 mb-1">Evidence Upload</h4>
+              <p className="text-xs text-gray-400">Photos, videos, and documents</p>
             </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <Cloud className="w-5 h-5 text-purple-600" />
+              </div>
+              <h4 className="text-sm font-semibold text-gray-900 mb-1">SharePoint Sync</h4>
+              <p className="text-xs text-gray-400">Enterprise-grade cloud storage</p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <Info className="w-5 h-5 text-amber-600" />
+              </div>
+              <h4 className="text-sm font-semibold text-gray-900 mb-1">Assessor Feedback</h4>
+              <p className="text-xs text-gray-400">Real-time approval status</p>
+            </div>
+          </div>
+
+          {/* App Store CTA */}
+          <div className="text-center">
+            <a
+              href="https://apps.apple.com/gb/app/ewa-tracker/id6740567747"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-6 py-3 rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition-colors shadow-lg"
+            >
+              <Apple className="w-5 h-5 mr-2" />
+              <span className="text-sm font-medium">Download on the App Store</span>
+            </a>
           </div>
         </div>
       </section>
