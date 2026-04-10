@@ -128,81 +128,82 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* EWA Candidate Showcase Section */}
-      <section className="py-16 md:py-24 bg-gray-100">
-        <div className="max-w-6xl mx-auto px-4">
+      {/* What the EWA Process Looks Like */}
+      <section className="py-16 md:py-20 bg-white border-t border-gray-100">
+        <div className="max-w-5xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">EWA Candidate Showcase</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Highlighting key skills, essential tools, and critical safety practices for experienced electricians
-              pursuing the EWA qualification.
+            <p className="text-sm font-medium text-blue-600 uppercase tracking-wider mb-2">The Assessment Journey</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">What the EWA Process Looks Like</h2>
+            <p className="text-base text-gray-500 max-w-2xl mx-auto">
+              A practical, evidence-based qualification built around your real work. Here&apos;s how it works.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-transform hover:scale-105 duration-300">
-              <Image
-                src="/electrical-images/conduit-bent.png"
-                alt="Conduit Bending"
-                width={400}
-                height={250}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-5">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Precision Conduit Bending</h3>
-                <p className="text-gray-600 text-sm">
-                  Showcasing the meticulous skill required for high-quality electrical conduit installations.
-                </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* On-Site Assessment */}
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
+              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                <span className="text-lg font-bold text-blue-600">1</span>
               </div>
+              <h3 className="text-base font-semibold text-gray-900 mb-2">On-Site Assessment</h3>
+              <p className="text-sm text-gray-500 leading-relaxed mb-3">
+                Your assessor reviews your work in real environments — whether domestic, commercial, or industrial installations.
+              </p>
+              <ul className="text-xs text-gray-400 space-y-1">
+                <li>• Workplace observation</li>
+                <li>• Professional discussion</li>
+                <li>• Practical demonstration</li>
+              </ul>
             </div>
 
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-transform hover:scale-105 duration-300">
-              <Image
-                src="/electrical-images/tools.png"
-                alt="Essential Electrical Tools"
-                width={400}
-                height={250}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-5">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Comprehensive Toolset</h3>
-                <p className="text-gray-600 text-sm">
-                  A display of the diverse and essential tools vital for professional electrical work.
-                </p>
+            {/* Evidence Collection */}
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
+              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                <span className="text-lg font-bold text-green-600">2</span>
               </div>
+              <h3 className="text-base font-semibold text-gray-900 mb-2">Evidence Collection</h3>
+              <p className="text-sm text-gray-500 leading-relaxed mb-3">
+                You capture photo and video evidence of your work using our iOS app. PPE must be visible in all assessment photos.
+              </p>
+              <ul className="text-xs text-gray-400 space-y-1">
+                <li>• Photos of completed work</li>
+                <li>• Video walkthroughs</li>
+                <li>• Supporting documentation</li>
+              </ul>
             </div>
 
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-transform hover:scale-105 duration-300">
-              <Image
-                src="/electrical-images/PPE.png"
-                alt="Electrical Safety Gear"
-                width={400}
-                height={250}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-5">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">PPE Requirements</h3>
-                <p className="text-gray-600 text-sm">
-                  Suitable PPE must be worn that is appropriate to the work activity being undertaken and must be visible in all assessment photo evidence.
-                </p>
+            {/* Structured Support */}
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
+              <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mb-4">
+                <span className="text-lg font-bold text-amber-600">3</span>
               </div>
+              <h3 className="text-base font-semibold text-gray-900 mb-2">Structured Support</h3>
+              <p className="text-sm text-gray-500 leading-relaxed mb-3">
+                Your assessor guides you through each unit, providing feedback and helping you complete efficiently.
+              </p>
+              <ul className="text-xs text-gray-400 space-y-1">
+                <li>• Clear progress tracking</li>
+                <li>• Regular assessor feedback</li>
+                <li>• Portfolio review sessions</li>
+              </ul>
             </div>
+          </div>
 
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-transform hover:scale-105 duration-300">
-              <Image
-                src="/electrical-images/ewa-advert.png"
-                alt="EWA Electrotechnical Experienced Worker Assessment"
-                width={400}
-                height={250}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-5">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">EWA Assessment Process</h3>
-                <p className="text-gray-600 text-sm">
-                  Overview of the EAL Level 3 Electrotechnical Experienced Worker Qualification assessment process.
-                </p>
-              </div>
-            </div>
+          <div className="mt-10 text-center">
+            <p className="text-sm text-gray-400 mb-4">
+              Most candidates complete within 8–12 weeks while continuing normal work.
+            </p>
+            <a
+              href="https://calendly.com/ewatracker-info/30min"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+            >
+              Book a call to discuss your experience
+              <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
           </div>
         </div>
       </section>
