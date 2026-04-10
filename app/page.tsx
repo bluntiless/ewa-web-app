@@ -281,6 +281,28 @@ export default function HomePage() {
             </div>
           </div>
 
+          {/* iPad Showcase */}
+          <div className="relative mb-20">
+            <div className="flex justify-center">
+              <div className="relative max-w-3xl w-full">
+                {/* iPad Frame */}
+                <div className="bg-gray-900 rounded-[1.5rem] md:rounded-[2rem] p-2 md:p-3 shadow-2xl">
+                  <div className="bg-black rounded-[1rem] md:rounded-[1.5rem] overflow-hidden">
+                    <div className="relative aspect-[4/3]">
+                      <Image
+                        src="/app-screenshots/ipad-qualifications.png"
+                        alt="EWA Tracker iPad - Experienced Worker Assessment"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p className="text-center mt-6 text-sm text-gray-500">Also available on iPad for larger screen management</p>
+          </div>
+
           {/* Feature Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
             <div className="text-center">
