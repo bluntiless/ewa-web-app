@@ -25,110 +25,104 @@ export default function AboutPage() {
 
       <main>
         {/* Hero Section */}
-        <section className="bg-white py-20 md:py-28">
-          <div className="max-w-4xl mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+        <section className="bg-white pt-8 pb-14 md:pt-12 md:pb-20">
+          <div className="max-w-2xl mx-auto px-4 text-center">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-5 tracking-tight">
               About EWA Tracker Ltd
             </h1>
-            <p className="text-lg md:text-xl text-gray-600 leading-relaxed mb-4 max-w-3xl mx-auto">
+            <p className="text-base md:text-lg text-gray-600 leading-relaxed mb-4">
               EWA Tracker Ltd is an EAL approved centre specialising in the Level 3 Electrotechnical Experienced Worker 
-              Qualification (603/5982/1). We help experienced electricians turn real-world competence into formal 
+              Qualification (603/5982/1). We help experienced electricians convert real-world competence into formal 
               recognition and progress towards the ECS Gold Card route.
             </p>
-            <p className="text-base text-gray-500 italic">
+            <p className="text-sm text-gray-400">
               Built for experienced electricians who want a clear, supported route to qualification.
             </p>
           </div>
         </section>
 
         {/* Cards Section */}
-        <section className="py-16 md:py-20 bg-gray-50">
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Card 1 */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mb-6">
-                  <span className="text-2xl font-bold text-blue-600">01</span>
+        <section className="py-10 md:py-14 bg-gray-50/50">
+          <div className="max-w-4xl mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-white rounded-lg border border-gray-100/80 p-5 hover:border-gray-200 transition-colors">
+                <div className="w-8 h-8 bg-blue-50 rounded-md flex items-center justify-center mb-3">
+                  <CheckCircle className="w-3.5 h-3.5 text-blue-600" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">What We Do</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Assessment, portfolio support, evidence review, and guidance for experienced electricians 
-                  completing the EWA route.
+                <h3 className="text-sm font-semibold text-gray-900 mb-1.5">What We Do</h3>
+                <p className="text-gray-400 leading-relaxed text-xs">
+                  We assess experienced electricians against the requirements of the EAL Level 3 Experienced Worker 
+                  Qualification and support them through portfolio completion.
                 </p>
               </div>
 
-              {/* Card 2 */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mb-6">
-                  <span className="text-2xl font-bold text-blue-600">02</span>
+              <div className="bg-white rounded-lg border border-gray-100/80 p-5 hover:border-gray-200 transition-colors">
+                <div className="w-8 h-8 bg-emerald-50 rounded-md flex items-center justify-center mb-3">
+                  <Award className="w-3.5 h-3.5 text-emerald-600" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Why Candidates Choose Us</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Clear guidance, responsive support, structured evidence planning, and a practical 
-                  understanding of the trade.
+                <h3 className="text-sm font-semibold text-gray-900 mb-1.5">Why Candidates Choose Us</h3>
+                <p className="text-gray-400 leading-relaxed text-xs">
+                  Candidates choose EWA Tracker Ltd for clear guidance, practical assessor support, and a 
+                  structured route to completion.
                 </p>
               </div>
 
-              {/* Card 3 */}
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mb-6">
-                  <span className="text-2xl font-bold text-blue-600">03</span>
+              <div className="bg-white rounded-lg border border-gray-100/80 p-5 hover:border-gray-200 transition-colors">
+                <div className="w-8 h-8 bg-amber-50 rounded-md flex items-center justify-center mb-3">
+                  <HeadphonesIcon className="w-3.5 h-3.5 text-amber-600" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Our Approach</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  A straightforward, professional process focused on helping candidates complete 
-                  efficiently and correctly.
+                <h3 className="text-sm font-semibold text-gray-900 mb-1.5">How We Work</h3>
+                <p className="text-gray-400 leading-relaxed text-xs">
+                  Our process is straightforward, responsive, and built around real-site evidence, professional 
+                  discussion, and efficient progress tracking.
                 </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Trust Row */}
-        <section className="py-12 bg-white border-y border-gray-100">
-          <div className="max-w-5xl mx-auto px-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-green-50 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Award className="w-5 h-5 text-green-600" />
-                </div>
-                <span className="text-sm font-medium text-gray-700">EAL Approved Centre</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0">
-                  <CheckCircle className="w-5 h-5 text-blue-600" />
-                </div>
-                <span className="text-sm font-medium text-gray-700">603/5982/1 Qualification</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-orange-50 rounded-full flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-5 h-5 text-orange-600" />
-                </div>
-                <span className="text-sm font-medium text-gray-700">London Based</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-purple-50 rounded-full flex items-center justify-center flex-shrink-0">
-                  <HeadphonesIcon className="w-5 h-5 text-purple-600" />
-                </div>
-                <span className="text-sm font-medium text-gray-700">Full Assessment Support</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Wayne Wright Section */}
-        <section className="py-16 md:py-20 bg-gray-50">
+        {/* Trust Strip */}
+        <section className="py-5 bg-white border-y border-gray-50">
           <div className="max-w-3xl mx-auto px-4">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12">
-              <div className="text-center">
-                <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <span className="text-2xl font-bold text-white">WW</span>
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+              <div className="flex items-center gap-1.5">
+                <Award className="w-3 h-3 text-gray-400" />
+                <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">EAL Approved</span>
+              </div>
+              <span className="text-gray-200">|</span>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle className="w-3 h-3 text-gray-400" />
+                <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">603/5982/1</span>
+              </div>
+              <span className="text-gray-200">|</span>
+              <div className="flex items-center gap-1.5">
+                <MapPin className="w-3 h-3 text-gray-400" />
+                <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">London</span>
+              </div>
+              <span className="text-gray-200">|</span>
+              <div className="flex items-center gap-1.5">
+                <HeadphonesIcon className="w-3 h-3 text-gray-400" />
+                <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Full Support</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Founder Section */}
+        <section className="py-12 md:py-16 bg-gray-50/50">
+          <div className="max-w-2xl mx-auto px-4">
+            <div className="flex items-start gap-5">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center shadow-sm">
+                  <span className="text-sm font-medium text-white">WW</span>
                 </div>
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Led by Wayne Wright</h2>
-                <p className="text-sm text-blue-600 font-medium mb-6">Founder & Lead Assessor</p>
-                <p className="text-gray-600 leading-relaxed max-w-2xl mx-auto">
+              </div>
+              <div>
+                <h2 className="text-base font-semibold text-gray-900">Wayne Wright</h2>
+                <p className="text-xs text-blue-600 font-medium mb-2">Founder & Lead Assessor</p>
+                <p className="text-gray-400 leading-relaxed text-xs">
                   EWA Tracker Ltd is led by Wayne Wright, an experienced electrical assessor focused on helping 
-                  experienced electricians achieve formal recognition through a structured and supportive 
+                  experienced electricians achieve formal recognition through a clear and professionally managed 
                   assessment process.
                 </p>
               </div>
@@ -137,17 +131,17 @@ export default function AboutPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-16 md:py-20 bg-blue-700">
-          <div className="max-w-3xl mx-auto px-4 text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Ready to Get Started?</h2>
-            <p className="text-blue-100 mb-8 max-w-xl mx-auto">
-              Book a free consultation to discuss your experience and eligibility for the EWA qualification.
+        <section className="py-10 md:py-14 bg-gradient-to-r from-blue-600 to-blue-700">
+          <div className="max-w-xl mx-auto px-4 text-center">
+            <h2 className="text-lg md:text-xl font-semibold text-white mb-2">Ready to Get Started?</h2>
+            <p className="text-blue-100/80 text-sm mb-5">
+              Book a free consultation to discuss your eligibility.
             </p>
             <a
               href="https://calendly.com/ewatracker-info/30min"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-8 py-4 rounded-full text-lg font-semibold bg-white text-blue-700 hover:bg-gray-100 transition-colors shadow-lg"
+              className="inline-flex items-center px-5 py-2.5 rounded-md text-xs font-semibold bg-white text-blue-700 hover:bg-blue-50 shadow-sm hover:shadow transition-all duration-150"
             >
               Book Your EWA Assessment Call
             </a>
