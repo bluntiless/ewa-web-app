@@ -181,9 +181,9 @@ export default function HomePage() {
                 className="w-full h-48 object-cover"
               />
               <div className="p-5">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Critical Safety Equipment</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">PPE Requirements</h3>
                 <p className="text-gray-600 text-sm">
-                  Emphasizing the importance of personal protective equipment in ensuring workplace safety.
+                  Suitable PPE must be worn that is appropriate to the work activity being undertaken and must be visible in all assessment photo evidence.
                 </p>
               </div>
             </div>
