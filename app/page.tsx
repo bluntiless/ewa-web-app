@@ -1,15 +1,22 @@
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
-import { Apple, Download, Info, CheckCircle, Lightbulb, Cloud, Smartphone, Award } from "lucide-react"
-import DocumentManager from "@/components/document-manager"
+import { Apple, Info, CheckCircle, Lightbulb, Cloud, Smartphone, Award } from "lucide-react"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 
 export const metadata: Metadata = {
-  title: "Home",
+  title: "EWA Assessment London & UK | ECS Gold Card Route for Electricians",
   description:
-    "EWA Tracker Ltd is an EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1) for experienced electricians seeking formal qualification across the UK.",
+    "EWA Tracker Ltd is an EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1). Fast-track your ECS Gold Card in London, South East, and across the UK.",
+  keywords: [
+    "EWA assessment London",
+    "ECS Gold Card electrician",
+    "experienced worker assessment UK",
+    "Level 3 electrical qualification",
+    "EAL approved centre",
+    "electrician qualification London",
+  ],
   alternates: {
     canonical: "https://ewatracker.co.uk",
   },
@@ -39,10 +46,14 @@ export default function HomePage() {
             className="mx-auto mb-8 drop-shadow-lg w-[250px] h-auto"
             priority
           />
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">EWA Tracker Ltd</h1>
-          <p className="text-lg md:text-xl max-w-3xl mx-auto mb-8 opacity-90">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
+            EWA Assessment & ECS Gold Card Route
+          </h1>
+          <p className="text-lg md:text-xl max-w-3xl mx-auto mb-4 opacity-90">
             EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1).
-            Now enrolling experienced electricians for fast-track EWA completion.
+          </p>
+          <p className="text-base md:text-lg max-w-2xl mx-auto mb-8 opacity-80">
+            Serving experienced electricians in <strong>London</strong>, the <strong>South East</strong>, and <strong>across the UK</strong>. Fast-track your ECS Gold Card today.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
@@ -67,9 +78,9 @@ export default function HomePage() {
       <section id="qualifications" className="py-16 md:py-24 bg-white">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our EAL Approved Qualification</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">EWA to ECS Gold Card — Your Fast-Track Route</h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              EWA Tracker Ltd is an EAL approved centre specialising in the Experienced Worker Assessment route for experienced electricians seeking formal qualification.
+              Already working as an electrician but need formal qualification? The EWA is designed for experienced professionals like you. Complete your Level 3 assessment and unlock your ECS Gold Card.
             </p>
           </div>
 
@@ -366,8 +377,79 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Policies and Procedures Section */}
-      <DocumentManager />
+      {/* ECS Gold Card Benefits Section */}
+      <section className="py-16 md:py-24 bg-gray-100">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Why Get Your ECS Gold Card?</h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              The ECS Gold Card is the industry standard for qualified electricians across the UK. Here&apos;s what it unlocks for your career.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white rounded-xl shadow-md p-8 text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Award className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Site Access</h3>
+              <p className="text-gray-600">
+                Gain entry to major construction sites that require ECS card verification for all electrical workers.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-md p-8 text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Proven Competence</h3>
+              <p className="text-gray-600">
+                Demonstrate your Level 3 qualification to clients, contractors, and employers with industry-recognised credentials.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-md p-8 text-center">
+              <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Lightbulb className="w-8 h-8 text-yellow-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Career Growth</h3>
+              <p className="text-gray-600">
+                Open doors to higher-paying contracts, supervisory roles, and specialist electrical work across the UK.
+              </p>
+            </div>
+          </div>
+
+          <div className="text-center mt-12">
+            <a
+              href="https://calendly.com/ewatracker-info/30min"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-8 py-4 rounded-full text-lg font-semibold bg-blue-700 text-white hover:bg-blue-800 transition-colors shadow-lg"
+            >
+              Book Your EWA Assessment Call
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Policies CTA Section */}
+      <section className="py-12 bg-white border-t border-gray-200">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">Policies & Procedures</h3>
+          <p className="text-gray-600 mb-4">
+            View our comprehensive documentation including complaints, appeals, data protection, and quality assurance policies.
+          </p>
+          <Link
+            href="/policies"
+            className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors"
+          >
+            View All Policies
+            <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
+      </section>
 
       {/* Contact Section */}
       <section id="contact" className="py-16 md:py-24 bg-blue-800 text-white">
