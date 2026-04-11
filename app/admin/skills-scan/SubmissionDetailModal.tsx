@@ -248,6 +248,35 @@ export default function SubmissionDetailModal({
             </div>
           </div>
 
+          {/* Preliminary Suitability Result */}
+          {formData.suitabilityResult && (
+            <div className={`rounded-lg p-4 mb-6 border ${
+              formData.suitabilityResult.result === "likely-suitable"
+                ? "bg-green-50 border-green-200"
+                : formData.suitabilityResult.result === "may-need-development"
+                ? "bg-amber-50 border-amber-200"
+                : "bg-red-50 border-red-200"
+            }`}>
+              <h3 className="font-semibold text-gray-900 mb-2">Preliminary Suitability Indication</h3>
+              <div className="flex flex-wrap items-center gap-4 mb-2">
+                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                  formData.suitabilityResult.result === "likely-suitable"
+                    ? "bg-green-100 text-green-800"
+                    : formData.suitabilityResult.result === "may-need-development"
+                    ? "bg-amber-100 text-amber-800"
+                    : "bg-red-100 text-red-800"
+                }`}>
+                  {formData.suitabilityResult.title}
+                </span>
+                <span className="text-sm text-gray-600">
+                  Knowledge: {formData.suitabilityResult.knowledgeScore}% | 
+                  Experience: {formData.suitabilityResult.experienceScore}%
+                </span>
+              </div>
+              <p className="text-sm text-gray-700">{formData.suitabilityResult.summary}</p>
+            </div>
+          )}
+
           {/* Status Actions */}
           <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6">
             <div className="flex flex-wrap items-center gap-3">

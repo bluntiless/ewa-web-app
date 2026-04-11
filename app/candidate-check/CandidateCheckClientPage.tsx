@@ -11,6 +11,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import SkillRatingRow from "@/components/skill-rating-row"
 import { qualificationsData, skillsScanSections } from "@/lib/skills-scan-data"
+import { evaluateSuitability, type SuitabilityEvaluation } from "@/lib/suitability-evaluation"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 
@@ -85,6 +86,8 @@ export default function CandidateCheckClientPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [submissionError, setSubmissionError] = useState<string | null>(null)
+  const [suitabilityResult, setSuitabilityResult] = useState<SuitabilityEvaluation | null>(null)
+  const [submissionId, setSubmissionId] = useState<string | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target
@@ -142,17 +145,26 @@ export default function CandidateCheckClientPage() {
     setIsSubmitting(true)
     setSubmissionError(null)
 
+    // Evaluate suitability before submitting
+    const evaluation = evaluateSuitability(formData)
+    setSuitabilityResult(evaluation)
+
     try {
       const response = await fetch("/api/skills-scan/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          suitabilityResult: evaluation,
+        }),
       })
 
       if (!response.ok) {
         throw new Error("Failed to submit")
       }
 
+      const data = await response.json()
+      setSubmissionId(data.submissionId)
       setIsSubmitted(true)
     } catch (error) {
       console.error("Submission error:", error)
@@ -162,254 +174,35 @@ export default function CandidateCheckClientPage() {
     }
   }
 
-  const handleSaveAsPdf = async () => {
+  const handleDownloadPdf = async () => {
+    if (!submissionId) return
+
     setIsPdfGenerating(true)
     setPdfSaveStatus(null)
 
     try {
-      // Dynamic import of html2pdf
-      const html2pdfModule = await import("html2pdf.js")
-      // Handle different module export formats
-      const html2pdf = typeof html2pdfModule === "function" 
-        ? html2pdfModule 
-        : (html2pdfModule.default || html2pdfModule)
-      // Create a temporary container for PDF content
-      // Use visibility:hidden instead of off-screen positioning for html2canvas compatibility
-      const pdfContainer = document.createElement("div")
-      pdfContainer.style.position = "fixed"
-      pdfContainer.style.left = "0"
-      pdfContainer.style.top = "0"
-      pdfContainer.style.width = "210mm" // A4 width
-      pdfContainer.style.minHeight = "297mm" // A4 height minimum
-      pdfContainer.style.backgroundColor = "white"
-      pdfContainer.style.padding = "20mm"
-      pdfContainer.style.fontFamily = "Arial, sans-serif"
-      pdfContainer.style.fontSize = "12px"
-      pdfContainer.style.lineHeight = "1.4"
-      pdfContainer.style.color = "#000"
-      pdfContainer.style.zIndex = "-9999"
-      pdfContainer.style.opacity = "0"
-      pdfContainer.style.pointerEvents = "none"
-
-      // Build PDF content
-      let pdfContent = `
-      <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="font-size: 18px; font-weight: bold; margin: 0 0 10px 0;">Installation & Maintenance Electrician EWA: Skills Scan</h1>
-        <p style="font-size: 12px; color: #666; margin: 0;">June 2024</p>
-      </div>
-
-      <div style="margin-bottom: 25px;">
-        <h2 style="font-size: 16px; font-weight: bold; margin: 0 0 15px 0; border-bottom: 2px solid #000; padding-bottom: 5px;">Candidate Details</h2>
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
-          <tr>
-            <td style="padding: 8px; border: 1px solid #ccc; font-weight: bold; width: 30%;">Name:</td>
-            <td style="padding: 8px; border: 1px solid #ccc;">${formData.fullName || "Not provided"}</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px; border: 1px solid #ccc; font-weight: bold;">Email:</td>
-            <td style="padding: 8px; border: 1px solid #ccc;">${formData.email || "Not provided"}</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px; border: 1px solid #ccc; font-weight: bold;">Phone:</td>
-            <td style="padding: 8px; border: 1px solid #ccc;">${formData.phone || "Not provided"}</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px; border: 1px solid #ccc; font-weight: bold;">Years of Experience:</td>
-            <td style="padding: 8px; border: 1px solid #ccc;">${formData.yearsExperience || "Not provided"}</td>
-          </tr>
-        </table>
-      </div>
-    `
-
-      // Add selected qualifications
-      const selectedTableA = Object.entries(formData.selectedQualifications.tableA).filter(([_, selected]) => selected)
-      const selectedTableB = Object.entries(formData.selectedQualifications.tableB).filter(([_, selected]) => selected)
-      const selectedTableC = Object.entries(formData.selectedQualifications.tableC).filter(([_, selected]) => selected)
-
-      if (selectedTableA.length > 0 || selectedTableB.length > 0 || selectedTableC.length > 0) {
-        pdfContent += `
-        <div style="margin-bottom: 25px;">
-          <h2 style="font-size: 16px; font-weight: bold; margin: 0 0 15px 0; border-bottom: 2px solid #000; padding-bottom: 5px;">Selected Qualifications</h2>
-      `
-
-        if (selectedTableA.length > 0) {
-          pdfContent += `
-          <h3 style="font-size: 14px; font-weight: bold; margin: 15px 0 10px 0;">Table A Qualifications:</h3>
-          <ul style="margin: 0 0 15px 20px; padding: 0;">
-        `
-          selectedTableA.forEach(([title]) => {
-            pdfContent += `<li style="margin-bottom: 5px;">${title}</li>`
-          })
-          pdfContent += `</ul>`
-        }
-
-        if (selectedTableB.length > 0) {
-          pdfContent += `
-          <h3 style="font-size: 14px; font-weight: bold; margin: 15px 0 10px 0;">Table B Qualifications:</h3>
-          <ul style="margin: 0 0 15px 20px; padding: 0;">
-        `
-          selectedTableB.forEach(([title]) => {
-            pdfContent += `<li style="margin-bottom: 5px;">${title}</li>`
-          })
-          pdfContent += `</ul>`
-        }
-
-        if (selectedTableC.length > 0) {
-          pdfContent += `
-          <h3 style="font-size: 14px; font-weight: bold; margin: 15px 0 10px 0;">Table C Qualifications:</h3>
-          <ul style="margin: 0 0 15px 20px; padding: 0;">
-        `
-          selectedTableC.forEach(([title]) => {
-            pdfContent += `<li style="margin-bottom: 5px;">${title}</li>`
-          })
-          pdfContent += `</ul>`
-        }
-
-        if (formData.otherQualifications) {
-          pdfContent += `
-          <h3 style="font-size: 14px; font-weight: bold; margin: 15px 0 10px 0;">Other Qualifications:</h3>
-          <p style="margin: 0 0 15px 0; padding: 10px; background-color: #f9f9f9; border-left: 4px solid #ccc;">${formData.otherQualifications}</p>
-        `
-        }
-
-        pdfContent += `</div>`
-      }
-
-      // Add skills assessment
-      pdfContent += `
-      <div style="margin-bottom: 25px;">
-        <h2 style="font-size: 16px; font-weight: bold; margin: 0 0 15px 0; border-bottom: 2px solid #000; padding-bottom: 5px;">Skills Assessment</h2>
-    `
-
-      skillsScanSections.forEach((section) => {
-        pdfContent += `
-        <div style="margin-bottom: 20px;">
-          <h3 style="font-size: 14px; font-weight: bold; margin: 0 0 10px 0; color: #333;">${section.title}</h3>
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 11px;">
-            <thead>
-              <tr style="background-color: #f0f0f0;">
-                <th style="border: 1px solid #000; padding: 8px; text-align: left; width: 50%;">Skill/Task</th>
-                <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 25%;">Knowledge</th>
-                <th style="border: 1px solid #000; padding: 8px; text-align: center; width: 25%;">Experience</th>
-              </tr>
-            </thead>
-            <tbody>
-      `
-
-        section.items.forEach((item) => {
-          const knowledge = formData.skills[section.id]?.[item.id]?.knowledge || "Not rated"
-          const experience = formData.skills[section.id]?.[item.id]?.experience || "Not rated"
-
-          pdfContent += `
-          <tr>
-            <td style="border: 1px solid #000; padding: 6px; vertical-align: top;">${item.text}</td>
-            <td style="border: 1px solid #000; padding: 6px; text-align: center; vertical-align: top;">${knowledge}</td>
-            <td style="border: 1px solid #000; padding: 6px; text-align: center; vertical-align: top;">${experience}</td>
-          </tr>
-        `
-        })
-
-        pdfContent += `
-            </tbody>
-          </table>
-        </div>
-      `
+      const response = await fetch(`/api/skills-scan/${submissionId}/pdf`, {
+        method: "POST",
       })
 
-      pdfContent += `</div>`
-
-      // Add further requirements if any
-      if (formData.furtherKnowledgeRequired || formData.furtherExperienceRequired) {
-        pdfContent += `
-        <div style="margin-bottom: 25px;">
-          <h2 style="font-size: 16px; font-weight: bold; margin: 0 0 15px 0; border-bottom: 2px solid #000; padding-bottom: 5px;">Further Requirements</h2>
-      `
-
-        if (formData.furtherKnowledgeRequired) {
-          pdfContent += `
-          <h3 style="font-size: 14px; font-weight: bold; margin: 15px 0 10px 0;">Knowledge:</h3>
-          <p style="margin: 0 0 15px 0; padding: 10px; background-color: #f9f9f9; border-left: 4px solid #ccc;">${formData.furtherKnowledgeRequired}</p>
-        `
-        }
-
-        if (formData.furtherExperienceRequired) {
-          pdfContent += `
-          <h3 style="font-size: 14px; font-weight: bold; margin: 15px 0 10px 0;">Experience:</h3>
-          <p style="margin: 0 0 15px 0; padding: 10px; background-color: #f9f9f9; border-left: 4px solid #ccc;">${formData.furtherExperienceRequired}</p>
-        `
-        }
-
-        pdfContent += `</div>`
+      if (!response.ok) {
+        throw new Error("Failed to generate PDF")
       }
 
-      // Add background declaration
-      pdfContent += `
-      <div style="margin-bottom: 25px;">
-        <h2 style="font-size: 16px; font-weight: bold; margin: 0 0 15px 0; border-bottom: 2px solid #000; padding-bottom: 5px;">Background Declaration</h2>
-        <table style="width: 100%; border-collapse: collapse;">
-          <tr>
-            <td style="padding: 8px; border: 1px solid #ccc; font-weight: bold; width: 40%;">Criminal Convictions:</td>
-            <td style="padding: 8px; border: 1px solid #ccc;">${formData.criminalConvictions}</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px; border: 1px solid #ccc; font-weight: bold;">Right to Work in UK:</td>
-            <td style="padding: 8px; border: 1px solid #ccc;">${formData.rightToWork}</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px; border: 1px solid #ccc; font-weight: bold;">Declaration Agreed:</td>
-            <td style="padding: 8px; border: 1px solid #ccc;">${formData.declaration ? "Yes" : "No"}</td>
-          </tr>
-        </table>
-      </div>
-    `
-
-      pdfContainer.innerHTML = pdfContent
-      document.body.appendChild(pdfContainer)
-
-      // Allow the browser to fully render the content before capturing
-      await new Promise<void>((resolve) => {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            resolve()
-          })
-        })
-      })
-
-      // Configure html2pdf options for better formatting
-      const opt = {
-        margin: [15, 15, 15, 15], // Top, Right, Bottom, Left margins in mm
-        filename: `EWA_Skills_Scan_${formData.fullName.replace(/\s+/g, "_") || "Candidate"}_${new Date().toISOString().split("T")[0]}.pdf`,
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          letterRendering: true,
-          allowTaint: false,
-          logging: false,
-          windowWidth: 794, // A4 width in pixels at 96dpi
-          windowHeight: 1123, // A4 height in pixels at 96dpi
-        },
-        jsPDF: {
-          unit: "mm",
-          format: "a4",
-          orientation: "portrait",
-          compress: true,
-        },
-        pagebreak: {
-          mode: ["avoid-all", "css", "legacy"],
-          before: ".page-break-before",
-          after: ".page-break-after",
-        },
-      }
-
-      await html2pdf().set(opt).from(pdfContainer).save()
-
-      // Clean up
-      document.body.removeChild(pdfContainer)
+      // Get the PDF blob and download it
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = `Skills_Scan_${formData.fullName.replace(/\s+/g, "_") || "Candidate"}_${new Date().toISOString().split("T")[0]}.pdf`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
 
       setPdfSaveStatus("success")
     } catch (error) {
-      console.error("Error generating PDF:", error)
+      console.error("Error downloading PDF:", error)
       setPdfSaveStatus("error")
     } finally {
       setIsPdfGenerating(false)
@@ -1041,41 +834,119 @@ export default function CandidateCheckClientPage() {
                 </p>
               </>
             ) : (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
-                <CheckCircle className="w-12 h-12 text-green-600 mx-auto mb-3" />
-                <h3 className="text-lg font-semibold text-green-800 mb-2">Skills Scan Submitted Successfully</h3>
-                <p className="text-green-700 text-sm">
-                  Thank you for submitting your Skills Scan. Our team will review your submission and be in touch soon.
-                </p>
+              <div className="space-y-6">
+                {/* Submission Confirmation */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <CheckCircle className="w-5 h-5 text-blue-600" />
+                    <span className="font-semibold text-blue-800">Skills Scan Submitted Successfully</span>
+                  </div>
+                  <p className="text-blue-700 text-sm">
+                    Your Skills Scan has been submitted for review. Our assessment team will be in touch to discuss your application.
+                  </p>
+                </div>
+
+                {/* Preliminary Suitability Result */}
+                {suitabilityResult && (
+                  <div className={`rounded-lg p-6 border ${
+                    suitabilityResult.result === "likely-suitable" 
+                      ? "bg-green-50 border-green-200" 
+                      : suitabilityResult.result === "may-need-development"
+                      ? "bg-amber-50 border-amber-200"
+                      : "bg-red-50 border-red-200"
+                  }`}>
+                    <h3 className={`text-xl font-bold mb-3 ${
+                      suitabilityResult.result === "likely-suitable" 
+                        ? "text-green-800" 
+                        : suitabilityResult.result === "may-need-development"
+                        ? "text-amber-800"
+                        : "text-red-800"
+                    }`}>
+                      Preliminary Indication: {suitabilityResult.title}
+                    </h3>
+                    
+                    <p className={`mb-4 ${
+                      suitabilityResult.result === "likely-suitable" 
+                        ? "text-green-700" 
+                        : suitabilityResult.result === "may-need-development"
+                        ? "text-amber-700"
+                        : "text-red-700"
+                    }`}>
+                      {suitabilityResult.summary}
+                    </p>
+
+                    {/* Scores */}
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div className="bg-white/60 rounded-lg p-3">
+                        <div className="text-sm font-medium text-gray-600 mb-1">Knowledge Score</div>
+                        <div className="text-2xl font-bold text-gray-900">{suitabilityResult.knowledgeScore}%</div>
+                        <div className="text-xs text-gray-500">
+                          {suitabilityResult.adequateOrBetterKnowledge} of {suitabilityResult.totalItems} adequate or better
+                        </div>
+                      </div>
+                      <div className="bg-white/60 rounded-lg p-3">
+                        <div className="text-sm font-medium text-gray-600 mb-1">Experience Score</div>
+                        <div className="text-2xl font-bold text-gray-900">{suitabilityResult.experienceScore}%</div>
+                        <div className="text-xs text-gray-500">
+                          {suitabilityResult.adequateOrBetterExperience} of {suitabilityResult.totalItems} adequate or better
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Guidance */}
+                    {suitabilityResult.guidance.length > 0 && (
+                      <div className="mb-4">
+                        <h4 className="font-semibold text-gray-800 mb-2">Guidance</h4>
+                        <ul className="list-disc pl-5 space-y-1">
+                          {suitabilityResult.guidance.map((item, idx) => (
+                            <li key={idx} className="text-sm text-gray-700">{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Important Disclaimer */}
+                    <div className="bg-white/80 border border-gray-200 rounded-lg p-4 mt-4">
+                      <p className="text-xs text-gray-600 leading-relaxed">
+                        <strong>Important:</strong> This is a preliminary indication based on your self-assessment responses only and remains subject to training provider review and verification. The final decision on your suitability for the IE/ME EWA will be made by your chosen training provider after reviewing your qualifications, experience, and completing a technical discussion with you.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Download PDF Button */}
+                {submissionId && (
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-800 mb-2">Download Your Completed Skills Scan</h4>
+                    <p className="text-sm text-gray-600 mb-3">
+                      Save a copy of your completed TESP Skills Scan PDF for your records and to share with your chosen training provider.
+                    </p>
+                    <Button
+                      type="button"
+                      onClick={handleDownloadPdf}
+                      className="w-full py-2 bg-purple-600 hover:bg-purple-700"
+                      disabled={isPdfGenerating}
+                    >
+                      {isPdfGenerating ? "Generating PDF..." : "Download TESP Skills Scan PDF"}
+                    </Button>
+                    {pdfSaveStatus === "success" && (
+                      <div className="mt-2 flex items-center justify-center text-green-600 text-sm">
+                        <CheckCircle className="w-4 h-4 mr-1" />
+                        PDF downloaded successfully
+                      </div>
+                    )}
+                    {pdfSaveStatus === "error" && (
+                      <div className="mt-2 flex items-center justify-center text-red-600 text-sm">
+                        <XCircle className="w-4 h-4 mr-1" />
+                        Failed to generate PDF. Please try again.
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 
-            <div className="border-t border-gray-200 pt-4 mt-4">
-              <Button
-                type="button"
-                onClick={handleSaveAsPdf}
-                className="w-full py-3 text-lg bg-purple-600 hover:bg-purple-700"
-                disabled={isPdfGenerating}
-              >
-                {isPdfGenerating ? "Generating PDF..." : "Save as PDF (Optional)"}
-              </Button>
 
-              {pdfSaveStatus === "success" && (
-                <div className="mt-4 flex items-center justify-center text-green-600 font-semibold">
-                  <CheckCircle className="w-5 h-5 mr-2" />
-                  PDF generated and saved to your device!
-                </div>
-              )}
-              {pdfSaveStatus === "error" && (
-                <div className="mt-4 flex items-center justify-center text-red-600 font-semibold">
-                  <XCircle className="w-5 h-5 mr-2" />
-                  Failed to generate PDF. Please try again.
-                </div>
-              )}
-              <p className="text-sm text-gray-500 mt-2 text-center">
-                Save a copy of your Skills Scan for your own records.
-              </p>
-            </div>
           </div>
         </section>
       </main>
