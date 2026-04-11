@@ -128,81 +128,79 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* EWA Candidate Showcase Section */}
-      <section className="py-16 md:py-24 bg-gray-100">
-        <div className="max-w-6xl mx-auto px-4">
+      {/* What the EWA Process Looks Like */}
+      <section className="py-16 md:py-20 bg-white border-t border-gray-100">
+        <div className="max-w-5xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">EWA Candidate Showcase</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Highlighting key skills, essential tools, and critical safety practices for experienced electricians
-              pursuing the EWA qualification.
+            <p className="text-sm font-medium text-blue-600 uppercase tracking-wider mb-2">The Assessment Journey</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">What the EWA Process Looks Like</h2>
+            <p className="text-base text-gray-500 max-w-2xl mx-auto">
+              A practical, evidence-based qualification built around your real work. Here&apos;s how it works.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-transform hover:scale-105 duration-300">
-              <Image
-                src="/electrical-images/conduit-bent.png"
-                alt="Conduit Bending"
-                width={400}
-                height={250}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-5">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Precision Conduit Bending</h3>
-                <p className="text-gray-600 text-sm">
-                  Showcasing the meticulous skill required for high-quality electrical conduit installations.
-                </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* On-Site Assessment */}
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
+              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                <span className="text-lg font-bold text-blue-600">1</span>
               </div>
+              <h3 className="text-base font-semibold text-gray-900 mb-2">On-Site Assessment</h3>
+              <p className="text-sm text-gray-500 leading-relaxed mb-3">
+                Your assessor reviews your work in real environments — whether domestic, commercial, or industrial installations.
+              </p>
+              <ul className="text-xs text-gray-400 space-y-1">
+                <li>• Workplace observation</li>
+                <li>• Professional discussion</li>
+                <li>• Practical demonstration</li>
+              </ul>
             </div>
 
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-transform hover:scale-105 duration-300">
-              <Image
-                src="/electrical-images/tools.png"
-                alt="Essential Electrical Tools"
-                width={400}
-                height={250}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-5">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Comprehensive Toolset</h3>
-                <p className="text-gray-600 text-sm">
-                  A display of the diverse and essential tools vital for professional electrical work.
-                </p>
+            {/* Evidence Collection */}
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
+              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                <span className="text-lg font-bold text-green-600">2</span>
               </div>
+              <h3 className="text-base font-semibold text-gray-900 mb-2">Evidence Collection</h3>
+              <p className="text-sm text-gray-500 leading-relaxed mb-3">
+                You capture photo and video evidence of your work using our iOS app. PPE must be visible in all assessment photos.
+              </p>
+              <ul className="text-xs text-gray-400 space-y-1">
+                <li>• Photos of completed work</li>
+                <li>• Video walkthroughs</li>
+                <li>• Supporting documentation</li>
+              </ul>
             </div>
 
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-transform hover:scale-105 duration-300">
-              <Image
-                src="/electrical-images/PPE.png"
-                alt="Electrical Safety Gear"
-                width={400}
-                height={250}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-5">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Critical Safety Equipment</h3>
-                <p className="text-gray-600 text-sm">
-                  Emphasizing the importance of personal protective equipment in ensuring workplace safety.
-                </p>
+            {/* Structured Support */}
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
+              <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mb-4">
+                <span className="text-lg font-bold text-amber-600">3</span>
               </div>
+              <h3 className="text-base font-semibold text-gray-900 mb-2">Structured Support</h3>
+              <p className="text-sm text-gray-500 leading-relaxed mb-3">
+                Your assessor guides you through each unit, providing feedback and helping you complete efficiently.
+              </p>
+              <ul className="text-xs text-gray-400 space-y-1">
+                <li>• Clear progress tracking</li>
+                <li>• Regular assessor feedback</li>
+                <li>• Portfolio review sessions</li>
+              </ul>
             </div>
+          </div>
 
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-transform hover:scale-105 duration-300">
-              <Image
-                src="/electrical-images/ewa-advert.png"
-                alt="EWA Electrotechnical Experienced Worker Assessment"
-                width={400}
-                height={250}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-5">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">EWA Assessment Process</h3>
-                <p className="text-gray-600 text-sm">
-                  Overview of the EAL Level 3 Electrotechnical Experienced Worker Qualification assessment process.
-                </p>
-              </div>
-            </div>
+          <div className="mt-12 text-center">
+            <a
+              href="https://calendly.com/ewatracker-info/30min"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 shadow-sm hover:shadow-md transition-all duration-200"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Book a Call to Discuss Your Experience
+            </a>
           </div>
         </div>
       </section>
@@ -400,6 +398,156 @@ export default function HomePage() {
             >
               Book Your EWA Assessment Call
             </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="py-16 md:py-20 bg-gray-50">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">Pricing</h2>
+            <p className="text-base text-gray-500 max-w-2xl mx-auto">
+              Clear, structured pricing for experienced electricians looking to complete the EAL Experienced Worker Assessment route.
+            </p>
+          </div>
+
+          {/* Skills Scan Panel */}
+          <div className="bg-blue-50 border border-blue-100 rounded-lg p-5 mb-8 max-w-2xl mx-auto">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <h3 className="text-sm font-semibold text-blue-900">Skills Scan / Eligibility Review</h3>
+                <p className="text-xs text-blue-700 mt-1">
+                  A short pre-enrolment review to confirm suitability for the Experienced Worker route.
+                  <br />
+                  <span className="text-blue-600">This fee is deducted from the programme fee if you proceed to enrolment.</span>
+                </p>
+              </div>
+              <div className="text-right">
+                <span className="text-xl font-bold text-blue-900">£50</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Pricing Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {/* Standard Plan */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">Standard EWA Service</h3>
+              <div className="mb-4">
+                <span className="text-3xl font-bold text-gray-900">£2,000</span>
+              </div>
+              <ul className="space-y-2.5 mb-6">
+                <li className="flex items-start gap-2 text-sm text-gray-600">
+                  <svg className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Initial assessment and onboarding
+                </li>
+                <li className="flex items-start gap-2 text-sm text-gray-600">
+                  <svg className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Portfolio guidance and evidence planning
+                </li>
+                <li className="flex items-start gap-2 text-sm text-gray-600">
+                  <svg className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Evidence review and assessor feedback
+                </li>
+                <li className="flex items-start gap-2 text-sm text-gray-600">
+                  <svg className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Professional discussion
+                </li>
+                <li className="flex items-start gap-2 text-sm text-gray-600">
+                  <svg className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Up to 2 observations
+                </li>
+                <li className="flex items-start gap-2 text-sm text-gray-600">
+                  <svg className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Internal quality assurance and certification support
+                </li>
+              </ul>
+              <a
+                href="https://calendly.com/ewatracker-info/30min"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full text-center px-5 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors"
+              >
+                Book a Call
+              </a>
+            </div>
+
+            {/* Gold Plan */}
+            <div className="bg-white rounded-xl border-2 border-blue-600 p-6 shadow-md relative">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                <span className="bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full">Recommended</span>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">Gold EWA Service</h3>
+              <div className="mb-4">
+                <span className="text-3xl font-bold text-gray-900">£2,500</span>
+              </div>
+              <ul className="space-y-2.5 mb-6">
+                <li className="flex items-start gap-2 text-sm text-gray-600">
+                  <svg className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Everything in Standard
+                </li>
+                <li className="flex items-start gap-2 text-sm text-gray-600">
+                  <svg className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Up to 4 observations
+                </li>
+                <li className="flex items-start gap-2 text-sm text-gray-600">
+                  <svg className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Priority evidence review and feedback
+                </li>
+                <li className="flex items-start gap-2 text-sm text-gray-600">
+                  <svg className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Additional scheduled progress reviews
+                </li>
+                <li className="flex items-start gap-2 text-sm text-gray-600">
+                  <svg className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Enhanced assessor support throughout the programme
+                </li>
+              </ul>
+              <a
+                href="https://calendly.com/ewatracker-info/30min"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full text-center px-5 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Book a Call
+              </a>
+            </div>
+          </div>
+
+          {/* Pricing Notes */}
+          <div className="mt-10 max-w-3xl mx-auto text-center">
+            <div className="bg-gray-100 rounded-lg p-5 text-sm text-gray-600">
+              <p className="font-medium text-gray-700 mb-2">EAL registration fee applies separately:</p>
+              <p>£211 for new registrations &nbsp;•&nbsp; £15 for transfer registrations</p>
+              <p className="mt-2">Additional observations outside the agreed package: £275 each</p>
+            </div>
+            <p className="mt-4 text-xs text-gray-400 max-w-2xl mx-auto">
+              <strong>Important:</strong> EWA Tracker Ltd provides the EAL Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1) only. 
+              External qualifications and assessments such as 18th Edition, Inspection and Testing, Initial Verification, and AM2E are not included and must be arranged separately where required.
+            </p>
           </div>
         </div>
       </section>
