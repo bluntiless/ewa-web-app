@@ -164,8 +164,8 @@ export default function SkillsScanUploadPage() {
       {/* Footer note */}
       <div className="bg-blue-50 border-t border-blue-200 py-3 px-4">
         <div className="max-w-7xl mx-auto text-center text-sm text-blue-800">
-          <strong>Important:</strong> Fill out all sections of the PDF above. Your browser may allow you to tick checkboxes directly.
-          If not, <Link href="/skills-scan-upload-file" className="underline">click here to download, fill, and upload the PDF</Link>.
+          <strong>Note:</strong> Some browsers may allow you to tick checkboxes directly in the PDF above.
+          If not, <Link href="/skills-scan" className="underline">use the recommended download/fill/upload method</Link>.
         </div>
       </div>
     </div>
