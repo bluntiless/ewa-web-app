@@ -8,6 +8,8 @@ import {
   type SkillsScanSubmissionData,
 } from "@/lib/skills-scan-submission"
 import { encryptJSON } from "@/lib/encryption"
+import { uploadToSharePoint, isSharePointConfigured, createFolder } from "@/lib/sharepoint"
+import { generateTespPdf } from "@/lib/tesp-pdf-generator"
 
 export async function POST(request: NextRequest) {
   try {
@@ -59,11 +61,52 @@ export async function POST(request: NextRequest) {
     // Generate candidate response PDF filename for reference
     const pdfFileName = getSubmissionFileName(formData.fullName, dateStr, "pdf")
 
+    // Upload to SharePoint if configured
+    let sharePointUrl: string | undefined
+    if (isSharePointConfigured()) {
+      try {
+        // Generate the TESP PDF
+        const pdfBytes = await generateTespPdf({
+          candidateName: formData.fullName,
+          skills: formData.skills,
+          selectedQualifications: formData.selectedQualifications,
+          furtherKnowledgeRequired: formData.furtherKnowledgeRequired,
+          furtherExperienceRequired: formData.furtherExperienceRequired,
+          suitabilityResult: formData.suitabilityResult,
+        })
+
+        // Create folder structure: Skills-Scan-Submissions/YYYY-MM
+        const folderPath = `Skills-Scan-Submissions/${dateStr.substring(0, 7)}`
+        await createFolder(folderPath)
+
+        // Upload PDF to SharePoint
+        const uploadResult = await uploadToSharePoint(
+          folderPath,
+          pdfFileName,
+          Buffer.from(pdfBytes),
+          "application/pdf"
+        )
+
+        if (uploadResult.success) {
+          sharePointUrl = uploadResult.url
+          console.log("[v0] Successfully uploaded to SharePoint:", sharePointUrl)
+        } else {
+          console.error("[v0] SharePoint upload failed:", uploadResult.error)
+        }
+      } catch (error) {
+        console.error("[v0] SharePoint upload error:", error)
+        // Don't fail the submission if SharePoint upload fails
+      }
+    } else {
+      console.log("[v0] SharePoint not configured, skipping upload")
+    }
+
     return NextResponse.json({
       success: true,
       submissionId,
       message: "Skills Scan submitted successfully",
       pdfFileName,
+      sharePointUrl,
     })
   } catch (error) {
     console.error("Skills Scan submission error:", error)
