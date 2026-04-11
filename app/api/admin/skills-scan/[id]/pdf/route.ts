@@ -5,6 +5,7 @@ import { PDFDocument, rgb, StandardFonts } from "pdf-lib"
 import { authOptions } from "@/lib/auth"
 import type { SkillsScanSubmissionData } from "@/lib/skills-scan-submission"
 import { skillsScanSections } from "@/lib/skills-scan-data"
+import { decryptJSON } from "@/lib/encryption"
 
 // Helper to find blob URL by pathname
 async function getBlobUrl(pathname: string): Promise<string | null> {
@@ -26,8 +27,8 @@ export async function POST(
   const { id } = await params
 
   try {
-    // Get blob URL for the response file
-    const blobUrl = await getBlobUrl(`skills-scan-submissions/${id}/response.json`)
+    // Get blob URL for the encrypted response file
+    const blobUrl = await getBlobUrl(`skills-scan-submissions/${id}/response.enc`)
 
     if (!blobUrl) {
       return NextResponse.json({ error: "Submission not found" }, { status: 404 })
@@ -38,7 +39,8 @@ export async function POST(
       return NextResponse.json({ error: "Submission not found" }, { status: 404 })
     }
 
-    const data = await response.json() as SkillsScanSubmissionData
+    const encryptedText = await response.text()
+    const data = decryptJSON<SkillsScanSubmissionData>(encryptedText)
 
     // Generate the filled PDF
     const pdfBytes = await generateTespPdf(data)

@@ -167,10 +167,12 @@ export default function CandidateCheckClientPage() {
     setPdfSaveStatus(null)
 
     try {
-      console.log("[v0] Starting PDF generation...")
+      // Dynamic import of html2pdf
       const html2pdfModule = await import("html2pdf.js")
-      const html2pdf = html2pdfModule.default || html2pdfModule
-      console.log("[v0] html2pdf loaded:", typeof html2pdf)
+      // Handle different module export formats
+      const html2pdf = typeof html2pdfModule === "function" 
+        ? html2pdfModule 
+        : (html2pdfModule.default || html2pdfModule)
       // Create a temporary container for PDF content
       const pdfContainer = document.createElement("div")
       pdfContainer.style.position = "absolute"
@@ -359,9 +361,6 @@ export default function CandidateCheckClientPage() {
       pdfContainer.innerHTML = pdfContent
       document.body.appendChild(pdfContainer)
 
-      console.log("[v0] PDF content length:", pdfContent.length)
-      console.log("[v0] Container attached to DOM:", document.body.contains(pdfContainer))
-
       // Configure html2pdf options for better formatting
       const opt = {
         margin: [15, 15, 15, 15], // Top, Right, Bottom, Left margins in mm
@@ -386,9 +385,7 @@ export default function CandidateCheckClientPage() {
         },
       }
 
-      console.log("[v0] Calling html2pdf().set(opt).from(pdfContainer).save()...")
       await html2pdf().set(opt).from(pdfContainer).save()
-      console.log("[v0] PDF save complete")
 
       // Clean up
       document.body.removeChild(pdfContainer)

@@ -5,6 +5,7 @@ import { authOptions } from "@/lib/auth"
 import { uploadToSharePoint, isSharePointConfigured } from "@/lib/sharepoint"
 import type { SkillsScanSubmission, SkillsScanSubmissionData } from "@/lib/skills-scan-submission"
 import { getSubmissionFileName, formatSubmissionDate } from "@/lib/skills-scan-submission"
+import { decryptJSON, encryptJSON } from "@/lib/encryption"
 
 // Helper to find blob URL by pathname
 async function getBlobUrl(pathname: string): Promise<string | null> {
@@ -42,8 +43,8 @@ export async function POST(
   }
 
   try {
-    // Get blob URL for the response file
-    const blobUrl = await getBlobUrl(`skills-scan-submissions/${id}/response.json`)
+    // Get blob URL for the encrypted response file
+    const blobUrl = await getBlobUrl(`skills-scan-submissions/${id}/response.enc`)
 
     if (!blobUrl) {
       return NextResponse.json({ error: "Submission not found" }, { status: 404 })
@@ -54,14 +55,15 @@ export async function POST(
       return NextResponse.json({ error: "Submission not found" }, { status: 404 })
     }
 
-    const data = await response.json() as SkillsScanSubmissionData
+    const encryptedText = await response.text()
+    const data = decryptJSON<SkillsScanSubmissionData>(encryptedText)
 
     const dateStr = formatSubmissionDate(new Date(data.metadata.submittedAt))
 
     // Prepare files to upload
     const uploads: { fileName: string; content: Buffer | Uint8Array; contentType: string }[] = []
 
-    // 1. JSON Response file
+    // 1. JSON Response file (decrypted for SharePoint)
     const jsonFileName = getSubmissionFileName(data.metadata.candidateName, dateStr, "json")
     uploads.push({
       fileName: jsonFileName,
@@ -111,13 +113,14 @@ export async function POST(
     const allSucceeded = uploadResults.every((r) => r.success)
     const anyFailed = uploadResults.some((r) => !r.success)
 
-    // Update metadata with status and SharePoint path
-    const metadataBlobUrl = await getBlobUrl(`skills-scan-submissions/${id}/metadata.json`)
+    // Update encrypted metadata with status and SharePoint path
+    const metadataBlobUrl = await getBlobUrl(`skills-scan-submissions/${id}/metadata.enc`)
 
     if (metadataBlobUrl) {
       const metaResponse = await fetch(metadataBlobUrl)
       if (metaResponse.ok) {
-        const metadata = await metaResponse.json() as SkillsScanSubmission
+        const encMetaText = await metaResponse.text()
+        const metadata = decryptJSON<SkillsScanSubmission>(encMetaText)
 
         const updatedMetadata: SkillsScanSubmission = {
           ...metadata,
@@ -127,9 +130,9 @@ export async function POST(
         }
 
         await put(
-          `skills-scan-submissions/${id}/metadata.json`,
-          JSON.stringify(updatedMetadata, null, 2),
-          { access: "public", contentType: "application/json" }
+          `skills-scan-submissions/${id}/metadata.enc`,
+          encryptJSON(updatedMetadata),
+          { access: "public", contentType: "text/plain" }
         )
       }
     }
@@ -148,17 +151,18 @@ export async function POST(
 
     // Update status to failed
     try {
-      const metadataBlobUrl = await getBlobUrl(`skills-scan-submissions/${id}/metadata.json`)
+      const metadataBlobUrl = await getBlobUrl(`skills-scan-submissions/${id}/metadata.enc`)
 
       if (metadataBlobUrl) {
         const metaResponse = await fetch(metadataBlobUrl)
         if (metaResponse.ok) {
-          const metadata = await metaResponse.json() as SkillsScanSubmission
+          const encMetaText = await metaResponse.text()
+          const metadata = decryptJSON<SkillsScanSubmission>(encMetaText)
 
           await put(
-            `skills-scan-submissions/${id}/metadata.json`,
-            JSON.stringify({ ...metadata, status: "failed" }, null, 2),
-            { access: "public", contentType: "application/json" }
+            `skills-scan-submissions/${id}/metadata.enc`,
+            encryptJSON({ ...metadata, status: "failed" }),
+            { access: "public", contentType: "text/plain" }
           )
         }
       }

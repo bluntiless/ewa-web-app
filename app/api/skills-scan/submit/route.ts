@@ -7,6 +7,7 @@ import {
   type SkillsScanSubmission,
   type SkillsScanSubmissionData,
 } from "@/lib/skills-scan-submission"
+import { encryptJSON } from "@/lib/encryption"
 
 export async function POST(request: NextRequest) {
   try {
@@ -37,18 +38,22 @@ export async function POST(request: NextRequest) {
       formData,
     }
 
-    // Store metadata.json
-    const metadataBlob = await put(
-      `skills-scan-submissions/${submissionId}/metadata.json`,
-      JSON.stringify(metadata, null, 2),
-      { access: "public", contentType: "application/json" }
+    // Encrypt data before storing (files are public but contents are encrypted)
+    const encryptedMetadata = encryptJSON(metadata)
+    const encryptedResponse = encryptJSON(submissionData)
+
+    // Store encrypted metadata
+    await put(
+      `skills-scan-submissions/${submissionId}/metadata.enc`,
+      encryptedMetadata,
+      { access: "public", contentType: "text/plain" }
     )
 
-    // Store full response.json
-    const responseBlob = await put(
-      `skills-scan-submissions/${submissionId}/response.json`,
-      JSON.stringify(submissionData, null, 2),
-      { access: "public", contentType: "application/json" }
+    // Store encrypted response
+    await put(
+      `skills-scan-submissions/${submissionId}/response.enc`,
+      encryptedResponse,
+      { access: "public", contentType: "text/plain" }
     )
 
     // Generate candidate response PDF filename for reference

@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth"
 import { type NextRequest, NextResponse } from "next/server"
 import { authOptions } from "@/lib/auth"
 import type { SkillsScanSubmission, SkillsScanSubmissionData } from "@/lib/skills-scan-submission"
+import { decryptJSON, encryptJSON } from "@/lib/encryption"
 
 // Helper to find blob URL by pathname
 async function getBlobUrl(pathname: string): Promise<string | null> {
@@ -24,8 +25,8 @@ export async function GET(
   const { id } = await params
 
   try {
-    // Get blob URL for the response file
-    const blobUrl = await getBlobUrl(`skills-scan-submissions/${id}/response.json`)
+    // Get blob URL for the encrypted response file
+    const blobUrl = await getBlobUrl(`skills-scan-submissions/${id}/response.enc`)
 
     if (!blobUrl) {
       return NextResponse.json({ error: "Submission not found" }, { status: 404 })
@@ -36,7 +37,8 @@ export async function GET(
       return NextResponse.json({ error: "Submission not found" }, { status: 404 })
     }
 
-    const data = await response.json() as SkillsScanSubmissionData
+    const encryptedText = await response.text()
+    const data = decryptJSON<SkillsScanSubmissionData>(encryptedText)
 
     return NextResponse.json(data)
   } catch (error) {
@@ -59,8 +61,8 @@ export async function PATCH(
   const updates = await request.json()
 
   try {
-    // Get current metadata
-    const blobUrl = await getBlobUrl(`skills-scan-submissions/${id}/metadata.json`)
+    // Get current encrypted metadata
+    const blobUrl = await getBlobUrl(`skills-scan-submissions/${id}/metadata.enc`)
 
     if (!blobUrl) {
       return NextResponse.json({ error: "Submission not found" }, { status: 404 })
@@ -71,7 +73,8 @@ export async function PATCH(
       return NextResponse.json({ error: "Submission not found" }, { status: 404 })
     }
 
-    const metadata = await response.json() as SkillsScanSubmission
+    const encryptedText = await response.text()
+    const metadata = decryptJSON<SkillsScanSubmission>(encryptedText)
 
     // Update metadata
     const updatedMetadata: SkillsScanSubmission = {
@@ -79,11 +82,11 @@ export async function PATCH(
       ...updates,
     }
 
-    // Save updated metadata
+    // Save encrypted updated metadata
     await put(
-      `skills-scan-submissions/${id}/metadata.json`,
-      JSON.stringify(updatedMetadata, null, 2),
-      { access: "public", contentType: "application/json" }
+      `skills-scan-submissions/${id}/metadata.enc`,
+      encryptJSON(updatedMetadata),
+      { access: "public", contentType: "text/plain" }
     )
 
     return NextResponse.json({ success: true, metadata: updatedMetadata })
@@ -107,7 +110,7 @@ export async function DELETE(
 
   try {
     // Archive by updating status
-    const blobUrl = await getBlobUrl(`skills-scan-submissions/${id}/metadata.json`)
+    const blobUrl = await getBlobUrl(`skills-scan-submissions/${id}/metadata.enc`)
 
     if (!blobUrl) {
       return NextResponse.json({ error: "Submission not found" }, { status: 404 })
@@ -118,7 +121,8 @@ export async function DELETE(
       return NextResponse.json({ error: "Submission not found" }, { status: 404 })
     }
 
-    const metadata = await response.json() as SkillsScanSubmission
+    const encryptedText = await response.text()
+    const metadata = decryptJSON<SkillsScanSubmission>(encryptedText)
 
     // Archive the submission
     const updatedMetadata: SkillsScanSubmission = {
@@ -128,9 +132,9 @@ export async function DELETE(
     }
 
     await put(
-      `skills-scan-submissions/${id}/metadata.json`,
-      JSON.stringify(updatedMetadata, null, 2),
-      { access: "public", contentType: "application/json" }
+      `skills-scan-submissions/${id}/metadata.enc`,
+      encryptJSON(updatedMetadata),
+      { access: "public", contentType: "text/plain" }
     )
 
     return NextResponse.json({ success: true })
