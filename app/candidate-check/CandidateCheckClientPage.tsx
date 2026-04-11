@@ -174,17 +174,22 @@ export default function CandidateCheckClientPage() {
         ? html2pdfModule 
         : (html2pdfModule.default || html2pdfModule)
       // Create a temporary container for PDF content
+      // Use visibility:hidden instead of off-screen positioning for html2canvas compatibility
       const pdfContainer = document.createElement("div")
-      pdfContainer.style.position = "absolute"
-      pdfContainer.style.left = "-9999px"
+      pdfContainer.style.position = "fixed"
+      pdfContainer.style.left = "0"
       pdfContainer.style.top = "0"
       pdfContainer.style.width = "210mm" // A4 width
+      pdfContainer.style.minHeight = "297mm" // A4 height minimum
       pdfContainer.style.backgroundColor = "white"
       pdfContainer.style.padding = "20mm"
       pdfContainer.style.fontFamily = "Arial, sans-serif"
       pdfContainer.style.fontSize = "12px"
       pdfContainer.style.lineHeight = "1.4"
       pdfContainer.style.color = "#000"
+      pdfContainer.style.zIndex = "-9999"
+      pdfContainer.style.opacity = "0"
+      pdfContainer.style.pointerEvents = "none"
 
       // Build PDF content
       let pdfContent = `
@@ -361,6 +366,15 @@ export default function CandidateCheckClientPage() {
       pdfContainer.innerHTML = pdfContent
       document.body.appendChild(pdfContainer)
 
+      // Allow the browser to fully render the content before capturing
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            resolve()
+          })
+        })
+      })
+
       // Configure html2pdf options for better formatting
       const opt = {
         margin: [15, 15, 15, 15], // Top, Right, Bottom, Left margins in mm
@@ -371,6 +385,9 @@ export default function CandidateCheckClientPage() {
           useCORS: true,
           letterRendering: true,
           allowTaint: false,
+          logging: false,
+          windowWidth: 794, // A4 width in pixels at 96dpi
+          windowHeight: 1123, // A4 height in pixels at 96dpi
         },
         jsPDF: {
           unit: "mm",
