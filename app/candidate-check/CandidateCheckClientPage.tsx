@@ -82,6 +82,9 @@ export default function CandidateCheckClientPage() {
 
   const [isPdfGenerating, setIsPdfGenerating] = useState(false)
   const [pdfSaveStatus, setPdfSaveStatus] = useState<"success" | "error" | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [submissionError, setSubmissionError] = useState<string | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target
@@ -128,6 +131,35 @@ export default function CandidateCheckClientPage() {
         },
       },
     }))
+  }
+
+  const handleSubmitSkillsScan = async () => {
+    if (!formData.fullName || !formData.email) {
+      setSubmissionError("Please provide your name and email address before submitting.")
+      return
+    }
+
+    setIsSubmitting(true)
+    setSubmissionError(null)
+
+    try {
+      const response = await fetch("/api/skills-scan/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to submit")
+      }
+
+      setIsSubmitted(true)
+    } catch (error) {
+      console.error("Submission error:", error)
+      setSubmissionError("Failed to submit your Skills Scan. Please try again.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleSaveAsPdf = async () => {
@@ -965,36 +997,64 @@ export default function CandidateCheckClientPage() {
             </div>
           </div>
 
-          {/* PDF Save Button and Status */}
-          <div className="mt-8">
-            <Button
-              type="button"
-              onClick={handleSaveAsPdf}
-              className="w-full py-3 text-lg bg-purple-600 hover:bg-purple-700"
-              disabled={isPdfGenerating}
-            >
-              {isPdfGenerating ? "Generating PDF..." : "Save as PDF"}
-            </Button>
+          {/* Submit and PDF Save Buttons */}
+          <div className="mt-8 space-y-4">
+            {!isSubmitted ? (
+              <>
+                <Button
+                  type="button"
+                  onClick={handleSubmitSkillsScan}
+                  className="w-full py-3 text-lg bg-blue-600 hover:bg-blue-700"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Submitting..." : "Submit Skills Scan"}
+                </Button>
+                {submissionError && (
+                  <div className="flex items-center justify-center text-red-600 font-semibold">
+                    <XCircle className="w-5 h-5 mr-2" />
+                    {submissionError}
+                  </div>
+                )}
+                <p className="text-sm text-gray-600 text-center">
+                  Submit your completed Skills Scan for review by our assessment team.
+                </p>
+              </>
+            ) : (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
+                <CheckCircle className="w-12 h-12 text-green-600 mx-auto mb-3" />
+                <h3 className="text-lg font-semibold text-green-800 mb-2">Skills Scan Submitted Successfully</h3>
+                <p className="text-green-700 text-sm">
+                  Thank you for submitting your Skills Scan. Our team will review your submission and be in touch soon.
+                </p>
+              </div>
+            )}
 
-            {pdfSaveStatus === "success" && (
-              <div className="mt-4 flex items-center justify-center text-green-600 font-semibold">
-                <CheckCircle className="w-5 h-5 mr-2" />
-                PDF generated and saved to your device!
-              </div>
-            )}
-            {pdfSaveStatus === "error" && (
-              <div className="mt-4 flex items-center justify-center text-red-600 font-semibold">
-                <XCircle className="w-5 h-5 mr-2" />
-                Failed to generate PDF. Please try again.
-              </div>
-            )}
-            <p className="text-sm text-gray-600 mt-4 text-center">
-              Please save the generated PDF and email it manually to{" "}
-              <a href="mailto:info@ewatracker.co.uk" className="text-blue-600 hover:underline">
-                info@ewatracker.co.uk
-              </a>
-              .
-            </p>
+            <div className="border-t border-gray-200 pt-4 mt-4">
+              <Button
+                type="button"
+                onClick={handleSaveAsPdf}
+                className="w-full py-3 text-lg bg-purple-600 hover:bg-purple-700"
+                disabled={isPdfGenerating}
+              >
+                {isPdfGenerating ? "Generating PDF..." : "Save as PDF (Optional)"}
+              </Button>
+
+              {pdfSaveStatus === "success" && (
+                <div className="mt-4 flex items-center justify-center text-green-600 font-semibold">
+                  <CheckCircle className="w-5 h-5 mr-2" />
+                  PDF generated and saved to your device!
+                </div>
+              )}
+              {pdfSaveStatus === "error" && (
+                <div className="mt-4 flex items-center justify-center text-red-600 font-semibold">
+                  <XCircle className="w-5 h-5 mr-2" />
+                  Failed to generate PDF. Please try again.
+                </div>
+              )}
+              <p className="text-sm text-gray-500 mt-2 text-center">
+                Save a copy of your Skills Scan for your own records.
+              </p>
+            </div>
           </div>
         </section>
       </main>
