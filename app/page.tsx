@@ -218,10 +218,69 @@ export default function HomePage() {
 
           {/* Premium iPhone Showcase */}
           <div className="relative mb-20">
-            {/* Main 3 phones display */}
-            <div className="flex justify-center items-end gap-4 md:gap-8">
+            {/* Mobile: horizontal scroll, Desktop: tilted 3-phone display */}
+            
+            {/* Mobile view - horizontal scroll */}
+            <div className="flex md:hidden gap-4 overflow-x-auto pb-4 px-4 -mx-4 snap-x snap-mandatory">
+              <div className="flex-shrink-0 snap-center">
+                <div className="relative w-[160px]">
+                  <div className="bg-gray-900 rounded-[2rem] p-1.5 shadow-xl">
+                    <div className="bg-black rounded-[1.5rem] overflow-hidden">
+                      <div className="relative aspect-[9/19.5]">
+                        <Image
+                          src="/app-screenshots/units-overview.png"
+                          alt="Unit Progress"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-center mt-3 text-xs text-gray-400">Unit Progress</p>
+              </div>
+
+              <div className="flex-shrink-0 snap-center">
+                <div className="relative w-[160px]">
+                  <div className="bg-gray-900 rounded-[2rem] p-1.5 shadow-xl">
+                    <div className="bg-black rounded-[1.5rem] overflow-hidden">
+                      <div className="relative aspect-[9/19.5]">
+                        <Image
+                          src="/app-screenshots/qualifications.png"
+                          alt="Qualifications Overview"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-center mt-3 text-xs font-medium text-gray-600">Qualifications</p>
+              </div>
+
+              <div className="flex-shrink-0 snap-center">
+                <div className="relative w-[160px]">
+                  <div className="bg-gray-900 rounded-[2rem] p-1.5 shadow-xl">
+                    <div className="bg-black rounded-[1.5rem] overflow-hidden">
+                      <div className="relative aspect-[9/19.5]">
+                        <Image
+                          src="/app-screenshots/upload-options.png"
+                          alt="Upload Evidence"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-center mt-3 text-xs text-gray-400">Upload Evidence</p>
+              </div>
+            </div>
+
+            {/* Desktop view - tilted 3-phone display */}
+            <div className="hidden md:flex justify-center items-end gap-8">
               {/* Left phone - tilted */}
-              <div className="hidden md:block transform -rotate-6 translate-y-8">
+              <div className="transform -rotate-6 translate-y-8">
                 <div className="relative w-[180px]">
                   <div className="bg-gray-900 rounded-[2.5rem] p-2 shadow-2xl">
                     <div className="bg-black rounded-[2rem] overflow-hidden">
@@ -241,7 +300,7 @@ export default function HomePage() {
 
               {/* Center phone - main focus */}
               <div className="relative z-10">
-                <div className="relative w-[220px] md:w-[260px]">
+                <div className="relative w-[260px]">
                   <div className="bg-gray-900 rounded-[2.5rem] p-2 shadow-2xl ring-1 ring-gray-800">
                     <div className="bg-black rounded-[2rem] overflow-hidden">
                       <div className="relative aspect-[9/19.5]">
@@ -259,7 +318,7 @@ export default function HomePage() {
               </div>
 
               {/* Right phone - tilted */}
-              <div className="hidden md:block transform rotate-6 translate-y-8">
+              <div className="transform rotate-6 translate-y-8">
                 <div className="relative w-[180px]">
                   <div className="bg-gray-900 rounded-[2.5rem] p-2 shadow-2xl">
                     <div className="bg-black rounded-[2rem] overflow-hidden">
