@@ -9,7 +9,7 @@ import {
 } from "@/lib/skills-scan-submission"
 import { encryptJSON } from "@/lib/encryption"
 import { uploadToSharePoint, isSharePointConfigured, createFolder } from "@/lib/sharepoint"
-import { generateTespPdf } from "@/lib/tesp-pdf-generator"
+import { overlayTespPdf } from "@/lib/tesp-pdf-overlay"
 
 export async function POST(request: NextRequest) {
   try {
@@ -65,14 +65,12 @@ export async function POST(request: NextRequest) {
     let sharePointUrl: string | undefined
     if (isSharePointConfigured()) {
       try {
-        // Generate the TESP PDF
-        const pdfBytes = await generateTespPdf({
+        // Overlay candidate responses onto the original TESP PDF
+        const pdfBytes = await overlayTespPdf({
           candidateName: formData.fullName,
           skills: formData.skills,
-          selectedQualifications: formData.selectedQualifications,
           furtherKnowledgeRequired: formData.furtherKnowledgeRequired,
           furtherExperienceRequired: formData.furtherExperienceRequired,
-          suitabilityResult: formData.suitabilityResult,
         })
 
         // Create folder structure: Skills-Scan-Submissions/YYYY-MM

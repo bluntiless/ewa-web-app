@@ -4,7 +4,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { authOptions } from "@/lib/auth"
 import type { SkillsScanSubmissionData } from "@/lib/skills-scan-submission"
 import { decryptJSON } from "@/lib/encryption"
-import { createTespPdf, type TespPdfFormData } from "@/lib/tesp-pdf-generator"
+import { overlayTespPdf, type TespOverlayData } from "@/lib/tesp-pdf-overlay"
 
 // Helper to find blob URL by pathname
 async function getBlobUrl(pathname: string): Promise<string | null> {
@@ -41,19 +41,16 @@ export async function POST(
     const encryptedText = await response.text()
     const data = decryptJSON<SkillsScanSubmissionData>(encryptedText)
 
-    // Prepare data for TESP PDF generation
-    const tespFormData: TespPdfFormData = {
+    // Prepare data for TESP PDF overlay
+    const overlayData: TespOverlayData = {
       candidateName: data.formData.fullName || "",
-      skills: data.formData.skills as TespPdfFormData["skills"],
-      selectedQualifications: data.formData.selectedQualifications,
-      otherQualifications: data.formData.otherQualifications,
+      skills: data.formData.skills,
       furtherKnowledgeRequired: data.formData.furtherKnowledgeRequired,
       furtherExperienceRequired: data.formData.furtherExperienceRequired,
-      suitabilityResult: data.formData.suitabilityResult,
     }
 
-    // Generate the TESP-style PDF
-    const pdfBytes = await createTespPdf(tespFormData)
+    // Overlay candidate responses onto the original TESP PDF
+    const pdfBytes = await overlayTespPdf(overlayData)
 
     // Return the PDF
     const candidateName = data.metadata?.candidateName || data.formData.fullName || "Candidate"

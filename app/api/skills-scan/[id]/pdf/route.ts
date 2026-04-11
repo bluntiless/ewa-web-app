@@ -2,7 +2,7 @@ import { list } from "@vercel/blob"
 import { type NextRequest, NextResponse } from "next/server"
 import { decryptJSON } from "@/lib/encryption"
 import type { SkillsScanSubmissionData } from "@/lib/skills-scan-submission"
-import { createTespPdf, type TespPdfFormData } from "@/lib/tesp-pdf-generator"
+import { overlayTespPdf, type TespOverlayData } from "@/lib/tesp-pdf-overlay"
 
 async function getBlobUrl(pathname: string): Promise<string | null> {
   const { blobs } = await list({ prefix: pathname.split("/").slice(0, -1).join("/") + "/" })
@@ -30,19 +30,16 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const data = decryptJSON<SkillsScanSubmissionData>(encryptedText)
     const formData = data.formData
 
-    // Prepare data for TESP PDF generation
-    const tespFormData: TespPdfFormData = {
+    // Prepare data for TESP PDF overlay
+    const overlayData: TespOverlayData = {
       candidateName: formData.fullName || "",
-      skills: formData.skills as TespPdfFormData["skills"],
-      selectedQualifications: formData.selectedQualifications,
-      otherQualifications: formData.otherQualifications,
+      skills: formData.skills,
       furtherKnowledgeRequired: formData.furtherKnowledgeRequired,
       furtherExperienceRequired: formData.furtherExperienceRequired,
-      suitabilityResult: formData.suitabilityResult,
     }
 
-    // Generate the TESP-style PDF
-    const pdfBytes = await createTespPdf(tespFormData)
+    // Overlay candidate responses onto the original TESP PDF
+    const pdfBytes = await overlayTespPdf(overlayData)
 
     // Return the PDF
     const filename = `TESP_Skills_Scan_${formData.fullName?.replace(/\s+/g, "_") || "Candidate"}_${new Date().toISOString().split("T")[0]}.pdf`
