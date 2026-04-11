@@ -13,6 +13,7 @@ export default function SkillsScanUploadPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
+  const [downloadComplete, setDownloadComplete] = useState(false)
   const [uploadStatus, setUploadStatus] = useState<"success" | "error" | null>(null)
   const [errorMessage, setErrorMessage] = useState("")
 
@@ -29,6 +30,7 @@ export default function SkillsScanUploadPage() {
       a.click()
       window.URL.revokeObjectURL(url)
       document.body.removeChild(a)
+      setDownloadComplete(true)
     } catch (error) {
       console.error("Download failed:", error)
       setErrorMessage("Failed to download template. Please try again.")
@@ -122,11 +124,26 @@ export default function SkillsScanUploadPage() {
                   <Download className="w-4 h-4 mr-2" />
                   {isDownloading ? "Downloading..." : "Download TESP Skills Scan PDF"}
                 </Button>
+                {downloadComplete && (
+                  <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="flex items-center gap-2 text-green-700 font-medium">
+                      <CheckCircle className="w-5 h-5" />
+                      PDF Downloaded Successfully
+                    </div>
+                    <p className="text-green-600 text-sm mt-1">
+                      Check your <strong>Downloads folder</strong> for the file: <br />
+                      <code className="bg-green-100 px-1 rounded">EWA-Skills-Scan-Installation-Electrician.pdf</code>
+                    </p>
+                    <p className="text-green-600 text-sm mt-2">
+                      Open it with <strong>Adobe Acrobat Reader</strong> to fill in the checkboxes, then save and upload below.
+                    </p>
+                  </div>
+                )}
               </div>
             </li>
             <li className="flex items-start gap-3">
               <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium">2</span>
-              <span>Open the PDF in Adobe Acrobat Reader and fill in all sections, ticking the appropriate boxes for your knowledge and experience levels</span>
+              <span>Open the PDF in <strong>Adobe Acrobat Reader</strong> (not your browser) and fill in all sections, ticking the appropriate boxes for your knowledge and experience levels</span>
             </li>
             <li className="flex items-start gap-3">
               <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium">3</span>
