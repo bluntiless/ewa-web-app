@@ -12,8 +12,30 @@ export default function SkillsScanUploadPage() {
   const [email, setEmail] = useState("")
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [isUploading, setIsUploading] = useState(false)
+  const [isDownloading, setIsDownloading] = useState(false)
   const [uploadStatus, setUploadStatus] = useState<"success" | "error" | null>(null)
   const [errorMessage, setErrorMessage] = useState("")
+
+  const handleDownloadTemplate = async () => {
+    setIsDownloading(true)
+    try {
+      const response = await fetch("/templates/ewa-skills-scan-template.pdf")
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = "EWA-Skills-Scan-Installation-Electrician.pdf"
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+    } catch (error) {
+      console.error("Download failed:", error)
+      setErrorMessage("Failed to download template. Please try again.")
+    } finally {
+      setIsDownloading(false)
+    }
+  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -90,14 +112,16 @@ export default function SkillsScanUploadPage() {
               <div>
                 <strong>Download the official TESP Skills Scan PDF</strong>
                 <br />
-                <a
-                  href="/templates/ewa-skills-scan-template.pdf"
-                  download="EWA-Skills-Scan-Installation-Electrician.pdf"
-                  className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 underline mt-1"
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleDownloadTemplate}
+                  disabled={isDownloading}
+                  className="mt-2 text-blue-600 border-blue-300 hover:bg-blue-50"
                 >
-                  <Download className="w-4 h-4" />
-                  Download TESP Skills Scan PDF
-                </a>
+                  <Download className="w-4 h-4 mr-2" />
+                  {isDownloading ? "Downloading..." : "Download TESP Skills Scan PDF"}
+                </Button>
               </div>
             </li>
             <li className="flex items-start gap-3">
