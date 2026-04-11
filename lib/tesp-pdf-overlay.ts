@@ -128,7 +128,13 @@ const FURTHER_REQUIREMENTS_POSITIONS = {
 export async function overlayTespPdf(data: TespOverlayData): Promise<Uint8Array> {
   // Load the original TESP PDF template
   const templatePath = path.join(process.cwd(), "public", "templates", "ewa-skills-scan-template.pdf")
+  
+  if (!fs.existsSync(templatePath)) {
+    throw new Error(`TESP PDF template not found at: ${templatePath}`)
+  }
+  
   const templateBytes = fs.readFileSync(templatePath)
+  console.log(`[v0] TESP PDF template loaded: ${templateBytes.length} bytes from ${templatePath}`)
   
   const pdfDoc = await PDFDocument.load(templateBytes)
   const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
@@ -137,6 +143,12 @@ export async function overlayTespPdf(data: TespOverlayData): Promise<Uint8Array>
   const pages = pdfDoc.getPages()
   
   console.log(`[v0] TESP PDF has ${pages.length} pages`)
+  
+  // Log page sizes for verification
+  pages.forEach((page, idx) => {
+    const { width, height } = page.getSize()
+    console.log(`[v0] Page ${idx + 1}: ${width.toFixed(0)} x ${height.toFixed(0)} points`)
+  })
   
   // Fill candidate name on page 1 (index 0)
   if (data.candidateName && pages.length > 0) {
