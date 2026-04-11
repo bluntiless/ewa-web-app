@@ -13,17 +13,9 @@ export async function GET() {
     }
 
     const templateBytes = fs.readFileSync(templatePath)
-    const fileSize = templateBytes.length
-    
-    // Try loading with different options
-    const pdfDoc = await PDFDocument.load(templateBytes, { 
-      ignoreEncryption: true,
-      updateMetadata: false 
-    })
-    
+    const pdfDoc = await PDFDocument.load(templateBytes)
     const form = pdfDoc.getForm()
     const fields = form.getFields()
-    const pages = pdfDoc.getPages()
 
     const textFields: string[] = []
     const checkboxFields: string[] = []
@@ -48,38 +40,13 @@ export async function GET() {
       }
     }
 
-    // Check for annotations on each page (another way PDFs can have form fields)
-    const pageInfo = pages.map((page, idx) => {
-      const { width, height } = page.getSize()
-      // Try to access raw annotations
-      const node = page.node
-      const annotsRef = node.get(pdfDoc.context.obj("Annots" as unknown as number))
-      return {
-        pageNumber: idx + 1,
-        width,
-        height,
-        hasAnnotsRef: !!annotsRef,
-      }
-    })
-
-    // Check for AcroForm in the document catalog
-    const catalog = pdfDoc.catalog
-    const acroFormRef = catalog.get(pdfDoc.context.obj("AcroForm" as unknown as number))
-
     return NextResponse.json({
-      fileSize,
-      pageCount: pages.length,
       totalFields: fields.length,
-      hasAcroForm: !!acroFormRef,
       textFields,
       checkboxFields,
       radioFields,
       dropdownFields,
       otherFields,
-      pageInfo,
-      message: fields.length === 0 
-        ? "No form fields detected. The PDF may use XFA forms (not supported by pdf-lib), or the fields may be flattened/embedded in the content stream."
-        : "Form fields detected successfully."
     })
   } catch (error) {
     console.error("Error reading PDF:", error)

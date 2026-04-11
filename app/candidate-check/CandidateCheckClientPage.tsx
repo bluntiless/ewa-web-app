@@ -81,10 +81,13 @@ export default function CandidateCheckClientPage() {
     furtherExperienceRequired: "",
   })
 
+  const [isPdfGenerating, setIsPdfGenerating] = useState(false)
+  const [pdfSaveStatus, setPdfSaveStatus] = useState<"success" | "error" | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [submissionError, setSubmissionError] = useState<string | null>(null)
   const [suitabilityResult, setSuitabilityResult] = useState<SuitabilityEvaluation | null>(null)
+  const [submissionId, setSubmissionId] = useState<string | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target
@@ -160,12 +163,49 @@ export default function CandidateCheckClientPage() {
         throw new Error("Failed to submit")
       }
 
+      const data = await response.json()
+      setSubmissionId(data.submissionId)
       setIsSubmitted(true)
     } catch (error) {
       console.error("Submission error:", error)
       setSubmissionError("Failed to submit your Skills Scan. Please try again.")
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  const handleDownloadPdf = async () => {
+    if (!submissionId) return
+
+    setIsPdfGenerating(true)
+    setPdfSaveStatus(null)
+
+    try {
+      const response = await fetch(`/api/skills-scan/${submissionId}/pdf`, {
+        method: "POST",
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to generate PDF")
+      }
+
+      // Get the PDF blob and download it
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = `Skills_Scan_${formData.fullName.replace(/\s+/g, "_") || "Candidate"}_${new Date().toISOString().split("T")[0]}.pdf`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+
+      setPdfSaveStatus("success")
+    } catch (error) {
+      console.error("Error downloading PDF:", error)
+      setPdfSaveStatus("error")
+    } finally {
+      setIsPdfGenerating(false)
     }
   }
 
@@ -874,26 +914,33 @@ export default function CandidateCheckClientPage() {
                   </div>
                 )}
 
-                {/* Next Step: Official TESP Skills Scan */}
-                {suitabilityResult && (suitabilityResult.result === "likely-suitable" || suitabilityResult.result === "may-need-development") && (
-                  <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-6">
-                    <h4 className="font-bold text-blue-900 text-lg mb-2">Next Step: Complete the Official TESP Skills Scan</h4>
-                    <p className="text-blue-800 mb-4">
-                      Based on your preliminary assessment, you may be suitable for the IE/ME EWA. 
-                      To proceed, you&apos;ll need to complete and submit the official TESP Skills Scan PDF 
-                      for Training Provider review.
+                {/* Download PDF Button */}
+                {submissionId && (
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-800 mb-2">Download Your Completed Skills Scan</h4>
+                    <p className="text-sm text-gray-600 mb-3">
+                      Save a copy of your completed TESP Skills Scan PDF for your records and to share with your chosen training provider.
                     </p>
-                    <a href="/skills-scan">
-                      <Button
-                        type="button"
-                        className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-lg font-semibold"
-                      >
-                        Complete Official TESP Skills Scan
-                      </Button>
-                    </a>
-                    <p className="text-xs text-blue-700 mt-3 text-center">
-                      You&apos;ll download the official fillable PDF, complete it, and upload it for provider review.
-                    </p>
+                    <Button
+                      type="button"
+                      onClick={handleDownloadPdf}
+                      className="w-full py-2 bg-purple-600 hover:bg-purple-700"
+                      disabled={isPdfGenerating}
+                    >
+                      {isPdfGenerating ? "Generating PDF..." : "Download TESP Skills Scan PDF"}
+                    </Button>
+                    {pdfSaveStatus === "success" && (
+                      <div className="mt-2 flex items-center justify-center text-green-600 text-sm">
+                        <CheckCircle className="w-4 h-4 mr-1" />
+                        PDF downloaded successfully
+                      </div>
+                    )}
+                    {pdfSaveStatus === "error" && (
+                      <div className="mt-2 flex items-center justify-center text-red-600 text-sm">
+                        <XCircle className="w-4 h-4 mr-1" />
+                        Failed to generate PDF. Please try again.
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

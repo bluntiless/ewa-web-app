@@ -2,13 +2,12 @@ import { put } from "@vercel/blob"
 import { type NextRequest, NextResponse } from "next/server"
 import {
   generateSubmissionId,
+  formatSubmissionDate,
+  getSubmissionFileName,
   type SkillsScanSubmission,
   type SkillsScanSubmissionData,
 } from "@/lib/skills-scan-submission"
 import { encryptJSON } from "@/lib/encryption"
-
-// This route handles preliminary self-assessment submissions from /candidate-check
-// The official TESP PDF submission happens via /api/skills-scan/upload-pdf
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,6 +19,7 @@ export async function POST(request: NextRequest) {
 
     const submissionId = generateSubmissionId()
     const submittedAt = new Date().toISOString()
+    const dateStr = formatSubmissionDate(new Date())
 
     // Create metadata
     const metadata: SkillsScanSubmission = {
@@ -56,10 +56,14 @@ export async function POST(request: NextRequest) {
       { access: "public", contentType: "text/plain" }
     )
 
+    // Generate candidate response PDF filename for reference
+    const pdfFileName = getSubmissionFileName(formData.fullName, dateStr, "pdf")
+
     return NextResponse.json({
       success: true,
       submissionId,
-      message: "Preliminary self-assessment submitted successfully",
+      message: "Skills Scan submitted successfully",
+      pdfFileName,
     })
   } catch (error) {
     console.error("Skills Scan submission error:", error)
