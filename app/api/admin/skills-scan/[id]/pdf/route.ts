@@ -4,7 +4,9 @@ import { type NextRequest, NextResponse } from "next/server"
 import { authOptions } from "@/lib/auth"
 import type { SkillsScanSubmissionData } from "@/lib/skills-scan-submission"
 import { decryptJSON } from "@/lib/encryption"
-import { createTespStylePdf, type TespPdfFormData } from "@/lib/tesp-pdf-filler"
+import { fillOfficialTespPdf, type TespPdfFormData } from "@/lib/tesp-pdf-filler"
+import fs from "fs"
+import path from "path"
 
 // Helper to find blob URL by pathname
 async function getBlobUrl(pathname: string): Promise<string | null> {
@@ -41,17 +43,33 @@ export async function POST(
     const encryptedText = await response.text()
     const data = decryptJSON<SkillsScanSubmissionData>(encryptedText)
 
+    // Load the official TESP PDF template
+    const templatePath = path.join(process.cwd(), "public", "templates", "ewa-skills-scan-template.pdf")
+    let templateBytes: ArrayBuffer
+
+    try {
+      const fileBuffer = fs.readFileSync(templatePath)
+      templateBytes = fileBuffer.buffer.slice(
+        fileBuffer.byteOffset,
+        fileBuffer.byteOffset + fileBuffer.byteLength
+      )
+    } catch (err) {
+      console.error("Failed to read TESP template:", err)
+      return NextResponse.json({ error: "TESP PDF template not found" }, { status: 500 })
+    }
+
     // Convert to TESP PDF format
     const tespFormData: TespPdfFormData = {
       candidateName: data.formData.fullName || "",
       skills: data.formData.skills as TespPdfFormData["skills"],
-      selectedQualifications: data.formData.selectedQualifications || { tableA: {}, tableB: {}, tableC: {} },
+      selectedQualifications: data.formData.selectedQualifications,
       furtherKnowledgeRequired: data.formData.furtherKnowledgeRequired,
       furtherExperienceRequired: data.formData.furtherExperienceRequired,
+      suitabilityResult: data.formData.suitabilityResult,
     }
 
-    // Generate the TESP-style PDF with suitability result if available
-    const pdfBytes = await createTespStylePdf(tespFormData, data.formData.suitabilityResult)
+    // Fill the official TESP PDF template with candidate responses
+    const pdfBytes = await fillOfficialTespPdf(templateBytes, tespFormData)
 
     // Return the PDF
     const candidateName = data.metadata?.candidateName || data.formData.fullName || "Candidate"

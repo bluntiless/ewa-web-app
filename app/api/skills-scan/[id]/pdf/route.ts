@@ -1,45 +1,10 @@
 import { list } from "@vercel/blob"
 import { type NextRequest, NextResponse } from "next/server"
 import { decryptJSON } from "@/lib/encryption"
-import { createTespStylePdf, type TespPdfFormData } from "@/lib/tesp-pdf-filler"
-
-interface SkillAssessment {
-  knowledge: string
-  experience: string
-}
-
-interface SuitabilityResult {
-  result: string
-  title: string
-  summary: string
-  knowledgeScore: number
-  experienceScore: number
-  guidance: string[]
-}
-
-interface SkillsScanSubmissionData {
-  fullName: string
-  email: string
-  phone: string
-  yearsExperience: string
-  otherQualifications: string
-  criminalConvictions: string
-  rightToWork: string
-  declaration: boolean
-  selectedQualifications: {
-    tableA: { [key: string]: boolean }
-    tableB: { [key: string]: boolean }
-    tableC: { [key: string]: boolean }
-  }
-  skills: {
-    [sectionId: string]: {
-      [skillId: string]: SkillAssessment
-    }
-  }
-  furtherKnowledgeRequired: string
-  furtherExperienceRequired: string
-  suitabilityResult?: SuitabilityResult
-}
+import { fillOfficialTespPdf, type TespPdfFormData } from "@/lib/tesp-pdf-filler"
+import type { SkillsScanSubmissionData } from "@/lib/skills-scan-submission"
+import fs from "fs"
+import path from "path"
 
 async function getBlobUrl(pathname: string): Promise<string | null> {
   const { blobs } = await list({ prefix: pathname.split("/").slice(0, -1).join("/") + "/" })
@@ -66,17 +31,33 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const encryptedText = await response.text()
     const data = decryptJSON<SkillsScanSubmissionData>(encryptedText)
 
+    // Load the official TESP PDF template
+    const templatePath = path.join(process.cwd(), "public", "templates", "ewa-skills-scan-template.pdf")
+    let templateBytes: ArrayBuffer
+
+    try {
+      const fileBuffer = fs.readFileSync(templatePath)
+      templateBytes = fileBuffer.buffer.slice(
+        fileBuffer.byteOffset,
+        fileBuffer.byteOffset + fileBuffer.byteLength
+      )
+    } catch (err) {
+      console.error("Failed to read TESP template:", err)
+      return NextResponse.json({ error: "TESP PDF template not found" }, { status: 500 })
+    }
+
     // Convert to TESP PDF format
     const tespFormData: TespPdfFormData = {
       candidateName: data.fullName || "",
       skills: data.skills as TespPdfFormData["skills"],
-      selectedQualifications: data.selectedQualifications || { tableA: {}, tableB: {}, tableC: {} },
+      selectedQualifications: data.selectedQualifications,
       furtherKnowledgeRequired: data.furtherKnowledgeRequired,
       furtherExperienceRequired: data.furtherExperienceRequired,
+      suitabilityResult: data.suitabilityResult,
     }
 
-    // Generate the TESP-style PDF with suitability result
-    const pdfBytes = await createTespStylePdf(tespFormData, data.suitabilityResult)
+    // Fill the official TESP PDF template with candidate responses
+    const pdfBytes = await fillOfficialTespPdf(templateBytes, tespFormData)
 
     // Return the PDF
     const filename = `TESP_Skills_Scan_${data.fullName?.replace(/\s+/g, "_") || "Candidate"}_${new Date().toISOString().split("T")[0]}.pdf`
