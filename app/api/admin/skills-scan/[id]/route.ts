@@ -1,8 +1,15 @@
-import { get, put } from "@vercel/blob"
+import { list, put } from "@vercel/blob"
 import { getServerSession } from "next-auth"
 import { type NextRequest, NextResponse } from "next/server"
 import { authOptions } from "@/lib/auth"
 import type { SkillsScanSubmission, SkillsScanSubmissionData } from "@/lib/skills-scan-submission"
+
+// Helper to find blob URL by pathname
+async function getBlobUrl(pathname: string): Promise<string | null> {
+  const { blobs } = await list({ prefix: pathname.split("/").slice(0, -1).join("/") + "/" })
+  const blob = blobs.find((b) => b.pathname === pathname)
+  return blob?.url || null
+}
 
 export async function GET(
   request: NextRequest,
@@ -17,25 +24,19 @@ export async function GET(
   const { id } = await params
 
   try {
-    // Get the full response data
-    const result = await get(`skills-scan-submissions/${id}/response.json`, {
-      access: "private",
-    })
+    // Get blob URL for the response file
+    const blobUrl = await getBlobUrl(`skills-scan-submissions/${id}/response.json`)
 
-    if (!result || !result.stream) {
+    if (!blobUrl) {
       return NextResponse.json({ error: "Submission not found" }, { status: 404 })
     }
 
-    const reader = result.stream.getReader()
-    const chunks: Uint8Array[] = []
-    let done = false
-    while (!done) {
-      const { value, done: streamDone } = await reader.read()
-      if (value) chunks.push(value)
-      done = streamDone
+    const response = await fetch(blobUrl)
+    if (!response.ok) {
+      return NextResponse.json({ error: "Submission not found" }, { status: 404 })
     }
-    const text = new TextDecoder().decode(Buffer.concat(chunks))
-    const data = JSON.parse(text) as SkillsScanSubmissionData
+
+    const data = await response.json() as SkillsScanSubmissionData
 
     return NextResponse.json(data)
   } catch (error) {
@@ -59,24 +60,18 @@ export async function PATCH(
 
   try {
     // Get current metadata
-    const result = await get(`skills-scan-submissions/${id}/metadata.json`, {
-      access: "private",
-    })
+    const blobUrl = await getBlobUrl(`skills-scan-submissions/${id}/metadata.json`)
 
-    if (!result || !result.stream) {
+    if (!blobUrl) {
       return NextResponse.json({ error: "Submission not found" }, { status: 404 })
     }
 
-    const reader = result.stream.getReader()
-    const chunks: Uint8Array[] = []
-    let done = false
-    while (!done) {
-      const { value, done: streamDone } = await reader.read()
-      if (value) chunks.push(value)
-      done = streamDone
+    const response = await fetch(blobUrl)
+    if (!response.ok) {
+      return NextResponse.json({ error: "Submission not found" }, { status: 404 })
     }
-    const text = new TextDecoder().decode(Buffer.concat(chunks))
-    const metadata = JSON.parse(text) as SkillsScanSubmission
+
+    const metadata = await response.json() as SkillsScanSubmission
 
     // Update metadata
     const updatedMetadata: SkillsScanSubmission = {
@@ -88,7 +83,7 @@ export async function PATCH(
     await put(
       `skills-scan-submissions/${id}/metadata.json`,
       JSON.stringify(updatedMetadata, null, 2),
-      { access: "private", contentType: "application/json" }
+      { access: "public", contentType: "application/json" }
     )
 
     return NextResponse.json({ success: true, metadata: updatedMetadata })
@@ -112,24 +107,18 @@ export async function DELETE(
 
   try {
     // Archive by updating status
-    const result = await get(`skills-scan-submissions/${id}/metadata.json`, {
-      access: "private",
-    })
+    const blobUrl = await getBlobUrl(`skills-scan-submissions/${id}/metadata.json`)
 
-    if (!result || !result.stream) {
+    if (!blobUrl) {
       return NextResponse.json({ error: "Submission not found" }, { status: 404 })
     }
 
-    const reader = result.stream.getReader()
-    const chunks: Uint8Array[] = []
-    let done = false
-    while (!done) {
-      const { value, done: streamDone } = await reader.read()
-      if (value) chunks.push(value)
-      done = streamDone
+    const response = await fetch(blobUrl)
+    if (!response.ok) {
+      return NextResponse.json({ error: "Submission not found" }, { status: 404 })
     }
-    const text = new TextDecoder().decode(Buffer.concat(chunks))
-    const metadata = JSON.parse(text) as SkillsScanSubmission
+
+    const metadata = await response.json() as SkillsScanSubmission
 
     // Archive the submission
     const updatedMetadata: SkillsScanSubmission = {
@@ -141,7 +130,7 @@ export async function DELETE(
     await put(
       `skills-scan-submissions/${id}/metadata.json`,
       JSON.stringify(updatedMetadata, null, 2),
-      { access: "private", contentType: "application/json" }
+      { access: "public", contentType: "application/json" }
     )
 
     return NextResponse.json({ success: true })

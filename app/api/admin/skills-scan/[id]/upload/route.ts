@@ -1,11 +1,17 @@
-import { get, put } from "@vercel/blob"
+import { list, put } from "@vercel/blob"
 import { getServerSession } from "next-auth"
 import { type NextRequest, NextResponse } from "next/server"
-import { PDFDocument, rgb, StandardFonts } from "pdf-lib"
 import { authOptions } from "@/lib/auth"
-import { uploadToSharePoint, isSharePointConfigured, checkFolderExists } from "@/lib/sharepoint"
+import { uploadToSharePoint, isSharePointConfigured } from "@/lib/sharepoint"
 import type { SkillsScanSubmission, SkillsScanSubmissionData } from "@/lib/skills-scan-submission"
 import { getSubmissionFileName, formatSubmissionDate } from "@/lib/skills-scan-submission"
+
+// Helper to find blob URL by pathname
+async function getBlobUrl(pathname: string): Promise<string | null> {
+  const { blobs } = await list({ prefix: pathname.split("/").slice(0, -1).join("/") + "/" })
+  const blob = blobs.find((b) => b.pathname === pathname)
+  return blob?.url || null
+}
 
 export async function POST(
   request: NextRequest,
@@ -36,25 +42,19 @@ export async function POST(
   }
 
   try {
-    // Get submission data
-    const result = await get(`skills-scan-submissions/${id}/response.json`, {
-      access: "private",
-    })
+    // Get blob URL for the response file
+    const blobUrl = await getBlobUrl(`skills-scan-submissions/${id}/response.json`)
 
-    if (!result || !result.stream) {
+    if (!blobUrl) {
       return NextResponse.json({ error: "Submission not found" }, { status: 404 })
     }
 
-    const reader = result.stream.getReader()
-    const chunks: Uint8Array[] = []
-    let done = false
-    while (!done) {
-      const { value, done: streamDone } = await reader.read()
-      if (value) chunks.push(value)
-      done = streamDone
+    const response = await fetch(blobUrl)
+    if (!response.ok) {
+      return NextResponse.json({ error: "Submission not found" }, { status: 404 })
     }
-    const text = new TextDecoder().decode(Buffer.concat(chunks))
-    const data = JSON.parse(text) as SkillsScanSubmissionData
+
+    const data = await response.json() as SkillsScanSubmissionData
 
     const dateStr = formatSubmissionDate(new Date(data.metadata.submittedAt))
 
@@ -112,34 +112,26 @@ export async function POST(
     const anyFailed = uploadResults.some((r) => !r.success)
 
     // Update metadata with status and SharePoint path
-    const metadataResult = await get(`skills-scan-submissions/${id}/metadata.json`, {
-      access: "private",
-    })
+    const metadataBlobUrl = await getBlobUrl(`skills-scan-submissions/${id}/metadata.json`)
 
-    if (metadataResult && metadataResult.stream) {
-      const metaReader = metadataResult.stream.getReader()
-      const metaChunks: Uint8Array[] = []
-      let metaDone = false
-      while (!metaDone) {
-        const { value, done: streamDone } = await metaReader.read()
-        if (value) metaChunks.push(value)
-        metaDone = streamDone
+    if (metadataBlobUrl) {
+      const metaResponse = await fetch(metadataBlobUrl)
+      if (metaResponse.ok) {
+        const metadata = await metaResponse.json() as SkillsScanSubmission
+
+        const updatedMetadata: SkillsScanSubmission = {
+          ...metadata,
+          status: allSucceeded ? "uploaded" : anyFailed ? "failed" : metadata.status,
+          sharePointPath,
+          uploadedAt: allSucceeded ? new Date().toISOString() : undefined,
+        }
+
+        await put(
+          `skills-scan-submissions/${id}/metadata.json`,
+          JSON.stringify(updatedMetadata, null, 2),
+          { access: "public", contentType: "application/json" }
+        )
       }
-      const metaText = new TextDecoder().decode(Buffer.concat(metaChunks))
-      const metadata = JSON.parse(metaText) as SkillsScanSubmission
-
-      const updatedMetadata: SkillsScanSubmission = {
-        ...metadata,
-        status: allSucceeded ? "uploaded" : anyFailed ? "failed" : metadata.status,
-        sharePointPath,
-        uploadedAt: allSucceeded ? new Date().toISOString() : undefined,
-      }
-
-      await put(
-        `skills-scan-submissions/${id}/metadata.json`,
-        JSON.stringify(updatedMetadata, null, 2),
-        { access: "private", contentType: "application/json" }
-      )
     }
 
     return NextResponse.json({
@@ -156,27 +148,19 @@ export async function POST(
 
     // Update status to failed
     try {
-      const metadataResult = await get(`skills-scan-submissions/${id}/metadata.json`, {
-        access: "private",
-      })
+      const metadataBlobUrl = await getBlobUrl(`skills-scan-submissions/${id}/metadata.json`)
 
-      if (metadataResult && metadataResult.stream) {
-        const reader = metadataResult.stream.getReader()
-        const chunks: Uint8Array[] = []
-        let done = false
-        while (!done) {
-          const { value, done: streamDone } = await reader.read()
-          if (value) chunks.push(value)
-          done = streamDone
+      if (metadataBlobUrl) {
+        const metaResponse = await fetch(metadataBlobUrl)
+        if (metaResponse.ok) {
+          const metadata = await metaResponse.json() as SkillsScanSubmission
+
+          await put(
+            `skills-scan-submissions/${id}/metadata.json`,
+            JSON.stringify({ ...metadata, status: "failed" }, null, 2),
+            { access: "public", contentType: "application/json" }
+          )
         }
-        const text = new TextDecoder().decode(Buffer.concat(chunks))
-        const metadata = JSON.parse(text) as SkillsScanSubmission
-
-        await put(
-          `skills-scan-submissions/${id}/metadata.json`,
-          JSON.stringify({ ...metadata, status: "failed" }, null, 2),
-          { access: "private", contentType: "application/json" }
-        )
       }
     } catch {}
 

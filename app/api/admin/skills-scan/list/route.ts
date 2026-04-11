@@ -1,4 +1,4 @@
-import { list, get } from "@vercel/blob"
+import { list } from "@vercel/blob"
 import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 import { authOptions } from "@/lib/auth"
@@ -20,23 +20,14 @@ export async function GET() {
     // Filter to only metadata.json files
     const metadataBlobs = blobs.filter((blob) => blob.pathname.endsWith("/metadata.json"))
 
-    // Fetch each metadata file
+    // Fetch each metadata file from public URL
     const submissions: SkillsScanSubmission[] = []
 
     for (const blob of metadataBlobs) {
       try {
-        const result = await get(blob.pathname, { access: "private" })
-        if (result && result.stream) {
-          const reader = result.stream.getReader()
-          const chunks: Uint8Array[] = []
-          let done = false
-          while (!done) {
-            const { value, done: streamDone } = await reader.read()
-            if (value) chunks.push(value)
-            done = streamDone
-          }
-          const text = new TextDecoder().decode(Buffer.concat(chunks))
-          const metadata = JSON.parse(text) as SkillsScanSubmission
+        const response = await fetch(blob.url)
+        if (response.ok) {
+          const metadata = await response.json() as SkillsScanSubmission
           submissions.push(metadata)
         }
       } catch (err) {

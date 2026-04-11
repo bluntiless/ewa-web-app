@@ -41,14 +41,14 @@ export async function POST(request: NextRequest) {
     const metadataBlob = await put(
       `skills-scan-submissions/${submissionId}/metadata.json`,
       JSON.stringify(metadata, null, 2),
-      { access: "private", contentType: "application/json" }
+      { access: "public", contentType: "application/json" }
     )
 
     // Store full response.json
     const responseBlob = await put(
       `skills-scan-submissions/${submissionId}/response.json`,
       JSON.stringify(submissionData, null, 2),
-      { access: "private", contentType: "application/json" }
+      { access: "public", contentType: "application/json" }
     )
 
     // Generate candidate response PDF filename for reference

@@ -1,19 +1,16 @@
-import { get } from "@vercel/blob"
+import { list } from "@vercel/blob"
 import { getServerSession } from "next-auth"
 import { type NextRequest, NextResponse } from "next/server"
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib"
 import { authOptions } from "@/lib/auth"
 import type { SkillsScanSubmissionData } from "@/lib/skills-scan-submission"
 import { skillsScanSections } from "@/lib/skills-scan-data"
-import fs from "fs"
-import path from "path"
 
-// Rating to checkbox mapping
-const RATING_MAP = {
-  limited: "L",
-  adequate: "A", 
-  extensive: "E",
-  unsure: "U",
+// Helper to find blob URL by pathname
+async function getBlobUrl(pathname: string): Promise<string | null> {
+  const { blobs } = await list({ prefix: pathname.split("/").slice(0, -1).join("/") + "/" })
+  const blob = blobs.find((b) => b.pathname === pathname)
+  return blob?.url || null
 }
 
 export async function POST(
@@ -29,25 +26,19 @@ export async function POST(
   const { id } = await params
 
   try {
-    // Get submission data
-    const result = await get(`skills-scan-submissions/${id}/response.json`, {
-      access: "private",
-    })
+    // Get blob URL for the response file
+    const blobUrl = await getBlobUrl(`skills-scan-submissions/${id}/response.json`)
 
-    if (!result || !result.stream) {
+    if (!blobUrl) {
       return NextResponse.json({ error: "Submission not found" }, { status: 404 })
     }
 
-    const reader = result.stream.getReader()
-    const chunks: Uint8Array[] = []
-    let done = false
-    while (!done) {
-      const { value, done: streamDone } = await reader.read()
-      if (value) chunks.push(value)
-      done = streamDone
+    const response = await fetch(blobUrl)
+    if (!response.ok) {
+      return NextResponse.json({ error: "Submission not found" }, { status: 404 })
     }
-    const text = new TextDecoder().decode(Buffer.concat(chunks))
-    const data = JSON.parse(text) as SkillsScanSubmissionData
+
+    const data = await response.json() as SkillsScanSubmissionData
 
     // Generate the filled PDF
     const pdfBytes = await generateTespPdf(data)
