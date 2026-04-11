@@ -20,99 +20,106 @@ export interface TespOverlayData {
 }
 
 // Checkbox column X positions (in points from left edge of page)
-// These need calibration based on the actual TESP PDF layout
-// Columns: Limited | Adequate | Extensive | Unsure for Knowledge, then same for Experience
+// A4 page is 595 x 842 points
+// The TESP PDF has 8 checkbox columns across the skills table
+// Layout: Skill text | L | A | E | U (Knowledge) | L | A | E | U (Experience)
 const CHECKBOX_COLUMNS = {
   knowledge: {
-    Limited: 262,
-    Adequate: 298,
-    Extensive: 334,
-    Unsure: 370,
+    Limited: 295,
+    Adequate: 330,
+    Extensive: 365,
+    Unsure: 400,
   },
   experience: {
-    Limited: 422,
-    Adequate: 458,
-    Extensive: 494,
-    Unsure: 530,
+    Limited: 450,
+    Adequate: 485,
+    Extensive: 520,
+    Unsure: 555,
   },
 }
 
 // Candidate name field position (Page 1)
-const CANDIDATE_NAME_POSITION = { x: 140, y: 695 }
+// The name field is below the header, in a text field area
+// Y is from bottom of page, so lower Y = lower on page
+const CANDIDATE_NAME_POSITION = { x: 180, y: 480 }
 
 // Mapping from website section/skill IDs to page index and Y position
 // This maps the exact IDs used in skills-scan-data.ts to coordinates in the TESP PDF
-// Y positions are from bottom of page (PDF coordinate system)
+// Y positions are from BOTTOM of page (PDF coordinate system)
+// A4 page height is 842 points, so y=742 is near top, y=100 is near bottom
+// Each skill row is approximately 22-25 points apart
+// The skills table typically starts around y=680 and rows go down from there
 const SKILL_COORDINATE_MAP: {
   [sectionId: string]: {
     [skillId: string]: { pageIndex: number; y: number }
   }
 } = {
   // Safe Isolation and Risk Assessment (Page 2, index 1)
+  // Table starts around y=680, rows approximately 25 points apart
   safeIsolation: {
-    carryOutRiskAssessment: { pageIndex: 1, y: 635 },
-    safeIsolationSinglePhase: { pageIndex: 1, y: 605 },
-    safeIsolationThreePhaseCircuit: { pageIndex: 1, y: 575 },
-    safeIsolationThreePhaseInstallation: { pageIndex: 1, y: 545 },
+    carryOutRiskAssessment: { pageIndex: 1, y: 655 },
+    safeIsolationSinglePhase: { pageIndex: 1, y: 630 },
+    safeIsolationThreePhaseCircuit: { pageIndex: 1, y: 605 },
+    safeIsolationThreePhaseInstallation: { pageIndex: 1, y: 580 },
   },
   // Installation (Pages 3-5, indices 2-4)
   installation: {
-    interpretationOfSpecs: { pageIndex: 2, y: 635 },
-    selectionOfProtectiveDevices: { pageIndex: 2, y: 605 },
-    installProtectiveEquipotentialBonding: { pageIndex: 2, y: 575 },
-    installTerminatePVCSingles: { pageIndex: 2, y: 545 },
-    installTerminatePVCMultiCore: { pageIndex: 2, y: 515 },
-    installTerminateSYMultiFlex: { pageIndex: 2, y: 485 },
-    installTerminateHeatResistantFlex: { pageIndex: 2, y: 455 },
-    installTerminateXLPE_SWA: { pageIndex: 2, y: 425 },
+    interpretationOfSpecs: { pageIndex: 2, y: 655 },
+    selectionOfProtectiveDevices: { pageIndex: 2, y: 630 },
+    installProtectiveEquipotentialBonding: { pageIndex: 2, y: 605 },
+    installTerminatePVCSingles: { pageIndex: 2, y: 580 },
+    installTerminatePVCMultiCore: { pageIndex: 2, y: 555 },
+    installTerminateSYMultiFlex: { pageIndex: 2, y: 530 },
+    installTerminateHeatResistantFlex: { pageIndex: 2, y: 505 },
+    installTerminateXLPE_SWA: { pageIndex: 2, y: 480 },
     // Page 4 (index 3)
-    installTerminateDataCable: { pageIndex: 3, y: 635 },
-    installTerminateFP200: { pageIndex: 3, y: 605 },
-    formInstall20mmMetalConduit: { pageIndex: 3, y: 575 },
-    formInstall20mmPVCConduit: { pageIndex: 3, y: 545 },
-    installThreeOtherWiringSystems: { pageIndex: 3, y: 515 },
-    installProtectiveDevicesTPN: { pageIndex: 3, y: 485 },
-    installTwoWayIntermediateLighting: { pageIndex: 3, y: 455 },
-    installBS1363SocketRing: { pageIndex: 3, y: 425 },
+    installTerminateDataCable: { pageIndex: 3, y: 655 },
+    installTerminateFP200: { pageIndex: 3, y: 630 },
+    formInstall20mmMetalConduit: { pageIndex: 3, y: 605 },
+    formInstall20mmPVCConduit: { pageIndex: 3, y: 580 },
+    installThreeOtherWiringSystems: { pageIndex: 3, y: 555 },
+    installProtectiveDevicesTPN: { pageIndex: 3, y: 530 },
+    installTwoWayIntermediateLighting: { pageIndex: 3, y: 505 },
+    installBS1363SocketRing: { pageIndex: 3, y: 480 },
     // Page 5 (index 4)
-    installCarbonMonoxideDetector: { pageIndex: 4, y: 635 },
-    installDataOutletsCat5: { pageIndex: 4, y: 605 },
-    installBSEN60309Socket: { pageIndex: 4, y: 575 },
-    installProtectiveEquipotentialBondingGasWater: { pageIndex: 4, y: 545 },
-    connectThreePhaseDirectMotor: { pageIndex: 4, y: 515 },
-    installSPlanCentralHeating: { pageIndex: 4, y: 485 },
+    installCarbonMonoxideDetector: { pageIndex: 4, y: 655 },
+    installDataOutletsCat5: { pageIndex: 4, y: 630 },
+    installBSEN60309Socket: { pageIndex: 4, y: 605 },
+    installProtectiveEquipotentialBondingGasWater: { pageIndex: 4, y: 580 },
+    connectThreePhaseDirectMotor: { pageIndex: 4, y: 555 },
+    installSPlanCentralHeating: { pageIndex: 4, y: 530 },
   },
   // Inspection and Testing (Pages 6-7, indices 5-6)
   inspectionTesting: {
-    riskAssessmentHealthSafety: { pageIndex: 5, y: 635 },
-    installationIsolated: { pageIndex: 5, y: 605 },
-    visualInspectionBS7671: { pageIndex: 5, y: 575 },
-    continuityProtectiveConductors: { pageIndex: 5, y: 545 },
-    continuityRingFinalCircuit: { pageIndex: 5, y: 515 },
-    insulationResistance: { pageIndex: 5, y: 485 },
-    polarity: { pageIndex: 5, y: 455 },
+    riskAssessmentHealthSafety: { pageIndex: 5, y: 655 },
+    installationIsolated: { pageIndex: 5, y: 630 },
+    visualInspectionBS7671: { pageIndex: 5, y: 605 },
+    continuityProtectiveConductors: { pageIndex: 5, y: 580 },
+    continuityRingFinalCircuit: { pageIndex: 5, y: 555 },
+    insulationResistance: { pageIndex: 5, y: 530 },
+    polarity: { pageIndex: 5, y: 505 },
     // Page 7 (index 6)
-    earthFaultLoopImpedance: { pageIndex: 6, y: 635 },
-    prospectiveFaultCurrent: { pageIndex: 6, y: 605 },
-    phaseSequenceRotation: { pageIndex: 6, y: 575 },
-    functionalTesting: { pageIndex: 6, y: 545 },
-    verifyTestResults: { pageIndex: 6, y: 515 },
-    completeElectricalInstallationCertificate: { pageIndex: 6, y: 485 },
+    earthFaultLoopImpedance: { pageIndex: 6, y: 655 },
+    prospectiveFaultCurrent: { pageIndex: 6, y: 630 },
+    phaseSequenceRotation: { pageIndex: 6, y: 605 },
+    functionalTesting: { pageIndex: 6, y: 580 },
+    verifyTestResults: { pageIndex: 6, y: 555 },
+    completeElectricalInstallationCertificate: { pageIndex: 6, y: 530 },
   },
   // Fault Diagnosis and Rectification (Page 8, index 7)
   faultDiagnosisRectification: {
-    riskAssessmentWorkBestPractice: { pageIndex: 7, y: 635 },
-    identifyUseToolsEquipment: { pageIndex: 7, y: 605 },
-    checksPreparationsPriorDiagnosis: { pageIndex: 7, y: 575 },
-    identifyFaultsFromSymptom: { pageIndex: 7, y: 545 },
-    stateRecordRectification: { pageIndex: 7, y: 515 },
+    riskAssessmentWorkBestPractice: { pageIndex: 7, y: 655 },
+    identifyUseToolsEquipment: { pageIndex: 7, y: 630 },
+    checksPreparationsPriorDiagnosis: { pageIndex: 7, y: 605 },
+    identifyFaultsFromSymptom: { pageIndex: 7, y: 580 },
+    stateRecordRectification: { pageIndex: 7, y: 555 },
   },
   // Assessment of Applied Knowledge (Page 9, index 8)
   assessmentAppliedKnowledge: {
-    healthAndSafety: { pageIndex: 8, y: 635 },
-    bs7671Requirements: { pageIndex: 8, y: 605 },
-    buildingRegulations: { pageIndex: 8, y: 575 },
-    inspectionTestingFaultFinding: { pageIndex: 8, y: 545 },
+    healthAndSafety: { pageIndex: 8, y: 655 },
+    bs7671Requirements: { pageIndex: 8, y: 630 },
+    buildingRegulations: { pageIndex: 8, y: 605 },
+    inspectionTestingFaultFinding: { pageIndex: 8, y: 580 },
   },
 }
 
