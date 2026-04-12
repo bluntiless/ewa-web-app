@@ -53,7 +53,18 @@ export function formatSubmissionDate(date: Date): string {
   return date.toISOString().split('T')[0]
 }
 
+export function sanitizeCandidateName(name: string): string {
+  // Remove characters that are invalid in SharePoint filenames: " * : < > ? / \ |
+  // Also remove any control characters and trim whitespace
+  return name
+    .replace(/["\*:<>\?\/\\|]/g, '') // Remove SharePoint invalid chars
+    .replace(/[^\w\s'-]/g, '')        // Keep only word chars, spaces, hyphens, apostrophes
+    .replace(/\s+/g, ' ')             // Normalize multiple spaces to single space
+    .trim()
+    .substring(0, 100)                // Limit length to avoid path issues
+}
+
 export function getSubmissionFileName(candidateName: string, date: string, extension: string): string {
-  const safeName = candidateName.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, ' ').trim()
-  return `Skills Scan Response - ${safeName} - ${date}.${extension}`
+  const safeName = sanitizeCandidateName(candidateName)
+  return `TESP Skills Scan - ${safeName} - ${date}.${extension}`
 }

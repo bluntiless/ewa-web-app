@@ -65,15 +65,76 @@ export default function ServicesPage() {
           <div className="mt-12 pt-8 border-t border-gray-200">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Start Your Assessment Journey</h2>
             <p className="text-lg text-gray-700 leading-relaxed mb-8 max-w-3xl mx-auto">
-              Ready to take the first step? Fill out our candidate background check and skills scan to help us
-              understand your experience and guide you to the right qualification pathway.
+              Ready to take the first step? Complete your Skills Scan to help us understand your experience and guide you to the right qualification pathway.
             </p>
-            <Link
-              href="/candidate-check"
-              className="inline-flex items-center px-8 py-3 rounded-full text-lg font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-lg"
-            >
-              <FilePenLine className="w-5 h-5 mr-2" /> Start Skills Scan
-            </Link>
+            
+            <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+              {/* Option 1: Preliminary Self-Check */}
+              <div className="bg-white border-2 border-blue-200 rounded-xl p-6 text-left hover:border-blue-400 hover:shadow-lg transition-all">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded">Recommended First</span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Preliminary Self-Check</h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  Complete an online self-assessment to get instant feedback on your suitability for the IE/ME EWA.
+                </p>
+                <ul className="text-sm text-gray-600 mb-4 space-y-1">
+                  <li>• Instant suitability indication</li>
+                  <li>• Identify knowledge gaps</li>
+                  <li>• No document uploads</li>
+                </ul>
+                <Link
+                  href="/candidate-check"
+                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                >
+                  <FilePenLine className="w-4 h-4 mr-2" /> Start Self-Check
+                </Link>
+              </div>
+
+              {/* Option 2: Official TESP Submission */}
+              <div className="bg-white border-2 border-gray-200 rounded-xl p-6 text-left hover:border-blue-400 hover:shadow-lg transition-all">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="bg-gray-100 text-gray-700 text-xs font-semibold px-2 py-1 rounded">Official Submission</span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Submit TESP Skills Scan</h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  Download the official TESP Skills Scan PDF, complete it in Adobe Reader, and upload.
+                </p>
+                <ul className="text-sm text-gray-600 mb-4 space-y-1">
+                  <li>• Official EWA document</li>
+                  <li>• Fill in Adobe Reader</li>
+                  <li>• Direct submission</li>
+                </ul>
+                <Link
+                  href="/skills-scan"
+                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-gray-800 text-white hover:bg-gray-900 transition-colors"
+                >
+                  <FilePenLine className="w-4 h-4 mr-2" /> Submit TESP
+                </Link>
+              </div>
+
+              {/* Option 3: Candidate Background Form */}
+              <div className="bg-white border-2 border-green-200 rounded-xl p-6 text-left hover:border-green-400 hover:shadow-lg transition-all">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded">Required Document</span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Candidate Background Form</h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  Complete the Candidate Background form to provide your employment history and qualifications.
+                </p>
+                <ul className="text-sm text-gray-600 mb-4 space-y-1">
+                  <li>• Employment history</li>
+                  <li>• Qualification details</li>
+                  <li>• Required for assessment</li>
+                </ul>
+                <Link
+                  href="/candidate-background"
+                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-green-600 text-white hover:bg-green-700 transition-colors"
+                >
+                  <FilePenLine className="w-4 h-4 mr-2" /> Complete Form
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
 

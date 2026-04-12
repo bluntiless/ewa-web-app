@@ -21,9 +21,23 @@ export default function SkillsScanPage() {
 
   const handleDownloadTemplate = async () => {
     setIsDownloading(true)
+    setErrorMessage("")
     try {
+      console.log("[v0] Starting PDF download...")
       const response = await fetch("/templates/ewa-skills-scan-template.pdf")
+      console.log("[v0] Fetch response status:", response.status)
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
       const blob = await response.blob()
+      console.log("[v0] Blob size:", blob.size, "type:", blob.type)
+      
+      if (blob.size === 0) {
+        throw new Error("Downloaded file is empty")
+      }
+      
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
@@ -33,8 +47,9 @@ export default function SkillsScanPage() {
       window.URL.revokeObjectURL(url)
       document.body.removeChild(a)
       setDownloadComplete(true)
+      console.log("[v0] PDF download complete")
     } catch (error) {
-      console.error("Download failed:", error)
+      console.error("[v0] Download failed:", error)
       setErrorMessage("Failed to download template. Please try again.")
     } finally {
       setIsDownloading(false)
