@@ -8,15 +8,15 @@ import SiteFooter from "@/components/site-footer"
 export const metadata: Metadata = {
   title: "Our Services",
   description:
-    "EWA Tracker Ltd is an EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1) and ECS Gold Card route.",
-  keywords: ["EWA", "ECS Gold Card", "electrical qualifications", "experienced worker assessment", "UK electrician", "Level 3", "EAL approved centre"],
+    "EWA Tracker Ltd is an EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1) and Level 3 Electrotechnical in Dwellings (610/2859/9). ECS Gold Card route available.",
+  keywords: ["EWA", "ECS Gold Card", "electrical qualifications", "experienced worker assessment", "UK electrician", "Level 3", "EAL approved centre", "Electrotechnical in Dwellings"],
   alternates: {
     canonical: "https://ewatracker.co.uk/services",
   },
   openGraph: {
     title: "Our Services - EWA Tracker Ltd",
     description:
-      "EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification and ECS Gold Card route.",
+      "EAL approved centre delivering Level 3 Electrotechnical Experienced Worker Qualifications and ECS Gold Card route.",
     url: "https://ewatracker.co.uk/services",
   },
 }
@@ -33,8 +33,18 @@ export default function ServicesPage() {
           </h1>
           <p className="text-lg text-gray-700 leading-relaxed mb-8 max-w-3xl mx-auto">
             EWA Tracker Ltd is an EAL approved centre specialising in the Experienced Worker Assessment route for experienced electricians seeking formal qualification.
-            We deliver the full-scope EAL Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1).
+            We deliver two EAL Level 3 qualifications:
           </p>
+          <div className="flex flex-col md:flex-row gap-4 justify-center mb-8 max-w-4xl mx-auto">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex-1">
+              <p className="font-semibold text-blue-900">Level 3 Electrotechnical Experienced Worker Qualification</p>
+              <p className="text-sm text-blue-700">(603/5982/1) - Full scope Installation &amp; Maintenance</p>
+            </div>
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex-1">
+              <p className="font-semibold text-green-900">Level 3 Electrotechnical in Dwellings</p>
+              <p className="text-sm text-green-700">(610/2859/9) - Domestic installations focus</p>
+            </div>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <Link

@@ -8,7 +8,7 @@ import SiteFooter from "@/components/site-footer"
 export const metadata: Metadata = {
   title: "EWA Assessment London & UK | ECS Gold Card Route for Electricians",
   description:
-    "EWA Tracker Ltd is an EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1). Fast-track your ECS Gold Card in London, South East, and across the UK.",
+    "EWA Tracker Ltd is an EAL approved centre delivering Level 3 Electrotechnical Experienced Worker Qualifications (603/5982/1) and Electrotechnical in Dwellings (610/2859/9). Fast-track your ECS Gold Card in London, South East, and across the UK.",
   keywords: [
     "EWA assessment London",
     "ECS Gold Card electrician",
@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     "Level 3 electrical qualification",
     "EAL approved centre",
     "electrician qualification London",
+    "Electrotechnical in Dwellings",
   ],
   alternates: {
     canonical: "https://ewatracker.co.uk",
@@ -50,7 +51,7 @@ export default function HomePage() {
             EWA Assessment & ECS Gold Card Route
           </h1>
           <p className="text-lg md:text-xl max-w-3xl mx-auto mb-4 opacity-90">
-            EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1).
+            EAL approved centre delivering Level 3 Electrotechnical Experienced Worker Qualifications (603/5982/1) and Electrotechnical in Dwellings (610/2859/9).
           </p>
           <p className="text-base md:text-lg max-w-2xl mx-auto mb-8 opacity-80">
             Serving experienced electricians in <strong>London</strong>, the <strong>South East</strong>, and <strong>across the UK</strong>. Fast-track your ECS Gold Card today.
@@ -93,8 +94,19 @@ export default function HomePage() {
                     EAL Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1)
                   </h3>
                   <p className="text-gray-600 mt-2">
-                    Achieve your industry-standard qualification through a comprehensive assessment of your existing
-                    skills and experience.
+                    Full-scope Installation &amp; Maintenance qualification through comprehensive assessment of your existing skills and experience.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-4">
+                <Award className="w-8 h-8 text-green-600 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900">
+                    EAL Level 3 Electrotechnical in Dwellings Experienced Worker Qualification (610/2859/9)
+                  </h3>
+                  <p className="text-gray-600 mt-2">
+                    Specialist domestic installations qualification for electricians focused on residential work.
                   </p>
                 </div>
               </div>
