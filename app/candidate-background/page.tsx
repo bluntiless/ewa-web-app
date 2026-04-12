@@ -1,5 +1,6 @@
 "use client"
 
+// Candidate Background Form page - download, fill, and upload workflow
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
