@@ -65,11 +65,10 @@ export default function ServicesPage() {
           <div className="mt-12 pt-8 border-t border-gray-200">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Start Your Assessment Journey</h2>
             <p className="text-lg text-gray-700 leading-relaxed mb-8 max-w-3xl mx-auto">
-              Ready to take the first step? Fill out our candidate background check and skills scan to help us
-              understand your experience and guide you to the right qualification pathway.
+              Ready to take the first step? Complete your Skills Scan to help us understand your experience and guide you to the right qualification pathway.
             </p>
             <Link
-              href="/candidate-check"
+              href="/skills-scan-options"
               className="inline-flex items-center px-8 py-3 rounded-full text-lg font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-lg"
             >
               <FilePenLine className="w-5 h-5 mr-2" /> Start Skills Scan
