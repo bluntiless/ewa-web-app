@@ -1,19 +1,19 @@
 import type { Metadata } from "next"
-import { CheckCircle, Award, MapPin, HeadphonesIcon, Home } from "lucide-react"
+import { CheckCircle, Award, MapPin, HeadphonesIcon } from "lucide-react"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 
 export const metadata: Metadata = {
   title: "About Us",
   description:
-    "Learn more about EWA Tracker Ltd, an EAL approved centre offering the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1) and the Electrotechnical in Dwellings Experienced Worker Qualification (610/2859/9).",
+    "Learn more about EWA Tracker Ltd, an EAL approved centre for the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1).",
   alternates: {
     canonical: "https://ewatracker.co.uk/about",
   },
   openGraph: {
     title: "About Us - EWA Tracker Ltd",
     description:
-      "Learn more about EWA Tracker Ltd, an EAL approved centre offering both the full-scope Electrotechnical EWA qualification and the Electrotechnical in Dwellings route.",
+      "Learn more about EWA Tracker Ltd, an EAL approved centre delivering the full-scope EWA qualification.",
     url: "https://ewatracker.co.uk/about",
   },
 }
@@ -31,19 +31,9 @@ export default function AboutPage() {
               About EWA Tracker Ltd
             </h1>
             <p className="text-base md:text-lg text-gray-600 leading-relaxed mb-3">
-              EWA Tracker Ltd is an EAL approved centre specialising in the{" "}
-              <span className="font-medium text-gray-900">
-                Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1)
-              </span>
-              . We help experienced electricians convert real-world competence into formal recognition
-              and progress towards the ECS Gold Card route.
-            </p>
-            <p className="text-base md:text-lg text-gray-600 leading-relaxed mb-3">
-              We also offer the{" "}
-              <span className="font-medium text-gray-900">
-                Level 3 Electrotechnical in Dwellings Experienced Worker Qualification (610/2859/9)
-              </span>{" "}
-              where appropriate, depending on the candidate’s occupational scope, experience, and suitability.
+              EWA Tracker Ltd is an EAL approved centre specialising in the Level 3 Electrotechnical Experienced Worker 
+              Qualification (603/5982/1). We help experienced electricians convert real-world competence into formal 
+              recognition and progress towards the ECS Gold Card route.
             </p>
             <p className="text-sm text-gray-400">
               Built for experienced electricians who want a clear, supported route to qualification.
@@ -61,9 +51,8 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">What We Do</h3>
                 <p className="text-gray-500 leading-relaxed text-sm">
-                  We assess experienced electricians against the requirements of the EAL Experienced
-                  Worker route and support them through portfolio completion, evidence planning, and
-                  assessment progression.
+                  We assess experienced electricians against the requirements of the EAL Level 3 Experienced Worker 
+                  Qualification and support them through portfolio completion.
                 </p>
               </div>
 
@@ -73,8 +62,8 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Why Candidates Choose Us</h3>
                 <p className="text-gray-500 leading-relaxed text-sm">
-                  Candidates choose EWA Tracker Ltd for clear guidance, practical assessor support,
-                  and a structured route to completion across the most appropriate qualification pathway.
+                  Candidates choose EWA Tracker Ltd for clear guidance, practical assessor support, and a 
+                  structured route to completion.
                 </p>
               </div>
 
@@ -84,61 +73,8 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">How We Work</h3>
                 <p className="text-gray-500 leading-relaxed text-sm">
-                  Our process is straightforward, responsive, and built around real-site evidence,
-                  professional discussion, and efficient progress tracking.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Qualifications Section */}
-        <section className="py-10 md:py-12 bg-white border-y border-gray-100">
-          <div className="max-w-5xl mx-auto px-4">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-3">
-                Qualifications We Offer
-              </h2>
-              <p className="text-gray-500 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-                Our main focus is the full Electrotechnical Experienced Worker route, with the
-                Electrotechnical in Dwellings qualification also available where appropriate.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
-              <div className="bg-gray-50 rounded-xl border border-gray-200 p-6 md:p-7">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Award className="w-5 h-5 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Level 3 Electrotechnical Experienced Worker Qualification
-                    </h3>
-                    <p className="text-sm text-blue-600 font-medium">603/5982/1</p>
-                  </div>
-                </div>
-                <p className="text-sm text-gray-500 leading-relaxed">
-                  This is our main full-scope Experienced Worker route for electricians whose work
-                  covers the broader electrotechnical occupational standard.
-                </p>
-              </div>
-
-              <div className="bg-gray-50 rounded-xl border border-gray-200 p-6 md:p-7">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Home className="w-5 h-5 text-amber-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Level 3 Electrotechnical in Dwellings Experienced Worker Qualification
-                    </h3>
-                    <p className="text-sm text-amber-600 font-medium">610/2859/9</p>
-                  </div>
-                </div>
-                <p className="text-sm text-gray-500 leading-relaxed">
-                  This route is available for candidates whose occupational scope is specifically
-                  aligned to electrotechnical work in dwellings, subject to suitability and entry requirements.
+                  Our process is straightforward, responsive, and built around real-site evidence, professional 
+                  discussion, and efficient progress tracking.
                 </p>
               </div>
             </div>
@@ -146,7 +82,7 @@ export default function AboutPage() {
         </section>
 
         {/* Trust Strip */}
-        <section className="py-8 md:py-10 bg-white border-b border-gray-100">
+        <section className="py-8 md:py-10 bg-white border-y border-gray-100">
           <div className="max-w-5xl mx-auto px-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
               <div className="flex flex-col items-center text-center">
@@ -161,21 +97,21 @@ export default function AboutPage() {
                   <CheckCircle className="w-5 h-5 text-green-600" />
                 </div>
                 <span className="text-sm font-semibold text-gray-900">603/5982/1</span>
-                <span className="text-xs text-gray-400 mt-0.5">Main Qualification</span>
+                <span className="text-xs text-gray-400 mt-0.5">Qualification Number</span>
               </div>
               <div className="flex flex-col items-center text-center">
                 <div className="w-10 h-10 bg-amber-50 rounded-full flex items-center justify-center mb-3">
-                  <Home className="w-5 h-5 text-amber-600" />
-                </div>
-                <span className="text-sm font-semibold text-gray-900">610/2859/9</span>
-                <span className="text-xs text-gray-400 mt-0.5">Dwellings Route</span>
-              </div>
-              <div className="flex flex-col items-center text-center">
-                <div className="w-10 h-10 bg-purple-50 rounded-full flex items-center justify-center mb-3">
-                  <MapPin className="w-5 h-5 text-purple-600" />
+                  <MapPin className="w-5 h-5 text-amber-600" />
                 </div>
                 <span className="text-sm font-semibold text-gray-900">London Based</span>
                 <span className="text-xs text-gray-400 mt-0.5">UK Coverage</span>
+              </div>
+              <div className="flex flex-col items-center text-center">
+                <div className="w-10 h-10 bg-purple-50 rounded-full flex items-center justify-center mb-3">
+                  <HeadphonesIcon className="w-5 h-5 text-purple-600" />
+                </div>
+                <span className="text-sm font-semibold text-gray-900">Full Support</span>
+                <span className="text-xs text-gray-400 mt-0.5">Throughout Assessment</span>
               </div>
             </div>
           </div>
@@ -195,9 +131,9 @@ export default function AboutPage() {
                   <h2 className="text-xl font-semibold text-gray-900">Wayne Wright</h2>
                   <p className="text-sm text-blue-600 font-medium mb-3">Founder & Lead Assessor</p>
                   <p className="text-gray-500 leading-relaxed text-sm max-w-xl">
-                    EWA Tracker Ltd is led by Wayne Wright, an experienced electrical assessor focused
-                    on helping experienced electricians achieve formal recognition through a clear and
-                    professionally managed assessment process.
+                    EWA Tracker Ltd is led by Wayne Wright, an experienced electrical assessor focused on helping 
+                    experienced electricians achieve formal recognition through a clear and professionally managed 
+                    assessment process.
                   </p>
                 </div>
               </div>
@@ -210,7 +146,7 @@ export default function AboutPage() {
           <div className="max-w-3xl mx-auto px-4 text-center">
             <h2 className="text-xl md:text-2xl font-semibold text-white mb-3">Ready to Get Started?</h2>
             <p className="text-blue-100 text-base mb-6 max-w-lg mx-auto">
-              Book a consultation to discuss which Experienced Worker route is most appropriate for your experience and occupational scope.
+              Book a free consultation to discuss your eligibility for the EWA qualification.
             </p>
             <a
               href="https://calendly.com/ewatracker-info/30min"
