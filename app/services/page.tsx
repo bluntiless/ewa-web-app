@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
-import { Lightbulb, Zap, CreditCard, FilePenLine } from "lucide-react"
+import { Lightbulb, Zap, CreditCard, FilePenLine, ChevronDown, CheckCircle, BookOpen } from "lucide-react"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 
@@ -45,6 +45,53 @@ export default function ServicesPage() {
               <p className="text-sm text-green-700">(610/2859/9) - Domestic installations focus</p>
             </div>
           </div>
+
+          {/* Eligibility Requirements Dropdown */}
+          <details className="group bg-amber-50 border border-amber-200 rounded-xl max-w-4xl mx-auto mb-8 text-left">
+            <summary className="flex items-center justify-between cursor-pointer p-5 list-none">
+              <div className="flex items-center gap-3">
+                <BookOpen className="w-6 h-6 text-amber-700" />
+                <span className="text-lg font-semibold text-amber-900">Eligibility Requirements for EWA Route</span>
+              </div>
+              <ChevronDown className="w-5 h-5 text-amber-700 transition-transform group-open:rotate-180" />
+            </summary>
+            <div className="px-5 pb-5 pt-2 border-t border-amber-200">
+              <p className="text-gray-700 mb-4">
+                To be eligible for the Experienced Worker Assessment route, you should have completed relevant electrotechnical theory training, typically holding a <strong>Level 2 Diploma in Electrical Installation</strong>, followed by a minimum of <strong>three years&apos; industry experience</strong> as a practicing electrician. This experience must be verifiable and auditable.
+              </p>
+              <p className="text-gray-700 mb-4">
+                Depending on your occupational scope, this may be aligned to either the <strong>full Electrotechnical route</strong> or the <strong>Electrotechnical in Dwellings route</strong>.
+              </p>
+              <p className="text-gray-700 mb-4">
+                You must be able to provide sufficient evidence from site, supported where necessary by witness testimony, to demonstrate competence against the full qualification requirements.
+              </p>
+              <p className="text-gray-700 mb-4">
+                You must also have an appropriate level of English to read, write, speak, and understand technical information.
+              </p>
+              
+              <p className="text-gray-800 font-semibold mb-3">As part of the qualification, you will also need to achieve:</p>
+              <ul className="space-y-2 mb-4">
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">18th Edition Wiring Regulations (BS 7671)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Level 3 Initial Verification and Periodic Inspection &amp; Testing of Electrical Installations</span>
+                </li>
+              </ul>
+              
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <p className="text-blue-800 text-sm">
+                  <strong>ECS Gold Card:</strong> If you intend to obtain an ECS Gold Card, you will also be required to complete the relevant AM2 assessment, such as the AM2E or AM2ED, delivered by the industry assessment body, National Electrotechnical Training.
+                </p>
+              </div>
+              
+              <p className="text-gray-700 italic">
+                The most appropriate route and any additional requirements will be discussed with you during a no-obligation initial consultation.
+              </p>
+            </div>
+          </details>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <Link
