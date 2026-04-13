@@ -81,7 +81,7 @@ export default function EWAvsApprenticeshipPage() {
             <li><strong>Structure:</strong> Assessment-based, working around your existing job</li>
             <li><strong>Learning:</strong> Demonstrating existing competence through portfolio and practical assessment</li>
             <li><strong>Income:</strong> Continue earning your normal wage</li>
-            <li><strong>Requirements:</strong> Must have at least 3 years of industry experience</li>
+            <li><strong>Requirements:</strong> Must have 3-5 years of industry experience (depending on qualification route)</li>
           </ul>
           <p>
             The EWA is ideal for experienced electricians who need formal recognition of skills they&apos;ve already developed through practical work.
@@ -107,7 +107,7 @@ export default function EWAvsApprenticeshipPage() {
                   </tr>
                   <tr className="border-b bg-gray-50">
                     <td className="py-3 px-4 font-medium text-gray-700">Prior experience required</td>
-                    <td className="py-3 px-4 text-gray-600">Minimum 3 years</td>
+                    <td className="py-3 px-4 text-gray-600">3-5 years (route dependent)</td>
                     <td className="py-3 px-4 text-gray-600">None</td>
                   </tr>
                   <tr className="border-b">
@@ -150,7 +150,7 @@ export default function EWAvsApprenticeshipPage() {
             The Experienced Worker Assessment is the right choice if you:
           </p>
           <ul>
-            <li><strong>Already have experience:</strong> You&apos;ve been working as an electrician for at least 3 years</li>
+            <li><strong>Already have experience:</strong> You&apos;ve been working as an electrician for at least 3-5 years</li>
             <li><strong>Need qualification quickly:</strong> You need formal certification for site access, contracts, or career progression</li>
             <li><strong>Can&apos;t afford apprentice wages:</strong> You have financial commitments that require your current income</li>
             <li><strong>Have family responsibilities:</strong> College attendance schedules don&apos;t fit your life</li>

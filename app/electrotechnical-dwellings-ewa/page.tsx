@@ -159,7 +159,7 @@ export default function ElectrotechnicalDwellingsPage() {
               </div>
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <h3 className="font-semibold text-gray-900 mb-2">18th Edition</h3>
-                <p className="text-gray-600 text-sm">BS 7671 Wiring Regulations certificate (can be achieved during the programme)</p>
+                <p className="text-gray-600 text-sm">BS 7671 Wiring Regulations certificate (required for ECS Gold Card)</p>
               </div>
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <h3 className="font-semibold text-gray-900 mb-2">Inspection &amp; Testing</h3>
@@ -169,6 +169,11 @@ export default function ElectrotechnicalDwellingsPage() {
             <p className="text-gray-600 text-sm mt-4">
               You must be able to provide portfolio evidence from domestic installation work, including photographs, certificates, and witness testimonies demonstrating your competence.
             </p>
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-4">
+              <p className="text-amber-800 text-sm">
+                <strong>Please note:</strong> EWA Tracker Ltd does not deliver the 18th Edition, Inspection &amp; Testing, or AM2 assessments. These are provided by separate training providers and NET assessment centres. We can recommend approved providers during your consultation.
+              </p>
+            </div>
           </div>
 
           {/* Coverage Areas */}

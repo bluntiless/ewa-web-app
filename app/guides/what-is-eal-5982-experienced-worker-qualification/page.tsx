@@ -70,7 +70,7 @@ export default function EAL5982GuidePage() {
             The term &quot;Experienced Worker&quot; refers to professionals who have developed their competence through workplace experience rather than formal training programmes. In the context of electrical work, this typically means electricians who:
           </p>
           <ul>
-            <li>Have been working in the electrical industry for at least three years</li>
+            <li>Have been working in the electrical industry for at least five years</li>
             <li>Have developed practical skills through on-the-job learning</li>
             <li>May have completed some theory training (such as a Level 2 Diploma) but not a full apprenticeship</li>
             <li>Can demonstrate competence across a range of electrical installation and maintenance activities</li>
@@ -121,7 +121,7 @@ export default function EAL5982GuidePage() {
           </p>
           <ul>
             <li><strong>Prior Learning:</strong> Level 2 Diploma in Electrical Installation or equivalent electrotechnical theory qualification</li>
-            <li><strong>Industry Experience:</strong> Minimum three years of verifiable experience as a practicing electrician</li>
+            <li><strong>Industry Experience:</strong> Minimum five years of verifiable experience as a practicing electrician</li>
             <li><strong>Occupational Role:</strong> Currently working in an electrical installation or maintenance role</li>
             <li><strong>English Proficiency:</strong> Appropriate level of English to read, write, and understand technical information</li>
           </ul>
@@ -133,6 +133,9 @@ export default function EAL5982GuidePage() {
             <li>Level 3 Initial Verification and Periodic Inspection &amp; Testing qualification</li>
             <li>AM2E practical assessment (for Installation Electricians)</li>
           </ul>
+          <p className="text-amber-700 bg-amber-50 p-3 rounded-lg border border-amber-200 text-sm">
+            <strong>Note:</strong> EWA Tracker Ltd does not deliver the 18th Edition, Inspection &amp; Testing, or AM2 assessments. These are provided by separate training providers and NET assessment centres. We can recommend approved providers during your consultation.
+          </p>
 
           <h2>Benefits of the EAL 5982 Qualification</h2>
           <p>

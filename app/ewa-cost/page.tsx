@@ -152,36 +152,29 @@ export default function EWACostPage() {
             </p>
             <div className="space-y-4">
               <div className="bg-white border border-gray-200 rounded-lg p-4">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-semibold text-gray-900">18th Edition (BS 7671)</h3>
-                    <p className="text-gray-600 text-sm">Wiring Regulations certificate - required for all candidates</p>
-                  </div>
-                  <span className="text-gray-500 text-sm">Variable*</span>
+                <div>
+                  <h3 className="font-semibold text-gray-900">18th Edition (BS 7671)</h3>
+                  <p className="text-gray-600 text-sm">Wiring Regulations certificate - required for all candidates</p>
                 </div>
               </div>
               <div className="bg-white border border-gray-200 rounded-lg p-4">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Level 3 Inspection &amp; Testing</h3>
-                    <p className="text-gray-600 text-sm">Initial Verification and Periodic Inspection &amp; Testing qualification</p>
-                  </div>
-                  <span className="text-gray-500 text-sm">Variable*</span>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Level 3 Inspection &amp; Testing</h3>
+                  <p className="text-gray-600 text-sm">Initial Verification and Periodic Inspection &amp; Testing qualification</p>
                 </div>
               </div>
               <div className="bg-white border border-gray-200 rounded-lg p-4">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-semibold text-gray-900">AM2 Assessment</h3>
-                    <p className="text-gray-600 text-sm">AM2E or AM2ED practical end-test (for ECS Gold Card)</p>
-                  </div>
-                  <span className="text-gray-500 text-sm">Approx £400-500*</span>
+                <div>
+                  <h3 className="font-semibold text-gray-900">AM2 Assessment</h3>
+                  <p className="text-gray-600 text-sm">AM2E or AM2ED practical end-test (for ECS Gold Card)</p>
                 </div>
               </div>
             </div>
-            <p className="text-gray-600 text-sm mt-4 italic">
-              *Prices vary by training provider. We can recommend approved providers during your consultation.
-            </p>
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-4">
+              <p className="text-amber-800 text-sm">
+                <strong>Please note:</strong> EWA Tracker Ltd does not deliver the 18th Edition, Inspection &amp; Testing, or AM2 assessments. These qualifications are provided by separate training providers and NET assessment centres. We can recommend approved providers during your consultation.
+              </p>
+            </div>
           </div>
 
           {/* What's Included */}

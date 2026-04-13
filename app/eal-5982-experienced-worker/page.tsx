@@ -72,7 +72,7 @@ export default function EAL5982Page() {
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
                 <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-1" />
-                <span className="text-gray-700"><strong>Minimum 3 years&apos; industry experience</strong> as a practicing electrician with verifiable work history</span>
+                <span className="text-gray-700"><strong>Minimum 5 years&apos; industry experience</strong> as a practicing electrician with verifiable work history</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-1" />
@@ -108,7 +108,7 @@ export default function EAL5982Page() {
               </div>
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <h3 className="font-semibold text-gray-900 mb-2">Industry Experience</h3>
-                <p className="text-gray-600 text-sm">Minimum 3 years verifiable experience as a practicing electrician</p>
+                <p className="text-gray-600 text-sm">Minimum 5 years verifiable experience as a practicing electrician</p>
               </div>
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <h3 className="font-semibold text-gray-900 mb-2">18th Edition</h3>
