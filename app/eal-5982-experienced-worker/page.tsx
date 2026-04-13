@@ -189,7 +189,10 @@ export default function EAL5982Page() {
               The total cost of achieving your EAL 5982 qualification includes EAL registration fees and centre assessment costs. During your initial consultation, we will provide a full breakdown based on your individual circumstances.
             </p>
             <p className="text-gray-700 mb-4">
-              EAL registration is currently £224 for new registrations. Additional costs may include 18th Edition certification and Inspection &amp; Testing qualifications if not already held.
+              EAL registration is currently £224 for new registrations. You may also need 18th Edition, Inspection &amp; Testing, and AM2 qualifications if not already held.
+            </p>
+            <p className="text-amber-700 bg-amber-50 p-3 rounded-lg border border-amber-200 text-sm mb-4">
+              <strong>Note:</strong> EWA Tracker Ltd does not deliver 18th Edition, Inspection &amp; Testing, or AM2 assessments. We can recommend approved providers during your consultation.
             </p>
             <p className="text-gray-600 text-sm italic">
               For detailed pricing information, please visit our <Link href="/ewa-cost" className="text-blue-600 hover:underline">EWA costs page</Link> or book a consultation.
