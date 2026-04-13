@@ -59,7 +59,7 @@ export default function ServicesPage() {
             </summary>
             <div className="px-5 pb-5 pt-2 border-t border-amber-200">
               <p className="text-gray-700 mb-4">
-                To be eligible for the Experienced Worker Assessment route, you should have completed relevant electrotechnical theory training, typically holding a <strong>Level 2 Diploma in Electrical Installation</strong>, followed by a minimum of <strong>three years&apos; industry experience</strong> as a practicing electrician. This experience must be verifiable and auditable.
+                To be eligible for the Experienced Worker Assessment route, you should have completed relevant electrotechnical theory training, typically holding a <strong>Level 2 Diploma in Electrical Installation</strong>. The minimum industry experience required depends on the qualification route: <strong>5 years for the full Electrotechnical qualification (603/5982/1)</strong> or <strong>3 years for the Electrotechnical in Dwellings qualification (610/2859/9)</strong>. This experience must be verifiable and auditable.
               </p>
               <p className="text-gray-700 mb-4">
                 Depending on your occupational scope, this may be aligned to either the <strong>full Electrotechnical route</strong> or the <strong>Electrotechnical in Dwellings route</strong>.
