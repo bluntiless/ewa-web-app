@@ -36,14 +36,16 @@ export default function ServicesPage() {
             We deliver two EAL Level 3 qualifications:
           </p>
           <div className="flex flex-col md:flex-row gap-4 justify-center mb-8 max-w-4xl mx-auto">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex-1">
+            <Link href="/eal-5982-experienced-worker" className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex-1 hover:border-blue-400 hover:shadow-md transition-all">
               <p className="font-semibold text-blue-900">Level 3 Electrotechnical Experienced Worker Qualification</p>
               <p className="text-sm text-blue-700">(603/5982/1) - Full scope Installation &amp; Maintenance</p>
-            </div>
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex-1">
+              <p className="text-xs text-blue-600 mt-2 font-medium">Learn more about EAL 5982 &rarr;</p>
+            </Link>
+            <Link href="/electrotechnical-dwellings-ewa" className="bg-green-50 border border-green-200 rounded-lg p-4 flex-1 hover:border-green-400 hover:shadow-md transition-all">
               <p className="font-semibold text-green-900">Level 3 Electrotechnical in Dwellings</p>
               <p className="text-sm text-green-700">(610/2859/9) - Domestic installations focus</p>
-            </div>
+              <p className="text-xs text-green-600 mt-2 font-medium">Learn more about Dwellings route &rarr;</p>
+            </Link>
           </div>
 
           {/* Eligibility Requirements Dropdown */}
@@ -83,7 +85,7 @@ export default function ServicesPage() {
               
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <p className="text-blue-800 text-sm">
-                  <strong>ECS Gold Card:</strong> If you intend to obtain an ECS Gold Card, you will also be required to complete the relevant AM2 assessment, such as the AM2E or AM2ED, delivered by the industry assessment body, National Electrotechnical Training.
+                  <strong>ECS Gold Card:</strong> If you intend to obtain an <Link href="/ecs-gold-card-experienced-worker" className="underline hover:text-blue-600">ECS Gold Card</Link>, you will also be required to complete the relevant AM2 assessment, such as the AM2E or AM2ED, delivered by the industry assessment body, National Electrotechnical Training. Learn more about <Link href="/ewa-cost" className="underline hover:text-blue-600">EWA costs</Link>.
                 </p>
               </div>
               

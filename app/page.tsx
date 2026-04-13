@@ -56,7 +56,7 @@ export default function HomePage() {
           <p className="text-base md:text-lg max-w-2xl mx-auto mb-8 opacity-80">
             Serving experienced electricians in <strong>London</strong>, the <strong>South East</strong>, and <strong>across the UK</strong>. Fast-track your ECS Gold Card today.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-4 mb-6">
             <Link
               href="/services"
               className="bg-white text-blue-700 px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg"
@@ -71,6 +71,17 @@ export default function HomePage() {
             >
               Book Your EWA Assessment Call
             </a>
+          </div>
+          <div className="flex flex-wrap justify-center gap-3 text-sm">
+            <Link href="/skills-scan" className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-full transition-colors">
+              Free Skills Scan
+            </Link>
+            <Link href="/eal-5982-experienced-worker" className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full transition-colors">
+              EAL 5982 Qualification
+            </Link>
+            <Link href="/ecs-gold-card-experienced-worker" className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full transition-colors">
+              ECS Gold Card Route
+            </Link>
           </div>
         </div>
       </section>
@@ -87,29 +98,29 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="space-y-6">
-              <div className="flex items-start space-x-4">
+              <Link href="/eal-5982-experienced-worker" className="flex items-start space-x-4 group">
                 <Award className="w-8 h-8 text-blue-600 flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900">
+                  <h3 className="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
                     EAL Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1)
                   </h3>
                   <p className="text-gray-600 mt-2">
                     Full-scope Installation &amp; Maintenance qualification through comprehensive assessment of your existing skills and experience.
                   </p>
                 </div>
-              </div>
+              </Link>
 
-              <div className="flex items-start space-x-4">
+              <Link href="/electrotechnical-dwellings-ewa" className="flex items-start space-x-4 group">
                 <Award className="w-8 h-8 text-green-600 flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900">
+                  <h3 className="text-xl font-semibold text-gray-900 group-hover:text-green-600 transition-colors">
                     EAL Level 3 Electrotechnical in Dwellings Experienced Worker Qualification (610/2859/9)
                   </h3>
                   <p className="text-gray-600 mt-2">
                     Specialist domestic installations qualification for electricians focused on residential work.
                   </p>
                 </div>
-              </div>
+              </Link>
 
               <div className="bg-blue-50 rounded-lg p-6 mt-6 shadow-inner">
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">Flexible Evidence Submission</h3>
