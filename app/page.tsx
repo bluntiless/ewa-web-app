@@ -612,7 +612,7 @@ export default function HomePage() {
           <div className="mt-10 max-w-3xl mx-auto text-center">
             <div className="bg-gray-100 rounded-lg p-5 text-sm text-gray-600">
               <p className="font-medium text-gray-700 mb-2">EAL registration fee applies separately:</p>
-              <p>£211 for new registrations &nbsp;•&nbsp; £15 for transfer registrations</p>
+              <p>£224 for new registrations &nbsp;•&nbsp; £15 for transfer registrations</p>
               <p className="mt-2">Additional observations outside the agreed package: £275 each</p>
             </div>
             <p className="mt-4 text-xs text-gray-400 max-w-2xl mx-auto">
