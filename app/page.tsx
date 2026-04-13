@@ -627,8 +627,8 @@ export default function HomePage() {
               <p className="mt-2">Additional observations outside the agreed package: £275 each</p>
             </div>
             <p className="mt-4 text-xs text-gray-400 max-w-2xl mx-auto">
-              <strong>Important:</strong> EWA Tracker Ltd provides the EAL Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1) only. 
-              External qualifications and assessments such as 18th Edition, Inspection and Testing, Initial Verification, and AM2E are not included and must be arranged separately where required.
+              <strong>Important:</strong> EWA Tracker Ltd delivers the EAL Level 3 Electrotechnical Experienced Worker Qualifications (603/5982/1 and 610/2859/9) only. 
+              We do not offer 18th Edition, Inspection &amp; Testing, or AM2 assessments - these must be arranged separately through approved training providers and NET assessment centres. We can recommend providers during your consultation.
             </p>
           </div>
         </div>

@@ -133,6 +133,9 @@ export default function EAL5982GuidePage() {
             <li>Level 3 Initial Verification and Periodic Inspection &amp; Testing qualification</li>
             <li>AM2E practical assessment (for Installation Electricians)</li>
           </ul>
+          <p className="text-amber-700 bg-amber-50 p-3 rounded-lg border border-amber-200 text-sm">
+            <strong>Note:</strong> EWA Tracker Ltd does not deliver the 18th Edition, Inspection &amp; Testing, or AM2 assessments. These are provided by separate training providers and NET assessment centres. We can recommend approved providers during your consultation.
+          </p>
 
           <h2>Benefits of the EAL 5982 Qualification</h2>
           <p>

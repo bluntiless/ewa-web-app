@@ -71,7 +71,7 @@ export default function ServicesPage() {
                 You must also have an appropriate level of English to read, write, speak, and understand technical information.
               </p>
               
-              <p className="text-gray-800 font-semibold mb-3">As part of the qualification, you will also need to achieve:</p>
+              <p className="text-gray-800 font-semibold mb-3">As part of the ECS Gold Card route, you will also need to achieve:</p>
               <ul className="space-y-2 mb-4">
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
@@ -81,11 +81,15 @@ export default function ServicesPage() {
                   <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                   <span className="text-gray-700">Level 3 Initial Verification and Periodic Inspection &amp; Testing of Electrical Installations</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">AM2 Assessment (AM2E or AM2ED practical end-test)</span>
+                </li>
               </ul>
               
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                <p className="text-blue-800 text-sm">
-                  <strong>ECS Gold Card:</strong> If you intend to obtain an <Link href="/ecs-gold-card-experienced-worker" className="underline hover:text-blue-600">ECS Gold Card</Link>, you will also be required to complete the relevant AM2 assessment, such as the AM2E or AM2ED, delivered by the industry assessment body, National Electrotechnical Training. Learn more about <Link href="/ewa-cost" className="underline hover:text-blue-600">EWA costs</Link>.
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+                <p className="text-amber-800 text-sm">
+                  <strong>Please note:</strong> EWA Tracker Ltd does not deliver the 18th Edition, Inspection &amp; Testing, or AM2 assessments. These are provided by separate training providers and NET assessment centres. We can recommend approved providers during your consultation to help you complete these requirements.
                 </p>
               </div>
               
