@@ -83,12 +83,22 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const jsonLd = {
+  // Organization schema for Google logo display in search results
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "EWA Tracker Ltd",
+    url: "https://www.ewatracker.co.uk",
+    logo: "https://www.ewatracker.co.uk/ewa_logo.png",
+  }
+
+  // Extended EducationalOrganization schema for rich results
+  const educationalOrgJsonLd = {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
     name: "EWA Tracker Ltd",
-    url: "https://ewatracker.co.uk",
-    logo: "https://ewatracker.co.uk/ewa_logo.png",
+    url: "https://www.ewatracker.co.uk",
+    logo: "https://www.ewatracker.co.uk/ewa_logo.png",
     description:
       "Specialist provider of the Electrotechnical Experienced Worker Assessment (EWA) Level 3 qualification and ECS Gold Card route for experienced electricians across the UK.",
     email: "info@ewatracker.co.uk",
@@ -116,7 +126,11 @@ export default function RootLayout({
       <body className={inter.className}>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(educationalOrgJsonLd) }}
         />
         {children}
       </body>
