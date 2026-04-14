@@ -77,7 +77,7 @@ export default function EWAvsApprenticeshipPage() {
             The <Link href="/ewa-electrician-uk">EWA route</Link> is designed for those who have already gained practical experience in the electrical industry. Key characteristics include:
           </p>
           <ul>
-            <li><strong>Duration:</strong> Typically 3-6 months</li>
+            <li><strong>Duration:</strong> Typically 6-9 months</li>
             <li><strong>Structure:</strong> Assessment-based, working around your existing job</li>
             <li><strong>Learning:</strong> Demonstrating existing competence through portfolio and practical assessment</li>
             <li><strong>Income:</strong> Continue earning your normal wage</li>
@@ -102,7 +102,7 @@ export default function EWAvsApprenticeshipPage() {
                 <tbody>
                   <tr className="border-b">
                     <td className="py-3 px-4 font-medium text-gray-700">Time to qualify</td>
-                    <td className="py-3 px-4 text-gray-600">3-6 months</td>
+                    <td className="py-3 px-4 text-gray-600">6-9 months</td>
                     <td className="py-3 px-4 text-gray-600">3-4 years</td>
                   </tr>
                   <tr className="border-b bg-gray-50">

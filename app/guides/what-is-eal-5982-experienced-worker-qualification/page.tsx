@@ -152,7 +152,7 @@ export default function EAL5982GuidePage() {
 
           <h2>How Long Does It Take?</h2>
           <p>
-            The time required to complete the EAL 5982 qualification varies depending on several factors, including your existing experience level, the availability of portfolio evidence, and how quickly you can arrange workplace observations. Typically, candidates complete the qualification within 3-6 months, though some may finish sooner if they have excellent evidence readily available.
+            The time required to complete the EAL 5982 qualification varies depending on several factors, including your existing experience level, the availability of portfolio evidence, and how quickly you can arrange workplace observations. Typically, candidates complete the qualification within 6-9 months, though some may finish sooner if they have excellent evidence readily available.
           </p>
 
           <h2>Getting Started</h2>
