@@ -230,7 +230,7 @@ export default function EAL5982Page() {
             </p>
             <div className="grid md:grid-cols-3 gap-4 mb-6">
               <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
-                <p className="text-3xl font-bold text-blue-700 mb-2">3-6</p>
+                <p className="text-3xl font-bold text-blue-700 mb-2">6-9</p>
                 <p className="text-gray-600 text-sm">Months typical completion time</p>
               </div>
               <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
@@ -243,7 +243,7 @@ export default function EAL5982Page() {
               </div>
             </div>
             <p className="text-gray-700 mb-4">
-              Most candidates complete the EAL 5982 Experienced Worker Qualification within 3-6 months. Well-prepared candidates with comprehensive portfolios and good evidence can complete more quickly. We work flexibly around your work schedule to minimise disruption.
+              Most candidates complete the EAL 5982 Experienced Worker Qualification within 6-9 months. Well-prepared candidates with comprehensive portfolios and good evidence can complete more quickly. We work flexibly around your work schedule to minimise disruption.
             </p>
             <p className="text-gray-600 text-sm italic">
               Unlike traditional apprenticeships that take 3-4 years, the EWA route recognises your existing experience, making it significantly faster for qualified candidates.
@@ -353,7 +353,7 @@ export default function EAL5982Page() {
                   How long does the EAL 5982 Experienced Worker Qualification take to complete?
                 </summary>
                 <div className="px-4 pb-4 text-gray-700 text-sm">
-                  Most candidates complete the EAL 5982 Experienced Worker Qualification within 3-6 months. The exact duration depends on your existing evidence, availability for assessments, and how quickly you can compile your portfolio. Well-prepared candidates can complete faster.
+                  Most candidates complete the EAL 5982 Experienced Worker Qualification within 6-9 months. The exact duration depends on your existing evidence, availability for assessments, and how quickly you can compile your portfolio. Well-prepared candidates can complete faster.
                 </div>
               </details>
 
