@@ -230,7 +230,7 @@ export default function EAL5982Page() {
             </p>
             <div className="grid md:grid-cols-3 gap-4 mb-6">
               <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
-                <p className="text-3xl font-bold text-blue-700 mb-2">3-6</p>
+                <p className="text-3xl font-bold text-blue-700 mb-2">6-9</p>
                 <p className="text-gray-600 text-sm">Months typical completion time</p>
               </div>
               <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
