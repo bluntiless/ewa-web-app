@@ -88,6 +88,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.7,
     },
+    // EWA Entry Test Mock
+    {
+      url: "https://ewatracker.co.uk/ewa-entry-test",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
     // Skills Scan & Candidate Pages
     {
       url: "https://ewatracker.co.uk/skills-scan",
