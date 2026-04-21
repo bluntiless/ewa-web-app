@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
-import { Lightbulb, Zap, CreditCard, FilePenLine, ChevronDown, CheckCircle, BookOpen } from "lucide-react"
+import { Lightbulb, Zap, CreditCard, FilePenLine, ChevronDown, CheckCircle, BookOpen, ClipboardCheck } from "lucide-react"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 
@@ -131,7 +131,7 @@ export default function ServicesPage() {
               Ready to take the first step? Complete your Skills Scan to help us understand your experience and guide you to the right qualification pathway.
             </p>
             
-            <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
               {/* Option 1: Preliminary Self-Check */}
               <div className="bg-white border-2 border-blue-200 rounded-xl p-6 text-left hover:border-blue-400 hover:shadow-lg transition-all">
                 <div className="flex items-center gap-2 mb-3">
@@ -154,7 +154,29 @@ export default function ServicesPage() {
                 </Link>
               </div>
 
-              {/* Option 2: Official TESP Submission */}
+              {/* Option 2: EWA Entry Test Mock */}
+              <div className="bg-white border-2 border-purple-200 rounded-xl p-6 text-left hover:border-purple-400 hover:shadow-lg transition-all">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="bg-purple-100 text-purple-700 text-xs font-semibold px-2 py-1 rounded">Practice Test</span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">EWA Entry Test Mock</h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  Practice with our 50-question mock assessment covering key electrotechnical topics.
+                </p>
+                <ul className="text-sm text-gray-600 mb-4 space-y-1">
+                  <li>• 50 random questions</li>
+                  <li>• 100-minute timed test</li>
+                  <li>• Instant results &amp; feedback</li>
+                </ul>
+                <Link
+                  href="/ewa-entry-test"
+                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-purple-600 text-white hover:bg-purple-700 transition-colors"
+                >
+                  <ClipboardCheck className="w-4 h-4 mr-2" /> Start Mock Test
+                </Link>
+              </div>
+
+              {/* Option 3: Official TESP Submission */}
               <div className="bg-white border-2 border-gray-200 rounded-xl p-6 text-left hover:border-blue-400 hover:shadow-lg transition-all">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="bg-gray-100 text-gray-700 text-xs font-semibold px-2 py-1 rounded">Official Submission</span>
@@ -176,7 +198,7 @@ export default function ServicesPage() {
                 </Link>
               </div>
 
-              {/* Option 3: Candidate Background Form */}
+              {/* Option 4: Candidate Background Form */}
               <div className="bg-white border-2 border-green-200 rounded-xl p-6 text-left hover:border-green-400 hover:shadow-lg transition-all">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded">Required Document</span>

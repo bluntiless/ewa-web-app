@@ -89,7 +89,13 @@ export default function RootLayout({
     "@type": "Organization",
     name: "EWA Tracker Ltd",
     url: "https://www.ewatracker.co.uk",
-    logo: "https://www.ewatracker.co.uk/logo.png",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://www.ewatracker.co.uk/logo.png",
+      width: 512,
+      height: 512,
+    },
+    image: "https://www.ewatracker.co.uk/logo.png",
   }
 
   // Extended EducationalOrganization schema for rich results
@@ -99,6 +105,7 @@ export default function RootLayout({
     name: "EWA Tracker Ltd",
     url: "https://www.ewatracker.co.uk",
     logo: "https://www.ewatracker.co.uk/logo.png",
+    image: "https://www.ewatracker.co.uk/logo.png",
     description:
       "Specialist provider of the Electrotechnical Experienced Worker Assessment (EWA) Level 3 qualification and ECS Gold Card route for experienced electricians across the UK.",
     email: "info@ewatracker.co.uk",
