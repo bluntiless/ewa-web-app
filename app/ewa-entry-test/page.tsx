@@ -380,6 +380,22 @@ export default function EwaEntryTestPage() {
           </section>
         )}
 
+        {started && !submitted && (
+          <div className="mb-6 rounded-2xl border-2 border-emerald-300 bg-emerald-50 p-6 text-center">
+            <p className="mb-3 text-slate-700">
+              You have answered <strong>{answeredCount}</strong> of <strong>{questions.length}</strong> questions.
+              Time remaining: <strong>{formatSeconds(secondsRemaining)}</strong>
+            </p>
+            <button
+              type="button"
+              onClick={() => handleSubmit(false)}
+              className="rounded-xl bg-emerald-600 px-8 py-3 text-lg font-semibold text-white transition hover:bg-emerald-700"
+            >
+              Submit Attempt
+            </button>
+          </div>
+        )}
+
         {started && (
           <section className="space-y-4">
             {questions.map((question) => {
@@ -445,6 +461,25 @@ export default function EwaEntryTestPage() {
                 </article>
               )
             })}
+
+            {!submitted && (
+              <div className="mt-8 rounded-2xl border-2 border-emerald-300 bg-emerald-50 p-6 text-center">
+                <p className="mb-3 text-slate-700">
+                  You have answered <strong>{answeredCount}</strong> of <strong>{questions.length}</strong> questions.
+                  Time remaining: <strong>{formatSeconds(secondsRemaining)}</strong>
+                </p>
+                <button
+                  type="button"
+                  onClick={() => handleSubmit(false)}
+                  className="rounded-xl bg-emerald-600 px-8 py-3 text-lg font-semibold text-white transition hover:bg-emerald-700"
+                >
+                  Submit Attempt
+                </button>
+                <p className="mt-3 text-sm text-slate-600">
+                  You can submit at any time. Unanswered questions will be marked as incorrect.
+                </p>
+              </div>
+            )}
           </section>
         )}
       </div>
