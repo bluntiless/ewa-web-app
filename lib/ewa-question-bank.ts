@@ -139,16 +139,11 @@ function makeSafetyQuestions(): Question[] {
       explanation: "Live working introduces significantly greater risk."
     },
   ]
-  const questions: Question[] = []
-  for (let i = 0; i < 20; i++) {
-    const item = items[i % items.length]
-    questions.push({
-      id: `safety-${i + 1}`,
-      category: "Safe Isolation and H&S",
-      ...item
-    })
-  }
-  return questions
+  return items.map((item, i) => ({
+    id: `safety-${i + 1}`,
+    category: "Safe Isolation and H&S",
+    ...item
+  }))
 }
 
 function makeEarthingQuestions(): Question[] {
@@ -214,16 +209,11 @@ function makeEarthingQuestions(): Question[] {
       explanation: "Bonding reduces dangerous voltage differences between conductive parts."
     },
   ]
-  const questions: Question[] = []
-  for (let i = 0; i < 20; i++) {
-    const item = items[i % items.length]
-    questions.push({
-      id: `earthing-${i + 1}`,
-      category: "Earthing and Bonding",
-      ...item
-    })
-  }
-  return questions
+  return items.map((item, i) => ({
+    id: `earthing-${i + 1}`,
+    category: "Earthing and Bonding",
+    ...item
+  }))
 }
 
 function makeProtectionQuestions(): Question[] {
@@ -289,16 +279,11 @@ function makeProtectionQuestions(): Question[] {
       explanation: "An RCBO combines MCB and RCD functions."
     },
   ]
-  const questions: Question[] = []
-  for (let i = 0; i < 20; i++) {
-    const item = items[i % items.length]
-    questions.push({
-      id: `protection-${i + 1}`,
-      category: "Protection Devices",
-      ...item
-    })
-  }
-  return questions
+  return items.map((item, i) => ({
+    id: `protection-${i + 1}`,
+    category: "Protection Devices",
+    ...item
+  }))
 }
 
 function makeTestingQuestions(): Question[] {
@@ -364,16 +349,11 @@ function makeTestingQuestions(): Question[] {
       explanation: "Insulation resistance is a dead test."
     },
   ]
-  const questions: Question[] = []
-  for (let i = 0; i < 20; i++) {
-    const item = items[i % items.length]
-    questions.push({
-      id: `testing-${i + 1}`,
-      category: "Inspection and Testing",
-      ...item
-    })
-  }
-  return questions
+  return items.map((item, i) => ({
+    id: `testing-${i + 1}`,
+    category: "Inspection and Testing",
+    ...item
+  }))
 }
 
 function makeInstallationQuestions(): Question[] {
@@ -439,16 +419,11 @@ function makeInstallationQuestions(): Question[] {
       explanation: "FCUs are used to provide local fused protection and isolation for fixed loads."
     },
   ]
-  const questions: Question[] = []
-  for (let i = 0; i < 20; i++) {
-    const item = items[i % items.length]
-    questions.push({
-      id: `installation-${i + 1}`,
-      category: "Installation Practice",
-      ...item
-    })
-  }
-  return questions
+  return items.map((item, i) => ({
+    id: `installation-${i + 1}`,
+    category: "Installation Practice",
+    ...item
+  }))
 }
 
 function makeFaultQuestions(): Question[] {
@@ -514,16 +489,11 @@ function makeFaultQuestions(): Question[] {
       explanation: "After rectification, suitable checks and testing should confirm the repair."
     },
   ]
-  const questions: Question[] = []
-  for (let i = 0; i < 20; i++) {
-    const item = items[i % items.length]
-    questions.push({
-      id: `fault-${i + 1}`,
-      category: "Fault Diagnosis",
-      ...item
-    })
-  }
-  return questions
+  return items.map((item, i) => ({
+    id: `fault-${i + 1}`,
+    category: "Fault Diagnosis",
+    ...item
+  }))
 }
 
 function makeRegsQuestions(): Question[] {
@@ -589,16 +559,11 @@ function makeRegsQuestions(): Question[] {
       explanation: "The Electricity at Work Regulations are intended to prevent danger from electricity."
     },
   ]
-  const questions: Question[] = []
-  for (let i = 0; i < 20; i++) {
-    const item = items[i % items.length]
-    questions.push({
-      id: `regs-${i + 1}`,
-      category: "BS 7671 and Industry Knowledge",
-      ...item
-    })
-  }
-  return questions
+  return items.map((item, i) => ({
+    id: `regs-${i + 1}`,
+    category: "BS 7671 and Industry Knowledge",
+    ...item
+  }))
 }
 
 export function buildQuestionPool(): Question[] {
