@@ -4,6 +4,19 @@ import { encryptJSON } from "@/lib/encryption"
 import { uploadToSharePoint, isSharePointConfigured, createFolder } from "@/lib/sharepoint"
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib"
 
+export interface InvigilationData {
+  tabSwitchCount: number
+  fullscreenExitCount: number
+  copyAttempts: number
+  pasteAttempts: number
+  rightClickAttempts: number
+  totalTimeAwaySeconds: number
+  logs: Array<{
+    type: string
+    timestamp: string
+  }>
+}
+
 export interface EWAEntryTestResult {
   id: string
   candidateName: string
@@ -14,6 +27,7 @@ export interface EWAEntryTestResult {
   passed: boolean
   categoryBreakdown: Record<string, { correct: number; total: number }>
   submittedAt: string
+  invigilation?: InvigilationData
   answers: Array<{
     questionId: string
     selectedAnswer: number
@@ -208,7 +222,111 @@ async function generateResultPDF(result: EWAEntryTestResult): Promise<Uint8Array
     y -= 18
   }
 
-  y -= 20
+  y -= 30
+
+  // Invigilation section
+  if (result.invigilation) {
+    const inv = result.invigilation
+    const totalFlags = inv.tabSwitchCount + inv.fullscreenExitCount + inv.copyAttempts + inv.pasteAttempts + inv.rightClickAttempts
+    const hasIssues = totalFlags > 0
+
+    page.drawText("Invigilation Report", {
+      x: 50,
+      y,
+      size: 14,
+      font: helveticaBold,
+      color: rgb(0.12, 0.23, 0.37),
+    })
+
+    y -= 20
+
+    // Invigilation status box
+    const invColor = hasIssues ? rgb(0.86, 0.15, 0.15) : rgb(0.02, 0.59, 0.41)
+    const invBgColor = hasIssues ? rgb(1, 0.95, 0.95) : rgb(0.93, 0.99, 0.96)
+    const invStatusText = hasIssues ? `${totalFlags} FLAG${totalFlags !== 1 ? "S" : ""} DETECTED` : "NO FLAGS DETECTED"
+
+    page.drawRectangle({
+      x: 50,
+      y: y - 75,
+      width: width - 100,
+      height: 85,
+      color: invBgColor,
+      borderColor: invColor,
+      borderWidth: 1,
+    })
+
+    page.drawText(invStatusText, {
+      x: 70,
+      y: y - 18,
+      size: 12,
+      font: helveticaBold,
+      color: invColor,
+    })
+
+    y -= 35
+
+    // Invigilation details in two columns
+    const col1X = 70
+    const col2X = 300
+
+    page.drawText(`Tab switches: ${inv.tabSwitchCount}`, {
+      x: col1X,
+      y,
+      size: 10,
+      font: helvetica,
+      color: inv.tabSwitchCount > 0 ? rgb(0.86, 0.15, 0.15) : rgb(0.3, 0.3, 0.3),
+    })
+
+    page.drawText(`Fullscreen exits: ${inv.fullscreenExitCount}`, {
+      x: col2X,
+      y,
+      size: 10,
+      font: helvetica,
+      color: inv.fullscreenExitCount > 0 ? rgb(0.86, 0.15, 0.15) : rgb(0.3, 0.3, 0.3),
+    })
+
+    y -= 15
+
+    page.drawText(`Copy attempts: ${inv.copyAttempts}`, {
+      x: col1X,
+      y,
+      size: 10,
+      font: helvetica,
+      color: inv.copyAttempts > 0 ? rgb(0.86, 0.15, 0.15) : rgb(0.3, 0.3, 0.3),
+    })
+
+    page.drawText(`Paste attempts: ${inv.pasteAttempts}`, {
+      x: col2X,
+      y,
+      size: 10,
+      font: helvetica,
+      color: inv.pasteAttempts > 0 ? rgb(0.86, 0.15, 0.15) : rgb(0.3, 0.3, 0.3),
+    })
+
+    y -= 15
+
+    page.drawText(`Right-click attempts: ${inv.rightClickAttempts}`, {
+      x: col1X,
+      y,
+      size: 10,
+      font: helvetica,
+      color: inv.rightClickAttempts > 0 ? rgb(0.86, 0.15, 0.15) : rgb(0.3, 0.3, 0.3),
+    })
+
+    const timeAwayFormatted = inv.totalTimeAwaySeconds > 0 
+      ? `${Math.floor(inv.totalTimeAwaySeconds / 60)}m ${inv.totalTimeAwaySeconds % 60}s`
+      : "0s"
+
+    page.drawText(`Time away: ${timeAwayFormatted}`, {
+      x: col2X,
+      y,
+      size: 10,
+      font: helvetica,
+      color: inv.totalTimeAwaySeconds > 30 ? rgb(0.86, 0.15, 0.15) : rgb(0.3, 0.3, 0.3),
+    })
+
+    y -= 35
+  }
 
   // Disclaimer
   page.drawText("Note: This is an unofficial practice assessment for revision purposes only.", {
@@ -261,6 +379,7 @@ export async function POST(request: Request) {
       passed: body.passed,
       categoryBreakdown: body.categoryBreakdown,
       submittedAt,
+      invigilation: body.invigilation || undefined,
       answers: body.answers || [],
     }
 

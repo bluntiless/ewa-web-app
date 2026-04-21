@@ -22,6 +22,22 @@ type CandidateDetails = {
   email: string
 }
 
+type InvigilationLog = {
+  type: "tab_hidden" | "tab_visible" | "fullscreen_exit" | "copy_attempt" | "paste_attempt" | "right_click"
+  timestamp: string
+}
+
+type InvigilationState = {
+  tabSwitchCount: number
+  fullscreenExitCount: number
+  copyAttempts: number
+  pasteAttempts: number
+  rightClickAttempts: number
+  totalTimeAway: number
+  lastHiddenAt: number | null
+  logs: InvigilationLog[]
+}
+
 const STORAGE_KEYS = {
   details: "ewa-entry-test-details-v1",
   attemptSeed: "ewa-entry-test-seed-v1",
@@ -86,6 +102,18 @@ export default function EwaEntryTestPage() {
   const [secondsRemaining, setSecondsRemaining] = useState(TEST_TIME_MINUTES * 60)
   const [saving, setSaving] = useState(false)
   const [saveMessage, setSaveMessage] = useState("")
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [showInvigilationWarning, setShowInvigilationWarning] = useState(false)
+  const [invigilation, setInvigilation] = useState<InvigilationState>({
+    tabSwitchCount: 0,
+    fullscreenExitCount: 0,
+    copyAttempts: 0,
+    pasteAttempts: 0,
+    rightClickAttempts: 0,
+    totalTimeAway: 0,
+    lastHiddenAt: null,
+    logs: [],
+  })
 
   const seed = useMemo(() => (mounted ? getOrCreateSeed() : 0), [mounted])
   const questions = useMemo(() => (mounted ? buildAttemptQuestions(seed) : []), [mounted, seed])
@@ -127,6 +155,103 @@ export default function EwaEntryTestPage() {
     return () => window.clearInterval(timer)
   }, [mounted, started, submitted, secondsRemaining])
 
+  // Invigilation: Tab visibility detection
+  useEffect(() => {
+    if (!mounted || !started || submitted) return
+
+    const handleVisibilityChange = () => {
+      const now = new Date().toISOString()
+      if (document.hidden) {
+        setInvigilation((prev) => ({
+          ...prev,
+          tabSwitchCount: prev.tabSwitchCount + 1,
+          lastHiddenAt: Date.now(),
+          logs: [...prev.logs, { type: "tab_hidden", timestamp: now }],
+        }))
+        setShowInvigilationWarning(true)
+      } else {
+        setInvigilation((prev) => {
+          const timeAway = prev.lastHiddenAt ? Math.floor((Date.now() - prev.lastHiddenAt) / 1000) : 0
+          return {
+            ...prev,
+            totalTimeAway: prev.totalTimeAway + timeAway,
+            lastHiddenAt: null,
+            logs: [...prev.logs, { type: "tab_visible", timestamp: now }],
+          }
+        })
+      }
+    }
+
+    document.addEventListener("visibilitychange", handleVisibilityChange)
+    return () => document.removeEventListener("visibilitychange", handleVisibilityChange)
+  }, [mounted, started, submitted])
+
+  // Invigilation: Fullscreen detection
+  useEffect(() => {
+    if (!mounted || !started || submitted) return
+
+    const handleFullscreenChange = () => {
+      const isNowFullscreen = !!document.fullscreenElement
+      setIsFullscreen(isNowFullscreen)
+      if (!isNowFullscreen && started && !submitted) {
+        setInvigilation((prev) => ({
+          ...prev,
+          fullscreenExitCount: prev.fullscreenExitCount + 1,
+          logs: [...prev.logs, { type: "fullscreen_exit", timestamp: new Date().toISOString() }],
+        }))
+        setShowInvigilationWarning(true)
+      }
+    }
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange)
+    return () => document.removeEventListener("fullscreenchange", handleFullscreenChange)
+  }, [mounted, started, submitted])
+
+  // Invigilation: Copy/Paste/Right-click prevention
+  useEffect(() => {
+    if (!mounted || !started || submitted) return
+
+    const handleCopy = (e: ClipboardEvent) => {
+      e.preventDefault()
+      setInvigilation((prev) => ({
+        ...prev,
+        copyAttempts: prev.copyAttempts + 1,
+        logs: [...prev.logs, { type: "copy_attempt", timestamp: new Date().toISOString() }],
+      }))
+      setShowInvigilationWarning(true)
+    }
+
+    const handlePaste = (e: ClipboardEvent) => {
+      e.preventDefault()
+      setInvigilation((prev) => ({
+        ...prev,
+        pasteAttempts: prev.pasteAttempts + 1,
+        logs: [...prev.logs, { type: "paste_attempt", timestamp: new Date().toISOString() }],
+      }))
+      setShowInvigilationWarning(true)
+    }
+
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault()
+      setInvigilation((prev) => ({
+        ...prev,
+        rightClickAttempts: prev.rightClickAttempts + 1,
+        logs: [...prev.logs, { type: "right_click", timestamp: new Date().toISOString() }],
+      }))
+      setShowInvigilationWarning(true)
+    }
+
+    document.addEventListener("copy", handleCopy)
+    document.addEventListener("paste", handlePaste)
+    document.addEventListener("contextmenu", handleContextMenu)
+
+    return () => {
+      document.removeEventListener("copy", handleCopy)
+      document.removeEventListener("paste", handlePaste)
+      document.removeEventListener("contextmenu", handleContextMenu)
+    }
+  }, [mounted, started, submitted])
+
   const answeredCount = Object.keys(answers).length
   const score = questions.reduce((sum, question) => {
     return sum + (answers[question.id] === question.correctIndex ? 1 : 0)
@@ -134,6 +259,13 @@ export default function EwaEntryTestPage() {
   const percent = questions.length ? Math.round((score / questions.length) * 100) : 0
   const passed = percent >= PASS_MARK_PERCENT
   const categoryBreakdown = getCategoryBreakdown(questions, answers)
+
+  function enterFullscreen() {
+    const elem = document.documentElement
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen().catch(() => {})
+    }
+  }
 
   function startAttempt() {
     if (!details.fullName.trim() || !details.email.trim()) {
@@ -150,6 +282,17 @@ export default function EwaEntryTestPage() {
     setStarted(true)
     setSecondsRemaining(TEST_TIME_MINUTES * 60)
     setSaveMessage("")
+    setInvigilation({
+      tabSwitchCount: 0,
+      fullscreenExitCount: 0,
+      copyAttempts: 0,
+      pasteAttempts: 0,
+      rightClickAttempts: 0,
+      totalTimeAway: 0,
+      lastHiddenAt: null,
+      logs: [],
+    })
+    enterFullscreen()
   }
 
   function updateAnswer(questionId: string, optionIndex: number) {
@@ -179,6 +322,15 @@ export default function EwaEntryTestPage() {
         submittedAt: new Date().toISOString(),
         autoSubmitted,
         categoryBreakdown,
+        invigilation: {
+          tabSwitchCount: invigilation.tabSwitchCount,
+          fullscreenExitCount: invigilation.fullscreenExitCount,
+          copyAttempts: invigilation.copyAttempts,
+          pasteAttempts: invigilation.pasteAttempts,
+          rightClickAttempts: invigilation.rightClickAttempts,
+          totalTimeAwaySeconds: invigilation.totalTimeAway,
+          logs: invigilation.logs,
+        },
         responses: questions.map((question) => ({
           id: question.id,
           category: question.category,
@@ -220,8 +372,51 @@ export default function EwaEntryTestPage() {
     return <div className="mx-auto max-w-5xl p-6">Loading...</div>
   }
 
+  const hasInvigilationIssues = invigilation.tabSwitchCount > 0 || invigilation.fullscreenExitCount > 0 || invigilation.copyAttempts > 0 || invigilation.pasteAttempts > 0 || invigilation.rightClickAttempts > 0
+
   return (
     <main className="min-h-screen bg-slate-50 py-8 text-slate-900">
+      {/* Invigilation Warning Modal */}
+      {showInvigilationWarning && started && !submitted && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="max-w-md rounded-2xl bg-white p-6 shadow-xl">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-100">
+                <svg className="h-6 w-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-slate-900">Invigilation Alert</h3>
+            </div>
+            <p className="mb-4 text-slate-700">
+              Activity that may indicate assessment irregularity has been detected. This includes tab switching, exiting fullscreen mode, or attempting to copy/paste content.
+            </p>
+            <p className="mb-4 text-sm text-slate-600">
+              All such events are logged and will be reviewed. Please remain focused on the assessment.
+            </p>
+            <div className="mb-4 rounded-lg bg-slate-50 p-3 text-sm">
+              <div className="grid grid-cols-2 gap-2">
+                <div>Tab switches: <strong>{invigilation.tabSwitchCount}</strong></div>
+                <div>Fullscreen exits: <strong>{invigilation.fullscreenExitCount}</strong></div>
+                <div>Copy attempts: <strong>{invigilation.copyAttempts}</strong></div>
+                <div>Right-click attempts: <strong>{invigilation.rightClickAttempts}</strong></div>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowInvigilationWarning(false)
+                  enterFullscreen()
+                }}
+                className="flex-1 rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white transition hover:bg-blue-700"
+              >
+                Return to Test
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="mx-auto max-w-5xl px-4">
         <div className="mb-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="border-b border-slate-200 px-6 py-5">
@@ -265,6 +460,21 @@ export default function EwaEntryTestPage() {
                   <li>When the time expires, the test is submitted automatically.</li>
                   <li>Use this as a practice tool only. It does not guarantee success in any official entry test.</li>
                 </ul>
+                <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4">
+                  <h3 className="mb-2 font-semibold text-amber-900">Browser Invigilation Active</h3>
+                  <p className="text-sm text-amber-800">
+                    This test includes lightweight browser-based invigilation. The following will be monitored and logged:
+                  </p>
+                  <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-amber-800">
+                    <li>Tab/window switching (leaving the test page)</li>
+                    <li>Exiting fullscreen mode</li>
+                    <li>Copy, paste, and right-click attempts</li>
+                    <li>Time spent away from the test</li>
+                  </ul>
+                  <p className="mt-2 text-sm text-amber-800">
+                    The test will open in fullscreen mode. All invigilation events are included in your submitted results.
+                  </p>
+                </div>
               </div>
 
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
@@ -317,6 +527,20 @@ export default function EwaEntryTestPage() {
                   <span className="rounded-full bg-white px-3 py-1 shadow-sm">
                     Time remaining: <strong>{formatSeconds(secondsRemaining)}</strong>
                   </span>
+                  {hasInvigilationIssues && (
+                    <span className="rounded-full bg-amber-100 px-3 py-1 text-amber-800 shadow-sm" title="Invigilation events detected">
+                      Flags: <strong>{invigilation.tabSwitchCount + invigilation.fullscreenExitCount + invigilation.copyAttempts + invigilation.rightClickAttempts}</strong>
+                    </span>
+                  )}
+                  {!isFullscreen && !submitted && (
+                    <button
+                      type="button"
+                      onClick={enterFullscreen}
+                      className="rounded-xl bg-amber-500 px-3 py-1 text-sm font-medium text-white transition hover:bg-amber-600"
+                    >
+                      Enter Fullscreen
+                    </button>
+                  )}
                   {!submitted && (
                     <button
                       type="button"
