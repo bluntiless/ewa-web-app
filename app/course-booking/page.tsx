@@ -528,7 +528,7 @@ export default function CourseBookingPage() {
               <ul className="text-gray-600 text-sm space-y-2">
                 <li>• The information provided in this form is accurate and complete to the best of my knowledge.</li>
                 <li>• I understand that additional requirements may still apply depending on my experience and evidence.</li>
-                <li>• I am aware that <strong>18th Edition</strong>, <strong>Inspection &amp; Testing</strong>, and <strong>AM2E</strong> qualifications may be required depending on progression and certification requirements.</li>
+                <li>• I am aware that <strong>18th Edition</strong>, <strong>Inspection &amp; Testing / Initial Verification</strong>, and <strong>AM2E</strong> qualifications are required if progression to Gold Card is required.</li>
                 <li>• I understand this booking form is not automatic acceptance onto the qualification programme.</li>
               </ul>
             </div>
