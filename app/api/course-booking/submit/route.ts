@@ -393,7 +393,7 @@ async function generateBookingPDF(data: CourseBookingData, bookingId: string, su
   })
 
   y -= 13
-  page.drawText("• Additional requirements may apply (18th Edition, I&T, AM2E)", {
+  page.drawText("• 18th Edition, I&T/Initial Verification, AM2E are required for Gold Card progression", {
     x: 50,
     y,
     size: 9,
