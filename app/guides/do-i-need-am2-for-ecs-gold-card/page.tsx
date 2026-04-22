@@ -98,7 +98,7 @@ export default function AM2GuidePage() {
 
           <h3>AM2ED (Domestic Electrician)</h3>
           <p>
-            The AM2ED is specifically designed for Domestic Electricians. It focuses exclusively on domestic installation competence. You would take this assessment if you are completing the <Link href="/electrotechnical-dwellings-ewa">Electrotechnical in Dwellings qualification (610/2859/9)</Link>.
+            The AM2ED is specifically designed for Domestic Electricians. It focuses exclusively on domestic installation competence and is suitable for those working primarily in residential settings.
           </p>
           <p>
             The AM2ED assessment includes tasks such as:
@@ -171,7 +171,7 @@ export default function AM2GuidePage() {
 
           <h2>Summary</h2>
           <p>
-            If you&apos;re pursuing an <Link href="/ecs-gold-card-experienced-worker">ECS Gold Card</Link> through the Experienced Worker route, you will almost certainly need to pass an AM2 assessment. The specific variant (AM2E or AM2ED) depends on whether you&apos;re qualifying through the full Electrotechnical route or the Electrotechnical in Dwellings route.
+            If you&apos;re pursuing an <Link href="/ecs-gold-card-experienced-worker">ECS Gold Card</Link> through the Experienced Worker route, you will almost certainly need to pass an AM2 assessment. The specific variant (AM2E or AM2ED) depends on whether your work covers full commercial/industrial scope or focuses primarily on domestic installations.
           </p>
 
           {/* CTA Box */}

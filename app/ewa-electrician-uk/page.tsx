@@ -148,18 +148,7 @@ export default function EWAElectricianUKPage() {
                   <li>• Electricians seeking maximum flexibility</li>
                 </ul>
               </div>
-              <div className="bg-green-50 border-2 border-green-200 rounded-xl p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Electrotechnical in Dwellings</h3>
-                <p className="text-gray-600 text-sm mb-4">
-                  The <Link href="/electrotechnical-dwellings-ewa" className="text-blue-600 hover:underline font-semibold">EAL Level 3 Electrotechnical in Dwellings (610/2859/9)</Link> focuses specifically on domestic installation work.
-                </p>
-                <p className="text-gray-700 text-sm mb-3"><strong>Best for:</strong></p>
-                <ul className="text-gray-600 text-sm space-y-1">
-                  <li>• Domestic installation specialists</li>
-                  <li>• Those working primarily in residential settings</li>
-                  <li>• Electricians seeking Part P competent person status</li>
-                </ul>
-              </div>
+              
             </div>
           </div>
 
@@ -236,9 +225,7 @@ export default function EWAElectricianUKPage() {
               <Link href="/eal-5982-experienced-worker" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
                 <ArrowRight className="w-4 h-4" /> EAL 5982 Qualification
               </Link>
-              <Link href="/electrotechnical-dwellings-ewa" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
-                <ArrowRight className="w-4 h-4" /> Electrotechnical in Dwellings
-              </Link>
+              
               <Link href="/ecs-gold-card-experienced-worker" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
                 <ArrowRight className="w-4 h-4" /> ECS Gold Card Route
               </Link>

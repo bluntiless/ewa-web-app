@@ -250,9 +250,7 @@ export default function EWACostPage() {
               <Link href="/eal-5982-experienced-worker" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
                 <ArrowRight className="w-4 h-4" /> EAL 5982 Qualification
               </Link>
-              <Link href="/electrotechnical-dwellings-ewa" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
-                <ArrowRight className="w-4 h-4" /> Electrotechnical in Dwellings
-              </Link>
+              
               <Link href="/ecs-gold-card-experienced-worker" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
                 <ArrowRight className="w-4 h-4" /> ECS Gold Card Route
               </Link>

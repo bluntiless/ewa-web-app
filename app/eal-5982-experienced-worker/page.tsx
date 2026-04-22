@@ -112,7 +112,7 @@ export default function EAL5982Page() {
               </li>
             </ul>
             <p className="text-gray-700 mb-4">
-              The EAL 5982 Experienced Worker Qualification is specifically designed for those working across <strong>commercial, industrial, and mixed-scope installations</strong>. If your experience is primarily in domestic installations, the <Link href="/electrotechnical-dwellings-ewa" className="text-blue-600 hover:underline">Electrotechnical in Dwellings qualification (610/2859/9)</Link> may be more suitable, requiring only 3 years of experience.
+              The EAL 5982 Experienced Worker Qualification is specifically designed for those working across <strong>commercial, industrial, domestic, and mixed-scope installations</strong>. This qualification covers the full scope of electrical installation work.
             </p>
           </div>
 
@@ -380,7 +380,7 @@ export default function EAL5982Page() {
                   Do I need 5 years experience for the EAL 5982?
                 </summary>
                 <div className="px-4 pb-4 text-gray-700 text-sm">
-                  Yes, the EAL 5982 Experienced Worker Qualification requires a minimum of 5 years verifiable industry experience. If you have less experience or work primarily in domestic settings, the <Link href="/electrotechnical-dwellings-ewa" className="text-blue-600 hover:underline">Electrotechnical in Dwellings qualification (610/2859/9)</Link> requires only 3 years and may be more suitable.
+                  Yes, the EAL 5982 Experienced Worker Qualification requires a minimum of 5 years verifiable industry experience. This experience must be auditable and demonstrable through work records, references, and portfolio evidence.
                 </div>
               </details>
 
@@ -402,9 +402,7 @@ export default function EAL5982Page() {
               <Link href="/ecs-gold-card-experienced-worker" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
                 <ArrowRight className="w-4 h-4" /> ECS Gold Card Experienced Worker Route
               </Link>
-              <Link href="/electrotechnical-dwellings-ewa" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
-                <ArrowRight className="w-4 h-4" /> Electrotechnical in Dwellings (3 Years)
-              </Link>
+              
               <Link href="/ewa-electrician-uk" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
                 <ArrowRight className="w-4 h-4" /> EWA for UK Electricians
               </Link>
