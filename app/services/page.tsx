@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
-import { Lightbulb, Zap, CreditCard, FilePenLine, ChevronDown, CheckCircle, BookOpen, ClipboardCheck } from "lucide-react"
+import { Lightbulb, Zap, CreditCard, FilePenLine, ChevronDown, CheckCircle, BookOpen, ClipboardCheck, FileEdit } from "lucide-react"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 
@@ -122,7 +122,7 @@ export default function ServicesPage() {
               Ready to take the first step? Complete your Skills Scan to help us understand your experience and guide you to the right qualification pathway.
             </p>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-7xl mx-auto">
               {/* Option 1: Preliminary Self-Check */}
               <div className="bg-white border-2 border-blue-200 rounded-xl p-6 text-left hover:border-blue-400 hover:shadow-lg transition-all">
                 <div className="flex items-center gap-2 mb-3">
@@ -208,6 +208,28 @@ export default function ServicesPage() {
                   className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-green-600 text-white hover:bg-green-700 transition-colors"
                 >
                   <FilePenLine className="w-4 h-4 mr-2" /> Complete Form
+                </Link>
+              </div>
+
+              {/* Option 5: Course Booking Form */}
+              <div className="bg-white border-2 border-orange-200 rounded-xl p-6 text-left hover:border-orange-400 hover:shadow-lg transition-all">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="bg-orange-100 text-orange-700 text-xs font-semibold px-2 py-1 rounded">Course Booking</span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Course Booking Form</h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  Register your interest in the EWA qualification programme with our online booking form.
+                </p>
+                <ul className="text-sm text-gray-600 mb-4 space-y-1">
+                  <li>• Online registration</li>
+                  <li>• Digital signature</li>
+                  <li>• Instant submission</li>
+                </ul>
+                <Link
+                  href="/course-booking"
+                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-orange-600 text-white hover:bg-orange-700 transition-colors"
+                >
+                  <FileEdit className="w-4 h-4 mr-2" /> Book Course
                 </Link>
               </div>
             </div>
