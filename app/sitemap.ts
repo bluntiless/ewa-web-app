@@ -90,6 +90,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
+    // Course Booking
+    {
+      url: "https://ewatracker.co.uk/course-booking",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
     // Skills Scan & Candidate Pages
     {
       url: "https://ewatracker.co.uk/skills-scan",
