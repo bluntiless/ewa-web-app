@@ -51,12 +51,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.9,
     },
-    {
-      url: "https://ewatracker.co.uk/electrotechnical-dwellings-ewa",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
+    
     {
       url: "https://ewatracker.co.uk/ewa-cost",
       lastModified: new Date(),

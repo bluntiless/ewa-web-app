@@ -107,7 +107,7 @@ export default function ECSGoldCardPage() {
             <div className="grid md:grid-cols-2 gap-4 mb-6">
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h3 className="font-semibold text-gray-900 mb-2">Level 3 EWA Qualification</h3>
-                <p className="text-gray-600 text-sm">Either the <Link href="/eal-5982-experienced-worker" className="text-blue-600 hover:underline">EAL 5982 (603/5982/1)</Link> or the <Link href="/electrotechnical-dwellings-ewa" className="text-blue-600 hover:underline">Electrotechnical in Dwellings (610/2859/9)</Link></p>
+                <p className="text-gray-600 text-sm">The <Link href="/eal-5982-experienced-worker" className="text-blue-600 hover:underline">EAL 5982 (603/5982/1)</Link> Experienced Worker Qualification</p>
               </div>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h3 className="font-semibold text-gray-900 mb-2">AM2 Assessment</h3>
@@ -144,7 +144,7 @@ export default function ECSGoldCardPage() {
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">AM2ED (Domestic Electrician)</h3>
                 <p className="text-gray-600 text-sm mb-2">
-                  For those qualifying through the <Link href="/electrotechnical-dwellings-ewa" className="text-blue-600 hover:underline">Electrotechnical in Dwellings route</Link>. Covers domestic installation competence.
+                  For those working primarily in domestic installations. Covers domestic installation competence.
                 </p>
                 <p className="text-gray-500 text-xs">Duration: 1 day practical assessment</p>
               </div>
@@ -172,7 +172,7 @@ export default function ECSGoldCardPage() {
                 <span className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm">2</span>
                 <div>
                   <h3 className="font-semibold text-gray-900">Achieve Level 3 Qualification</h3>
-                  <p className="text-gray-600 text-sm">Complete either the <Link href="/eal-5982-experienced-worker" className="text-blue-600 hover:underline">EAL 5982</Link> or <Link href="/electrotechnical-dwellings-ewa" className="text-blue-600 hover:underline">Electrotechnical in Dwellings</Link> qualification through portfolio and assessment.</p>
+                  <p className="text-gray-600 text-sm">Complete the <Link href="/eal-5982-experienced-worker" className="text-blue-600 hover:underline">EAL 5982</Link> qualification through portfolio and assessment.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4 bg-white border-l-4 border-blue-600 shadow-sm p-4">
@@ -230,9 +230,7 @@ export default function ECSGoldCardPage() {
               <Link href="/eal-5982-experienced-worker" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
                 <ArrowRight className="w-4 h-4" /> EAL 5982 Qualification
               </Link>
-              <Link href="/electrotechnical-dwellings-ewa" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
-                <ArrowRight className="w-4 h-4" /> Electrotechnical in Dwellings
-              </Link>
+              
               <Link href="/ewa-cost" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
                 <ArrowRight className="w-4 h-4" /> EWA Costs
               </Link>

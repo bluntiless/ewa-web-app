@@ -8,15 +8,15 @@ import SiteFooter from "@/components/site-footer"
 export const metadata: Metadata = {
   title: "Our Services",
   description:
-    "EWA Tracker Ltd is an EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1) and Level 3 Electrotechnical in Dwellings (610/2859/9). ECS Gold Card route available.",
-  keywords: ["EWA", "ECS Gold Card", "electrical qualifications", "experienced worker assessment", "UK electrician", "Level 3", "EAL approved centre", "Electrotechnical in Dwellings"],
+    "EWA Tracker Ltd is an EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1). ECS Gold Card route available.",
+  keywords: ["EWA", "ECS Gold Card", "electrical qualifications", "experienced worker assessment", "UK electrician", "Level 3", "EAL approved centre", "EAL 5982"],
   alternates: {
     canonical: "https://ewatracker.co.uk/services",
   },
   openGraph: {
     title: "Our Services - EWA Tracker Ltd",
     description:
-      "EAL approved centre delivering Level 3 Electrotechnical Experienced Worker Qualifications and ECS Gold Card route.",
+      "EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification and ECS Gold Card route.",
     url: "https://ewatracker.co.uk/services",
   },
 }
@@ -33,18 +33,12 @@ export default function ServicesPage() {
           </h1>
           <p className="text-lg text-gray-700 leading-relaxed mb-8 max-w-3xl mx-auto">
             EWA Tracker Ltd is an EAL approved centre specialising in the Experienced Worker Assessment route for experienced electricians seeking formal qualification.
-            We deliver two EAL Level 3 qualifications:
           </p>
-          <div className="flex flex-col md:flex-row gap-4 justify-center mb-8 max-w-4xl mx-auto">
-            <Link href="/eal-5982-experienced-worker" className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex-1 hover:border-blue-400 hover:shadow-md transition-all">
-              <p className="font-semibold text-blue-900">Level 3 Electrotechnical Experienced Worker Qualification</p>
-              <p className="text-sm text-blue-700">(603/5982/1) - Full scope Installation &amp; Maintenance</p>
-              <p className="text-xs text-blue-600 mt-2 font-medium">Learn more about EAL 5982 &rarr;</p>
-            </Link>
-            <Link href="/electrotechnical-dwellings-ewa" className="bg-green-50 border border-green-200 rounded-lg p-4 flex-1 hover:border-green-400 hover:shadow-md transition-all">
-              <p className="font-semibold text-green-900">Level 3 Electrotechnical in Dwellings</p>
-              <p className="text-sm text-green-700">(610/2859/9) - Domestic installations focus</p>
-              <p className="text-xs text-green-600 mt-2 font-medium">Learn more about Dwellings route &rarr;</p>
+          <div className="flex justify-center mb-8 max-w-4xl mx-auto">
+            <Link href="/eal-5982-experienced-worker" className="bg-blue-50 border border-blue-200 rounded-lg p-6 max-w-md hover:border-blue-400 hover:shadow-md transition-all">
+              <p className="font-semibold text-blue-900 text-lg">Level 3 Electrotechnical Experienced Worker Qualification</p>
+              <p className="text-sm text-blue-700 mt-1">(603/5982/1) - Full scope Installation &amp; Maintenance</p>
+              <p className="text-xs text-blue-600 mt-3 font-medium">Learn more about EAL 5982 &rarr;</p>
             </Link>
           </div>
 
@@ -59,10 +53,7 @@ export default function ServicesPage() {
             </summary>
             <div className="px-5 pb-5 pt-2 border-t border-amber-200">
               <p className="text-gray-700 mb-4">
-                To be eligible for the Experienced Worker Assessment route, you should have completed relevant electrotechnical theory training, typically holding a <strong>Level 2 Diploma in Electrical Installation</strong>. The minimum industry experience required depends on the qualification route: <strong>5 years for the full Electrotechnical qualification (603/5982/1)</strong> or <strong>3 years for the Electrotechnical in Dwellings qualification (610/2859/9)</strong>. This experience must be verifiable and auditable.
-              </p>
-              <p className="text-gray-700 mb-4">
-                Depending on your occupational scope, this may be aligned to either the <strong>full Electrotechnical route</strong> or the <strong>Electrotechnical in Dwellings route</strong>.
+                To be eligible for the Experienced Worker Assessment route, you should have completed relevant electrotechnical theory training, typically holding a <strong>Level 2 Diploma in Electrical Installation</strong>, followed by a minimum of <strong>5 years&apos; industry experience</strong> as a practicing electrician. This experience must be verifiable and auditable.
               </p>
               <p className="text-gray-700 mb-4">
                 You must be able to provide sufficient evidence from site, supported where necessary by witness testimony, to demonstrate competence against the full qualification requirements.
