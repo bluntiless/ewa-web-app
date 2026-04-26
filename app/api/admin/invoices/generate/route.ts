@@ -6,7 +6,6 @@ import { decryptJSON, encryptJSON } from "@/lib/encryption"
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib"
 import { 
   createInvoiceFromBooking, 
-  generateInvoiceNumber, 
   formatDate,
   type Invoice 
 } from "@/lib/invoice"
