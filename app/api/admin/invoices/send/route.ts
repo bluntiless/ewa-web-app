@@ -7,7 +7,14 @@ import { Resend } from "resend"
 import { formatCurrency, bankDetails } from "@/lib/pricing"
 import { formatDate, type Invoice } from "@/lib/invoice"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Resend client is initialized lazily inside the handler to avoid build-time errors
+function getResendClient(): Resend {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    throw new Error("RESEND_API_KEY environment variable is not set")
+  }
+  return new Resend(apiKey)
+}
 
 // Generate HTML email content for invoice
 function generateInvoiceEmailHTML(invoice: Invoice): string {
@@ -266,6 +273,7 @@ export async function POST(request: Request) {
     }
 
     // Send email via Resend
+    const resend = getResendClient()
     const { data, error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || "EWA Tracker <invoices@ewatracker.co.uk>",
       to: [invoice.candidateEmail],
