@@ -3,16 +3,16 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { list, put } from "@vercel/blob"
 import { decryptJSON, encryptJSON } from "@/lib/encryption"
-import { Resend } from "resend"
 import { formatCurrency, bankDetails } from "@/lib/pricing"
 import { formatDate, type Invoice } from "@/lib/invoice"
 
 // Resend client is initialized lazily inside the handler to avoid build-time errors
-function getResendClient(): Resend {
+async function getResendClient() {
   const apiKey = process.env.RESEND_API_KEY
   if (!apiKey) {
     throw new Error("RESEND_API_KEY environment variable is not set")
   }
+  const { Resend } = await import("resend")
   return new Resend(apiKey)
 }
 
