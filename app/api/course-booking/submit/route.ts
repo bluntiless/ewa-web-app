@@ -24,8 +24,9 @@ interface CourseBookingData {
   // Section C - Course/Booking Details
   qualification: string
   route: string
+  serviceOption: "standard" | "gold"
+  paymentOption: "full" | "instalments"
   preferredStartDate: string
-  paymentOption: string
   notes: string
 
   // Section D - Declaration
@@ -33,6 +34,57 @@ interface CourseBookingData {
 
   // Section E - Digital Signature
   digitalSignature: string
+}
+
+// Pricing structure
+const pricing = {
+  standardFull: {
+    programmeFee: 2000,
+    registrationFee: 224,
+    discount: 112,
+    total: 2112,
+    description: "Standard Programme - Full Payment",
+  },
+  standardInstalments: {
+    initialPayment: 724,
+    remainingPayments: [
+      { amount: 500, due: "1 month after start" },
+      { amount: 500, due: "2 months after start" },
+      { amount: 500, due: "3 months after start" },
+    ],
+    total: 2224,
+    description: "Standard Programme - Instalments",
+  },
+  goldFull: {
+    programmeFee: 2500,
+    registrationFee: 224,
+    discount: 168,
+    total: 2556,
+    description: "Gold Service - Full Payment",
+  },
+  goldInstalments: {
+    initialPayment: 724,
+    remainingPayments: [
+      { amount: 500, due: "1 month after start" },
+      { amount: 500, due: "2 months after start" },
+      { amount: 500, due: "3 months after start" },
+      { amount: 500, due: "4 months after start" },
+    ],
+    total: 2724,
+    description: "Gold Service - Instalments",
+  },
+}
+
+function getPricingKey(serviceOption: string, paymentOption: string): keyof typeof pricing | null {
+  if (serviceOption === "standard" && paymentOption === "full") return "standardFull"
+  if (serviceOption === "standard" && paymentOption === "instalments") return "standardInstalments"
+  if (serviceOption === "gold" && paymentOption === "full") return "goldFull"
+  if (serviceOption === "gold" && paymentOption === "instalments") return "goldInstalments"
+  return null
+}
+
+function formatCurrency(amount: number): string {
+  return new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(amount)
 }
 
 function generateBookingId(): string {
@@ -297,10 +349,103 @@ async function generateBookingPDF(data: CourseBookingData, bookingId: string, su
   y -= 16
   drawField("Route", data.route)
   y -= 16
-  drawField("Preferred Start", formatDateDisplay(data.preferredStartDate))
+  drawField("Service Option", data.serviceOption === "gold" ? "Gold Service" : "Standard Programme")
   y -= 16
-  drawField("Payment Option", data.paymentOption || "To be discussed")
-  y -= 18
+  drawField("Payment Option", data.paymentOption === "full" ? "Full Payment" : "Instalments")
+  y -= 16
+  drawField("Preferred Start", formatDateDisplay(data.preferredStartDate))
+  y -= 20
+
+  // Pricing Summary Box
+  const pricingKey = getPricingKey(data.serviceOption, data.paymentOption)
+  if (pricingKey) {
+    const selectedPricing = pricing[pricingKey]
+    
+    page.drawRectangle({
+      x: 50,
+      y: y - 85,
+      width: width - 100,
+      height: 95,
+      color: rgb(0.97, 0.98, 1),
+      borderColor: rgb(0.12, 0.23, 0.37),
+      borderWidth: 1,
+    })
+
+    page.drawText("PRICING SUMMARY", {
+      x: 60,
+      y: y - 16,
+      size: 10,
+      font: helveticaBold,
+      color: rgb(0.12, 0.23, 0.37),
+    })
+
+    y -= 32
+
+    if ("discount" in selectedPricing) {
+      // Full payment pricing
+      page.drawText(`Programme Fee: ${formatCurrency(selectedPricing.programmeFee)}`, {
+        x: 60,
+        y,
+        size: 9,
+        font: helvetica,
+        color: rgb(0.3, 0.3, 0.3),
+      })
+      y -= 13
+      page.drawText(`EAL Registration: ${formatCurrency(selectedPricing.registrationFee)}`, {
+        x: 60,
+        y,
+        size: 9,
+        font: helvetica,
+        color: rgb(0.3, 0.3, 0.3),
+      })
+      y -= 13
+      page.drawText(`Discount: -${formatCurrency(selectedPricing.discount)}`, {
+        x: 60,
+        y,
+        size: 9,
+        font: helvetica,
+        color: rgb(0.02, 0.59, 0.41),
+      })
+      y -= 15
+      page.drawText(`Total Due: ${formatCurrency(selectedPricing.total)}`, {
+        x: 60,
+        y,
+        size: 11,
+        font: helveticaBold,
+        color: rgb(0.12, 0.23, 0.37),
+      })
+      y -= 22
+    } else {
+      // Instalments pricing
+      page.drawText(`Initial Payment (due now): ${formatCurrency(selectedPricing.initialPayment)}`, {
+        x: 60,
+        y,
+        size: 9,
+        font: helveticaBold,
+        color: rgb(0.3, 0.3, 0.3),
+      })
+      y -= 13
+      const remainingText = selectedPricing.remainingPayments.map((p, i) => `Payment ${i + 2}: ${formatCurrency(p.amount)}`).join(" | ")
+      page.drawText(`Remaining: ${remainingText}`, {
+        x: 60,
+        y,
+        size: 8,
+        font: helvetica,
+        color: rgb(0.4, 0.4, 0.4),
+      })
+      y -= 15
+      page.drawText(`Total Programme Cost: ${formatCurrency(selectedPricing.total)}`, {
+        x: 60,
+        y,
+        size: 11,
+        font: helveticaBold,
+        color: rgb(0.12, 0.23, 0.37),
+      })
+      y -= 22
+    }
+  }
+
+  y -= 10
 
   // Notes / Experience section with bordered box
   if (data.notes) {
@@ -521,14 +666,28 @@ export async function POST(request: Request) {
       { access: "public", contentType: "text/plain" }
     )
 
+    // Calculate pricing for metadata
+    const pricingKey = getPricingKey(body.serviceOption, body.paymentOption)
+    const selectedPricing = pricingKey ? pricing[pricingKey] : null
+    const invoiceAmount = selectedPricing 
+      ? ("initialPayment" in selectedPricing ? selectedPricing.initialPayment : selectedPricing.total)
+      : 0
+    const totalAmount = selectedPricing?.total || 0
+
     // Store metadata file for admin listing
     const metadata = {
       id: bookingId,
       candidateName: body.fullName,
       email: body.email,
+      phone: body.contactNumber,
       qualification: body.qualification,
       route: body.route,
+      serviceOption: body.serviceOption,
+      paymentOption: body.paymentOption,
       preferredStartDate: body.preferredStartDate,
+      invoiceAmount,
+      totalAmount,
+      status: "pending" as const,
       submittedAt,
     }
 
