@@ -641,26 +641,35 @@ async function generateInvoicePDF(invoice: Invoice): Promise<Uint8Array> {
 
   let y = 800
 
-  // Header
-  page.drawText("EWA Tracker Ltd", {
+  // Header - Company Info
+  page.drawText("EWA TRACKER LTD", {
     x: 50,
     y,
-    size: 22,
+    size: 18,
     font: helveticaBold,
     color: rgb(0.12, 0.23, 0.37),
   })
 
-  y -= 20
+  y -= 16
   page.drawText("EAL Approved Centre", {
     x: 50,
     y,
-    size: 10,
+    size: 9,
     font: helvetica,
     color: rgb(0.4, 0.4, 0.4),
   })
 
-  y -= 14
-  page.drawText("info@ewatracker.co.uk | 07828 893976 | ewatracker.co.uk", {
+  y -= 12
+  page.drawText("info@ewatracker.co.uk | 07828 893976", {
+    x: 50,
+    y,
+    size: 9,
+    font: helvetica,
+    color: rgb(0.5, 0.5, 0.5),
+  })
+
+  y -= 12
+  page.drawText("www.ewatracker.co.uk", {
     x: 50,
     y,
     size: 9,
@@ -670,79 +679,39 @@ async function generateInvoicePDF(invoice: Invoice): Promise<Uint8Array> {
 
   // INVOICE badge on right
   page.drawRectangle({
-    x: width - 150,
-    y: y + 20,
-    width: 100,
-    height: 30,
+    x: width - 130,
+    y: y + 30,
+    width: 80,
+    height: 28,
     color: rgb(0.12, 0.23, 0.37),
   })
 
   page.drawText("INVOICE", {
-    x: width - 135,
-    y: y + 30,
-    size: 14,
+    x: width - 118,
+    y: y + 39,
+    size: 12,
     font: helveticaBold,
     color: rgb(1, 1, 1),
   })
 
-  y -= 40
+  y -= 25
 
-  // Invoice details box
-  page.drawRectangle({
-    x: 50,
-    y: y - 65,
-    width: width - 100,
-    height: 75,
-    color: rgb(0.97, 0.98, 1),
-    borderColor: rgb(0.85, 0.88, 0.92),
-    borderWidth: 1,
-  })
+  // Two column layout: Invoice To | Invoice Details
+  const leftColX = 50
+  const rightColX = 320
 
-  page.drawText(`Invoice Number: ${invoice.invoiceNumber}`, {
-    x: 60,
-    y: y - 18,
-    size: 10,
-    font: helveticaBold,
-    color: rgb(0.2, 0.2, 0.2),
-  })
-
-  page.drawText(`Invoice Date: ${formatInvoiceDate(invoice.invoiceDate)}`, {
-    x: 60,
-    y: y - 35,
-    size: 10,
-    font: helvetica,
-    color: rgb(0.3, 0.3, 0.3),
-  })
-
-  page.drawText(`Due Date: ${formatInvoiceDate(invoice.dueDate)}`, {
-    x: 60,
-    y: y - 52,
-    size: 10,
-    font: helvetica,
-    color: rgb(0.3, 0.3, 0.3),
-  })
-
-  page.drawText(`Payment Reference: ${invoice.paymentReference}`, {
-    x: 300,
-    y: y - 18,
+  // Invoice To section
+  page.drawText("Invoice To", {
+    x: leftColX,
+    y,
     size: 10,
     font: helveticaBold,
     color: rgb(0.12, 0.23, 0.37),
   })
 
-  page.drawText(`Booking ID: ${invoice.bookingId}`, {
-    x: 300,
-    y: y - 35,
-    size: 9,
-    font: helvetica,
-    color: rgb(0.4, 0.4, 0.4),
-  })
-
-  y -= 90
-
-  // Bill To section
-  page.drawText("BILL TO:", {
-    x: 50,
+  // Invoice Details section
+  page.drawText("Invoice Details", {
+    x: rightColX,
     y,
     size: 10,
     font: helveticaBold,
@@ -750,16 +719,91 @@ async function generateInvoicePDF(invoice: Invoice): Promise<Uint8Array> {
   })
 
   y -= 16
+
+  // Candidate name
   page.drawText(invoice.candidateName, {
-    x: 50,
+    x: leftColX,
     y,
     size: 10,
     font: helveticaBold,
     color: rgb(0.2, 0.2, 0.2),
   })
 
+  // Invoice number
+  page.drawText(`Invoice No: ${invoice.invoiceNumber}`, {
+    x: rightColX,
+    y,
+    size: 9,
+    font: helvetica,
+    color: rgb(0.3, 0.3, 0.3),
+  })
+
   y -= 14
+
+  // Candidate email
   page.drawText(invoice.candidateEmail, {
+    x: leftColX,
+    y,
+    size: 9,
+    font: helvetica,
+    color: rgb(0.3, 0.3, 0.3),
+  })
+
+  // Invoice date
+  page.drawText(`Invoice Date: ${formatInvoiceDate(invoice.invoiceDate)}`, {
+    x: rightColX,
+    y,
+    size: 9,
+    font: helvetica,
+    color: rgb(0.3, 0.3, 0.3),
+  })
+
+  y -= 14
+
+  // Qualification
+  page.drawText("EAL Level 3 Electrotechnical EWA", {
+    x: leftColX,
+    y,
+    size: 9,
+    font: helvetica,
+    color: rgb(0.3, 0.3, 0.3),
+  })
+
+  // Payment reference
+  page.drawText(`Payment Reference: ${invoice.paymentReference}`, {
+    x: rightColX,
+    y,
+    size: 9,
+    font: helvetica,
+    color: rgb(0.3, 0.3, 0.3),
+  })
+
+  y -= 25
+
+  // Programme section header
+  page.drawRectangle({
+    x: 50,
+    y: y - 4,
+    width: width - 100,
+    height: 18,
+    color: rgb(0.95, 0.97, 1),
+  })
+
+  page.drawText("Programme", {
+    x: 55,
+    y,
+    size: 10,
+    font: helveticaBold,
+    color: rgb(0.12, 0.23, 0.37),
+  })
+
+  y -= 20
+
+  // Programme description
+  const serviceLabel = invoice.serviceOption === "gold" ? "Gold Service" : "Standard Programme"
+  const routeText = `Route: Installation EWA (603/5982/1) - ${serviceLabel}`
+  
+  page.drawText("EAL Level 3 Electrotechnical Experienced Worker Qualification", {
     x: 50,
     y,
     size: 9,
@@ -768,7 +812,8 @@ async function generateInvoicePDF(invoice: Invoice): Promise<Uint8Array> {
   })
 
   y -= 12
-  page.drawText(invoice.candidatePhone, {
+
+  page.drawText(routeText, {
     x: 50,
     y,
     size: 9,
@@ -776,252 +821,306 @@ async function generateInvoicePDF(invoice: Invoice): Promise<Uint8Array> {
     color: rgb(0.3, 0.3, 0.3),
   })
 
-  // Address (wrap if needed)
-  if (invoice.candidateAddress) {
-    const addressLines = invoice.candidateAddress.match(/.{1,50}/g) || []
-    for (const line of addressLines.slice(0, 2)) {
-      y -= 12
-      page.drawText(line, {
-        x: 50,
-        y,
-        size: 9,
-        font: helvetica,
-        color: rgb(0.3, 0.3, 0.3),
-      })
-    }
-  }
-
-  y -= 30
+  y -= 25
 
   // Line items table header
   page.drawRectangle({
     x: 50,
-    y: y - 20,
+    y: y - 18,
     width: width - 100,
-    height: 25,
+    height: 22,
     color: rgb(0.12, 0.23, 0.37),
   })
 
   page.drawText("Description", {
     x: 60,
-    y: y - 13,
-    size: 10,
+    y: y - 12,
+    size: 9,
     font: helveticaBold,
     color: rgb(1, 1, 1),
   })
 
   page.drawText("Amount", {
-    x: width - 120,
-    y: y - 13,
-    size: 10,
+    x: width - 110,
+    y: y - 12,
+    size: 9,
     font: helveticaBold,
     color: rgb(1, 1, 1),
   })
 
-  y -= 28
+  y -= 25
 
   // Line items
   for (const item of invoice.lineItems) {
     page.drawText(item.description, {
       x: 60,
       y,
-      size: 10,
+      size: 9,
       font: helvetica,
       color: rgb(0.2, 0.2, 0.2),
     })
 
-    page.drawText(formatPriceCurrency(item.amount), {
-      x: width - 120,
+    page.drawText(`GBP ${item.amount.toFixed(2)}`, {
+      x: width - 115,
       y,
-      size: 10,
+      size: 9,
       font: helvetica,
       color: rgb(0.2, 0.2, 0.2),
     })
 
-    y -= 20
-
-    // Line separator
-    page.drawLine({
-      start: { x: 50, y: y + 8 },
-      end: { x: width - 50, y: y + 8 },
-      thickness: 0.5,
-      color: rgb(0.9, 0.9, 0.9),
-    })
-  }
-
-  y -= 10
-
-  // Subtotal, discount, total
-  if (invoice.discount > 0) {
-    page.drawText("Subtotal:", {
-      x: width - 200,
-      y,
-      size: 10,
-      font: helvetica,
-      color: rgb(0.3, 0.3, 0.3),
-    })
-    page.drawText(formatPriceCurrency(invoice.subtotal), {
-      x: width - 120,
-      y,
-      size: 10,
-      font: helvetica,
-      color: rgb(0.3, 0.3, 0.3),
-    })
-    y -= 18
-
-    page.drawText("Discount:", {
-      x: width - 200,
-      y,
-      size: 10,
-      font: helvetica,
-      color: rgb(0.02, 0.59, 0.41),
-    })
-    page.drawText(`-${formatPriceCurrency(invoice.discount)}`, {
-      x: width - 120,
-      y,
-      size: 10,
-      font: helvetica,
-      color: rgb(0.02, 0.59, 0.41),
-    })
     y -= 18
   }
 
-  // Amount due box
+  // Total Due Now box
+  y -= 5
   page.drawRectangle({
-    x: width - 220,
-    y: y - 25,
-    width: 170,
-    height: 35,
+    x: 50,
+    y: y - 22,
+    width: width - 100,
+    height: 26,
     color: rgb(0.12, 0.23, 0.37),
   })
 
-  page.drawText("AMOUNT DUE:", {
-    x: width - 210,
-    y: y - 12,
+  page.drawText("TOTAL DUE NOW", {
+    x: 60,
+    y: y - 15,
     size: 10,
     font: helveticaBold,
     color: rgb(1, 1, 1),
   })
 
-  page.drawText(formatPriceCurrency(invoice.amountDue), {
+  page.drawText(`GBP ${invoice.amountDue.toFixed(2)}`, {
     x: width - 120,
-    y: y - 12,
-    size: 14,
+    y: y - 15,
+    size: 10,
     font: helveticaBold,
     color: rgb(1, 1, 1),
   })
 
-  y -= 50
+  y -= 40
 
-  // Instalment info if applicable
-  if (invoice.paymentOption === "instalments" && invoice.remainingBalance && invoice.remainingBalance > 0) {
-    page.drawText(`Payment ${invoice.paymentNumber} of ${invoice.totalPayments}`, {
+  // Instalment Payment Schedule (if applicable)
+  if (invoice.paymentOption === "instalments") {
+    page.drawText("Instalment Payment Schedule", {
       x: 50,
       y,
       size: 10,
       font: helveticaBold,
-      color: rgb(0.4, 0.4, 0.4),
+      color: rgb(0.12, 0.23, 0.37),
+    })
+
+    y -= 18
+
+    // Schedule table header
+    page.drawRectangle({
+      x: 50,
+      y: y - 16,
+      width: width - 100,
+      height: 20,
+      color: rgb(0.95, 0.95, 0.95),
+    })
+
+    page.drawText("Payment", {
+      x: 60,
+      y: y - 10,
+      size: 8,
+      font: helveticaBold,
+      color: rgb(0.3, 0.3, 0.3),
+    })
+
+    page.drawText("Amount", {
+      x: 220,
+      y: y - 10,
+      size: 8,
+      font: helveticaBold,
+      color: rgb(0.3, 0.3, 0.3),
+    })
+
+    page.drawText("Due Date", {
+      x: 380,
+      y: y - 10,
+      size: 8,
+      font: helveticaBold,
+      color: rgb(0.3, 0.3, 0.3),
+    })
+
+    y -= 22
+
+    // Calculate instalment dates from invoice date
+    const invoiceDate = new Date(invoice.invoiceDate)
+    
+    // Initial payment
+    page.drawText("Initial payment", {
+      x: 60,
+      y,
+      size: 8,
+      font: helvetica,
+      color: rgb(0.2, 0.2, 0.2),
+    })
+    page.drawText(`GBP ${invoice.amountDue.toFixed(2)}`, {
+      x: 220,
+      y,
+      size: 8,
+      font: helvetica,
+      color: rgb(0.2, 0.2, 0.2),
+    })
+    page.drawText("Due on receipt", {
+      x: 380,
+      y,
+      size: 8,
+      font: helvetica,
+      color: rgb(0.2, 0.2, 0.2),
     })
     y -= 14
-    page.drawText(`Remaining balance after this payment: ${formatPriceCurrency(invoice.remainingBalance)}`, {
-      x: 50,
-      y,
-      size: 9,
-      font: helvetica,
-      color: rgb(0.4, 0.4, 0.4),
-    })
-    y -= 14
-    page.drawText(`Total programme cost: ${formatPriceCurrency(invoice.total)}`, {
-      x: 50,
-      y,
-      size: 9,
-      font: helvetica,
-      color: rgb(0.4, 0.4, 0.4),
-    })
-    y -= 30
+
+    // Remaining instalments
+    const numInstalments = invoice.serviceOption === "gold" ? 4 : 3
+    for (let i = 1; i <= numInstalments; i++) {
+      const dueDate = new Date(invoiceDate)
+      dueDate.setMonth(dueDate.getMonth() + i)
+      
+      page.drawText(`Instalment ${i + 1}`, {
+        x: 60,
+        y,
+        size: 8,
+        font: helvetica,
+        color: rgb(0.2, 0.2, 0.2),
+      })
+      page.drawText("GBP 500.00", {
+        x: 220,
+        y,
+        size: 8,
+        font: helvetica,
+        color: rgb(0.2, 0.2, 0.2),
+      })
+      page.drawText(formatInvoiceDate(dueDate.toISOString()), {
+        x: 380,
+        y,
+        size: 8,
+        font: helvetica,
+        color: rgb(0.2, 0.2, 0.2),
+      })
+      y -= 14
+    }
+
+    y -= 10
   }
 
-  // Bank details section
-  page.drawRectangle({
+  // Bank Transfer Details section
+  page.drawText("Bank Transfer Details", {
     x: 50,
-    y: y - 85,
-    width: width - 100,
-    height: 95,
-    color: rgb(0.97, 0.98, 0.97),
-    borderColor: rgb(0.85, 0.88, 0.85),
-    borderWidth: 1,
-  })
-
-  page.drawText("PAYMENT DETAILS", {
-    x: 60,
-    y: y - 18,
-    size: 11,
+    y,
+    size: 10,
     font: helveticaBold,
     color: rgb(0.12, 0.23, 0.37),
   })
 
-  page.drawText("Please make payment by bank transfer using the details below:", {
-    x: 60,
-    y: y - 35,
-    size: 9,
-    font: helvetica,
-    color: rgb(0.3, 0.3, 0.3),
-  })
+  y -= 18
 
   page.drawText(`Account Name: ${bankDetails.accountName}`, {
-    x: 60,
-    y: y - 52,
-    size: 10,
+    x: 50,
+    y,
+    size: 9,
     font: helvetica,
     color: rgb(0.2, 0.2, 0.2),
   })
 
+  y -= 14
+
   page.drawText(`Sort Code: ${bankDetails.sortCode}`, {
-    x: 60,
-    y: y - 66,
-    size: 10,
+    x: 50,
+    y,
+    size: 9,
     font: helvetica,
     color: rgb(0.2, 0.2, 0.2),
   })
 
   page.drawText(`Account Number: ${bankDetails.accountNumber}`, {
-    x: 250,
-    y: y - 66,
-    size: 10,
+    x: 200,
+    y,
+    size: 9,
     font: helvetica,
     color: rgb(0.2, 0.2, 0.2),
   })
 
+  y -= 14
+
   page.drawText(`Reference: ${invoice.paymentReference}`, {
-    x: 60,
-    y: y - 80,
+    x: 50,
+    y,
+    size: 9,
+    font: helveticaBold,
+    color: rgb(0.12, 0.23, 0.37),
+  })
+
+  y -= 25
+
+  // Notes section
+  page.drawText("Notes", {
+    x: 50,
+    y,
     size: 10,
     font: helveticaBold,
     color: rgb(0.12, 0.23, 0.37),
   })
 
+  y -= 16
+
+  const notes = [
+    "- Initial payment is required before registration/onboarding is processed.",
+    "- Onboarding and pre-registration activities may include finalising the Skills Scan and Candidate",
+    "  Background Form, verifying certificates, and arranging/completing the Technical Discussion.",
+    "- Formal assessment activity and portfolio assessment can only begin once the candidate has",
+    "  been registered with EAL.",
+    "- The Technical Discussion is recorded and retained for EQA purposes.",
+  ]
+
+  // Add service-specific note
+  if (invoice.serviceOption === "gold") {
+    notes.push("- Gold Service includes 4 observations: 1 face-to-face and 3 remote video observations.")
+  } else {
+    notes.push("- Standard Programme includes 3 observations: 1 face-to-face and 2 remote video observations.")
+  }
+
+  // Add instalment note if applicable
+  if (invoice.paymentOption === "instalments") {
+    notes.push("- Continued programme access and assessment support are subject to instalments being")
+    notes.push("  paid by the agreed due dates.")
+  }
+
+  for (const note of notes) {
+    page.drawText(note, {
+      x: 50,
+      y,
+      size: 8,
+      font: helvetica,
+      color: rgb(0.3, 0.3, 0.3),
+    })
+    y -= 11
+  }
+
   // Footer
   page.drawLine({
-    start: { x: 50, y: 55 },
-    end: { x: width - 50, y: 55 },
+    start: { x: 50, y: 50 },
+    end: { x: width - 50, y: 50 },
     thickness: 0.5,
     color: rgb(0.8, 0.8, 0.8),
   })
 
-  page.drawText("EWA Tracker Ltd | EAL Approved Centre | Company Registration: 15083099", {
+  page.drawText("EWA Tracker Ltd | EAL Approved Centre | www.ewatracker.co.uk", {
     x: 50,
-    y: 40,
+    y: 38,
     size: 8,
     font: helvetica,
     color: rgb(0.6, 0.6, 0.6),
   })
 
-  page.drawText("Thank you for choosing EWA Tracker Ltd for your qualification journey.", {
-    x: 50,
-    y: 28,
+  page.drawText("Thank you for your business", {
+    x: width - 150,
+    y: 38,
     size: 8,
-    font: helvetica,
-    color: rgb(0.6, 0.6, 0.6),
+    font: helveticaBold,
+    color: rgb(0.12, 0.23, 0.37),
   })
 
   return pdfDoc.save()
@@ -1172,15 +1271,11 @@ export async function POST(request: Request) {
     let invoiceNumber: string | undefined
     let sharePointInvoiceUrl: string | undefined
 
-    console.log("[v0] Invoice generation starting...")
-    console.log("[v0] Service option:", body.serviceOption)
-    console.log("[v0] Payment option:", body.paymentOption)
+    
 
     try {
       // Get pricing details
       const pricingDetails = getPricing(body.serviceOption as "standard" | "gold", body.paymentOption as "full" | "instalments")
-      
-      console.log("[v0] Pricing details:", pricingDetails ? "found" : "not found")
       
       if (pricingDetails) {
         // Create invoice
@@ -1199,11 +1294,9 @@ export async function POST(request: Request) {
 
         invoiceId = invoice.id
         invoiceNumber = invoice.invoiceNumber
-        console.log("[v0] Invoice created:", invoiceNumber, "ID:", invoiceId)
 
         // Generate invoice PDF
         const invoicePdfBytes = await generateInvoicePDF(invoice)
-        console.log("[v0] Invoice PDF generated, size:", invoicePdfBytes.length, "bytes")
 
         // Store invoice in Blob
         const encryptedInvoice = encryptJSON(invoice)
@@ -1214,14 +1307,11 @@ export async function POST(request: Request) {
         )
 
         // Upload invoice to SharePoint if configured
-        console.log("[v0] SharePoint configured:", isSharePointConfigured())
         if (isSharePointConfigured()) {
           try {
             // Create Invoices folder structure: Invoices/YYYY-MM
             const invoiceFolderPath = `Invoices/${dateStr.substring(0, 7)}`
-            console.log("[v0] Creating invoice folder:", invoiceFolderPath)
             await createFolder(invoiceFolderPath)
-            console.log("[v0] Invoice folder created successfully")
 
             const invoiceFileName = `Invoice-${invoice.invoiceNumber}-${safeName}.pdf`
 
@@ -1236,21 +1326,17 @@ export async function POST(request: Request) {
               sharePointInvoiceUrl = invoiceResult.url
               console.log("Successfully uploaded invoice to SharePoint:", sharePointInvoiceUrl)
 } else {
-        console.error("[v0] SharePoint invoice upload failed:", invoiceResult.error)
+        console.error("SharePoint invoice upload failed:", invoiceResult.error)
       }
     } catch (invoiceError) {
-      console.error("[v0] Invoice SharePoint upload error:", invoiceError)
+      console.error("Invoice SharePoint upload error:", invoiceError)
     }
-  } else {
-    console.log("[v0] SharePoint not configured for invoice upload")
   }
 
-  console.log(`[v0] Invoice ${invoiceNumber} generated for booking ${bookingId}`)
-      } else {
-        console.log("[v0] No pricing details found - invoice not generated")
+  console.log(`Invoice ${invoiceNumber} generated for booking ${bookingId}`)
       }
     } catch (invoiceError) {
-      console.error("[v0] Invoice generation error:", invoiceError)
+      console.error("Invoice generation error:", invoiceError)
       // Don't fail the submission if invoice generation fails
     }
 

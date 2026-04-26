@@ -133,10 +133,18 @@ export function createInvoiceFromBooking(
     totalPayments = pricingDetails.remainingPayments.length + 1
 
     if (paymentNumber === 1) {
-      // Initial payment invoice
+      // Initial payment invoice - split into programme initial + registration fee
+      // Initial payment of £724 = £500 programme + £224 registration
+      const programmeInitial = 500
+      const registrationFee = 224
+      
       lineItems.push({
-        description: `${serviceOption === "gold" ? "Gold Service" : "Standard"} Programme - Initial Payment`,
-        amount: pricingDetails.initialPayment,
+        description: `${serviceOption === "gold" ? "Gold Service" : "Standard Programme"} - Initial Instalment`,
+        amount: programmeInitial,
+      })
+      lineItems.push({
+        description: "EAL Registration Fee",
+        amount: registrationFee,
       })
       subtotal = pricingDetails.initialPayment
       amountDue = pricingDetails.initialPayment
