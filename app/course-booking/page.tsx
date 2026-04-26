@@ -31,8 +31,9 @@ interface FormData {
   // Section C - Course/Booking Details
   qualification: string
   route: string
+  serviceOption: "standard" | "gold" | ""
+  paymentOption: "full" | "instalments" | ""
   preferredStartDate: string
-  paymentOption: string
   notes: string
 
   // Section D - Declaration
@@ -57,11 +58,63 @@ const initialFormData: FormData = {
   employerEmail: "",
   qualification: "EAL Level 3 Electrotechnical Experienced Worker Qualification",
   route: "Installation EWA (603/5982/1)",
-  preferredStartDate: "",
+  serviceOption: "",
   paymentOption: "",
+  preferredStartDate: "",
   notes: "",
   declarationAccepted: false,
   digitalSignature: "",
+}
+
+// Pricing structure
+const pricing = {
+  standardFull: {
+    programmeFee: 2000,
+    registrationFee: 224,
+    discount: 112,
+    total: 2112,
+    description: "Standard Programme - Full Payment",
+  },
+  standardInstalments: {
+    initialPayment: 724,
+    remainingPayments: [
+      { amount: 500, due: "1 month after start" },
+      { amount: 500, due: "2 months after start" },
+      { amount: 500, due: "3 months after start" },
+    ],
+    total: 2224,
+    description: "Standard Programme - Instalments",
+  },
+  goldFull: {
+    programmeFee: 2500,
+    registrationFee: 224,
+    discount: 168,
+    total: 2556,
+    description: "Gold Service - Full Payment",
+  },
+  goldInstalments: {
+    initialPayment: 724,
+    remainingPayments: [
+      { amount: 500, due: "1 month after start" },
+      { amount: 500, due: "2 months after start" },
+      { amount: 500, due: "3 months after start" },
+      { amount: 500, due: "4 months after start" },
+    ],
+    total: 2724,
+    description: "Gold Service - Instalments",
+  },
+}
+
+function getPricingKey(serviceOption: string, paymentOption: string): keyof typeof pricing | null {
+  if (serviceOption === "standard" && paymentOption === "full") return "standardFull"
+  if (serviceOption === "standard" && paymentOption === "instalments") return "standardInstalments"
+  if (serviceOption === "gold" && paymentOption === "full") return "goldFull"
+  if (serviceOption === "gold" && paymentOption === "instalments") return "goldInstalments"
+  return null
+}
+
+function formatCurrency(amount: number): string {
+  return new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(amount)
 }
 
 export default function CourseBookingPage() {
@@ -106,6 +159,14 @@ export default function CourseBookingPage() {
     }
     if (!formData.route) {
       setErrorMessage("Please select a route")
+      return
+    }
+    if (!formData.serviceOption) {
+      setErrorMessage("Please select a service option (Standard or Gold)")
+      return
+    }
+    if (!formData.paymentOption) {
+      setErrorMessage("Please select a payment option (Full Payment or Instalments)")
       return
     }
     if (!formData.declarationAccepted) {
@@ -162,9 +223,9 @@ export default function CourseBookingPage() {
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8">
               <h3 className="font-semibold text-amber-900 mb-2">Important Information</h3>
               <ul className="text-amber-800 text-sm space-y-2">
-                <li>• This booking form submission is <strong>not automatic acceptance</strong> onto the qualification.</li>
-                <li>• Your suitability and evidence requirements will be reviewed by our team.</li>
-                <li>• You may be required to provide additional documentation or complete a Skills Scan.</li>
+                <li>• Submission of this form <strong>does not confirm registration or acceptance</strong> onto the programme.</li>
+                <li>• Registration is subject to verification of certificates, completion of the Technical Discussion, and EAL registration requirements.</li>
+                <li>• We will review your details and send your invoice once eligibility checks are complete.</li>
                 <li>• We will contact you at <strong>{submittedData.email}</strong> with next steps.</li>
               </ul>
             </div>
@@ -190,6 +251,18 @@ export default function CourseBookingPage() {
                 <div>
                   <dt className="text-gray-500">Route</dt>
                   <dd className="font-medium text-gray-900">{submittedData.route}</dd>
+                </div>
+                <div>
+                  <dt className="text-gray-500">Service Option</dt>
+                  <dd className="font-medium text-gray-900">
+                    {submittedData.serviceOption === "standard" ? "Standard Programme" : "Gold Service"}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-gray-500">Payment Option</dt>
+                  <dd className="font-medium text-gray-900">
+                    {submittedData.paymentOption === "full" ? "Full Payment" : "Instalments"}
+                  </dd>
                 </div>
                 {submittedData.preferredStartDate && (
                   <div>
@@ -468,6 +541,189 @@ export default function CourseBookingPage() {
                 </select>
               </div>
 
+              {/* Service Option */}
+              <div className="md:col-span-2">
+                <Label className="mb-3 block">Service Option *</Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div
+                    onClick={() => handleInputChange("serviceOption", "standard")}
+                    className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
+                      formData.serviceOption === "standard"
+                        ? "border-blue-500 bg-blue-50"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-0.5 ${
+                        formData.serviceOption === "standard" ? "border-blue-500" : "border-gray-300"
+                      }`}>
+                        {formData.serviceOption === "standard" && (
+                          <div className="w-2.5 h-2.5 rounded-full bg-blue-500" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-semibold text-gray-900">Standard Programme</p>
+                        <p className="text-sm text-gray-600 mt-1">Full EWA qualification programme with assessor support</p>
+                        <p className="text-sm font-medium text-blue-600 mt-2">
+                          From {formatCurrency(pricing.standardFull.total)} (full) or {formatCurrency(pricing.standardInstalments.initialPayment)} initial
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={() => handleInputChange("serviceOption", "gold")}
+                    className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
+                      formData.serviceOption === "gold"
+                        ? "border-amber-500 bg-amber-50"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-0.5 ${
+                        formData.serviceOption === "gold" ? "border-amber-500" : "border-gray-300"
+                      }`}>
+                        {formData.serviceOption === "gold" && (
+                          <div className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-semibold text-gray-900">Gold Service</p>
+                        <p className="text-sm text-gray-600 mt-1">Premium support with additional mentoring and expedited processing</p>
+                        <p className="text-sm font-medium text-amber-600 mt-2">
+                          From {formatCurrency(pricing.goldFull.total)} (full) or {formatCurrency(pricing.goldInstalments.initialPayment)} initial
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Payment Option */}
+              <div className="md:col-span-2">
+                <Label className="mb-3 block">Payment Option *</Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div
+                    onClick={() => handleInputChange("paymentOption", "full")}
+                    className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
+                      formData.paymentOption === "full"
+                        ? "border-green-500 bg-green-50"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-0.5 ${
+                        formData.paymentOption === "full" ? "border-green-500" : "border-gray-300"
+                      }`}>
+                        {formData.paymentOption === "full" && (
+                          <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-semibold text-gray-900">Full Payment</p>
+                        <p className="text-sm text-gray-600 mt-1">Pay in full and receive a discount</p>
+                        {formData.serviceOption && (
+                          <p className="text-sm font-medium text-green-600 mt-2">
+                            {formData.serviceOption === "standard"
+                              ? `${formatCurrency(pricing.standardFull.total)} (save ${formatCurrency(pricing.standardFull.discount)})`
+                              : `${formatCurrency(pricing.goldFull.total)} (save ${formatCurrency(pricing.goldFull.discount)})`}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={() => handleInputChange("paymentOption", "instalments")}
+                    className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
+                      formData.paymentOption === "instalments"
+                        ? "border-purple-500 bg-purple-50"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-0.5 ${
+                        formData.paymentOption === "instalments" ? "border-purple-500" : "border-gray-300"
+                      }`}>
+                        {formData.paymentOption === "instalments" && (
+                          <div className="w-2.5 h-2.5 rounded-full bg-purple-500" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-semibold text-gray-900">Instalments</p>
+                        <p className="text-sm text-gray-600 mt-1">Spread the cost with monthly payments</p>
+                        {formData.serviceOption && (
+                          <p className="text-sm font-medium text-purple-600 mt-2">
+                            {formData.serviceOption === "standard"
+                              ? `${formatCurrency(pricing.standardInstalments.initialPayment)} initial + ${pricing.standardInstalments.remainingPayments.length}x ${formatCurrency(500)}`
+                              : `${formatCurrency(pricing.goldInstalments.initialPayment)} initial + ${pricing.goldInstalments.remainingPayments.length}x ${formatCurrency(500)}`}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Pricing Summary */}
+              {formData.serviceOption && formData.paymentOption && (
+                <div className="md:col-span-2 bg-slate-50 border border-slate-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 mb-3">Pricing Summary</h4>
+                  {(() => {
+                    const pricingKey = getPricingKey(formData.serviceOption, formData.paymentOption)
+                    if (!pricingKey) return null
+                    const selectedPricing = pricing[pricingKey]
+
+                    if ("discount" in selectedPricing) {
+                      // Full payment
+                      return (
+                        <div className="space-y-2 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Programme Fee:</span>
+                            <span>{formatCurrency(selectedPricing.programmeFee)}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">EAL Registration Fee:</span>
+                            <span>{formatCurrency(selectedPricing.registrationFee)}</span>
+                          </div>
+                          <div className="flex justify-between text-green-600">
+                            <span>Discount:</span>
+                            <span>-{formatCurrency(selectedPricing.discount)}</span>
+                          </div>
+                          <div className="flex justify-between font-semibold text-lg pt-2 border-t border-slate-200">
+                            <span>Total:</span>
+                            <span>{formatCurrency(selectedPricing.total)}</span>
+                          </div>
+                        </div>
+                      )
+                    } else {
+                      // Instalments
+                      return (
+                        <div className="space-y-2 text-sm">
+                          <div className="flex justify-between font-medium">
+                            <span className="text-gray-900">Initial Payment (due now):</span>
+                            <span>{formatCurrency(selectedPricing.initialPayment)}</span>
+                          </div>
+                          <div className="pt-2 border-t border-slate-200">
+                            <p className="text-gray-600 mb-2">Remaining Payments:</p>
+                            {selectedPricing.remainingPayments.map((payment, idx) => (
+                              <div key={idx} className="flex justify-between text-gray-600">
+                                <span>Payment {idx + 2} ({payment.due}):</span>
+                                <span>{formatCurrency(payment.amount)}</span>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="flex justify-between font-semibold text-lg pt-2 border-t border-slate-200">
+                            <span>Total Programme Cost:</span>
+                            <span>{formatCurrency(selectedPricing.total)}</span>
+                          </div>
+                        </div>
+                      )
+                    }
+                  })()}
+                </div>
+              )}
+
               <div>
                 <Label htmlFor="preferredStartDate">Preferred Start Date</Label>
                 <Input
@@ -477,22 +733,6 @@ export default function CourseBookingPage() {
                   onChange={(e) => handleInputChange("preferredStartDate", e.target.value)}
                   className="mt-1"
                 />
-              </div>
-
-              <div>
-                <Label htmlFor="paymentOption">Payment Option</Label>
-                <select
-                  id="paymentOption"
-                  value={formData.paymentOption}
-                  onChange={(e) => handleInputChange("paymentOption", e.target.value)}
-                  className="mt-1 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                >
-                  <option value="">Select payment option</option>
-                  <option value="Self-funded">Self-funded</option>
-                  <option value="Employer-funded">Employer-funded</option>
-                  <option value="Payment plan">Payment plan (subject to approval)</option>
-                  <option value="To be discussed">To be discussed</option>
-                </select>
               </div>
 
               <div className="md:col-span-2">

@@ -3,6 +3,18 @@ import { NextResponse } from "next/server"
 import { encryptJSON } from "@/lib/encryption"
 import { uploadToSharePoint, isSharePointConfigured, createFolder } from "@/lib/sharepoint"
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib"
+import { 
+  createInvoiceFromBooking, 
+  generateInvoiceNumber,
+  formatDate as formatInvoiceDate,
+  type Invoice 
+} from "@/lib/invoice"
+import { 
+  getPricing, 
+  formatCurrency as formatPriceCurrency, 
+  bankDetails,
+  type PricingDetails
+} from "@/lib/pricing"
 
 interface CourseBookingData {
   // Section A - Candidate Details
@@ -24,8 +36,9 @@ interface CourseBookingData {
   // Section C - Course/Booking Details
   qualification: string
   route: string
+  serviceOption: "standard" | "gold"
+  paymentOption: "full" | "instalments"
   preferredStartDate: string
-  paymentOption: string
   notes: string
 
   // Section D - Declaration
@@ -33,6 +46,57 @@ interface CourseBookingData {
 
   // Section E - Digital Signature
   digitalSignature: string
+}
+
+// Pricing structure
+const pricing = {
+  standardFull: {
+    programmeFee: 2000,
+    registrationFee: 224,
+    discount: 112,
+    total: 2112,
+    description: "Standard Programme - Full Payment",
+  },
+  standardInstalments: {
+    initialPayment: 724,
+    remainingPayments: [
+      { amount: 500, due: "1 month after start" },
+      { amount: 500, due: "2 months after start" },
+      { amount: 500, due: "3 months after start" },
+    ],
+    total: 2224,
+    description: "Standard Programme - Instalments",
+  },
+  goldFull: {
+    programmeFee: 2500,
+    registrationFee: 224,
+    discount: 168,
+    total: 2556,
+    description: "Gold Service - Full Payment",
+  },
+  goldInstalments: {
+    initialPayment: 724,
+    remainingPayments: [
+      { amount: 500, due: "1 month after start" },
+      { amount: 500, due: "2 months after start" },
+      { amount: 500, due: "3 months after start" },
+      { amount: 500, due: "4 months after start" },
+    ],
+    total: 2724,
+    description: "Gold Service - Instalments",
+  },
+}
+
+function getPricingKey(serviceOption: string, paymentOption: string): keyof typeof pricing | null {
+  if (serviceOption === "standard" && paymentOption === "full") return "standardFull"
+  if (serviceOption === "standard" && paymentOption === "instalments") return "standardInstalments"
+  if (serviceOption === "gold" && paymentOption === "full") return "goldFull"
+  if (serviceOption === "gold" && paymentOption === "instalments") return "goldInstalments"
+  return null
+}
+
+function formatCurrency(amount: number): string {
+  return new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(amount)
 }
 
 function generateBookingId(): string {
@@ -297,10 +361,103 @@ async function generateBookingPDF(data: CourseBookingData, bookingId: string, su
   y -= 16
   drawField("Route", data.route)
   y -= 16
-  drawField("Preferred Start", formatDateDisplay(data.preferredStartDate))
+  drawField("Service Option", data.serviceOption === "gold" ? "Gold Service" : "Standard Programme")
   y -= 16
-  drawField("Payment Option", data.paymentOption || "To be discussed")
-  y -= 18
+  drawField("Payment Option", data.paymentOption === "full" ? "Full Payment" : "Instalments")
+  y -= 16
+  drawField("Preferred Start", formatDateDisplay(data.preferredStartDate))
+  y -= 20
+
+  // Pricing Summary Box
+  const pricingKey = getPricingKey(data.serviceOption, data.paymentOption)
+  if (pricingKey) {
+    const selectedPricing = pricing[pricingKey]
+    
+    page.drawRectangle({
+      x: 50,
+      y: y - 85,
+      width: width - 100,
+      height: 95,
+      color: rgb(0.97, 0.98, 1),
+      borderColor: rgb(0.12, 0.23, 0.37),
+      borderWidth: 1,
+    })
+
+    page.drawText("PRICING SUMMARY", {
+      x: 60,
+      y: y - 16,
+      size: 10,
+      font: helveticaBold,
+      color: rgb(0.12, 0.23, 0.37),
+    })
+
+    y -= 32
+
+    if ("discount" in selectedPricing) {
+      // Full payment pricing
+      page.drawText(`Programme Fee: ${formatCurrency(selectedPricing.programmeFee)}`, {
+        x: 60,
+        y,
+        size: 9,
+        font: helvetica,
+        color: rgb(0.3, 0.3, 0.3),
+      })
+      y -= 13
+      page.drawText(`EAL Registration: ${formatCurrency(selectedPricing.registrationFee)}`, {
+        x: 60,
+        y,
+        size: 9,
+        font: helvetica,
+        color: rgb(0.3, 0.3, 0.3),
+      })
+      y -= 13
+      page.drawText(`Discount: -${formatCurrency(selectedPricing.discount)}`, {
+        x: 60,
+        y,
+        size: 9,
+        font: helvetica,
+        color: rgb(0.02, 0.59, 0.41),
+      })
+      y -= 15
+      page.drawText(`Total Due: ${formatCurrency(selectedPricing.total)}`, {
+        x: 60,
+        y,
+        size: 11,
+        font: helveticaBold,
+        color: rgb(0.12, 0.23, 0.37),
+      })
+      y -= 22
+    } else {
+      // Instalments pricing
+      page.drawText(`Initial Payment (due now): ${formatCurrency(selectedPricing.initialPayment)}`, {
+        x: 60,
+        y,
+        size: 9,
+        font: helveticaBold,
+        color: rgb(0.3, 0.3, 0.3),
+      })
+      y -= 13
+      const remainingText = selectedPricing.remainingPayments.map((p, i) => `Payment ${i + 2}: ${formatCurrency(p.amount)}`).join(" | ")
+      page.drawText(`Remaining: ${remainingText}`, {
+        x: 60,
+        y,
+        size: 8,
+        font: helvetica,
+        color: rgb(0.4, 0.4, 0.4),
+      })
+      y -= 15
+      page.drawText(`Total Programme Cost: ${formatCurrency(selectedPricing.total)}`, {
+        x: 60,
+        y,
+        size: 11,
+        font: helveticaBold,
+        color: rgb(0.12, 0.23, 0.37),
+      })
+      y -= 22
+    }
+  }
+
+  y -= 10
 
   // Notes / Experience section with bordered box
   if (data.notes) {
@@ -474,6 +631,501 @@ async function generateBookingPDF(data: CourseBookingData, bookingId: string, su
   return pdfDoc.save()
 }
 
+async function generateInvoicePDF(invoice: Invoice): Promise<Uint8Array> {
+  const pdfDoc = await PDFDocument.create()
+  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
+  const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica)
+
+  const page = pdfDoc.addPage([595, 842]) // A4 size
+  const { width } = page.getSize()
+
+  let y = 800
+
+  // Header - Company Info
+  page.drawText("EWA TRACKER LTD", {
+    x: 50,
+    y,
+    size: 18,
+    font: helveticaBold,
+    color: rgb(0.12, 0.23, 0.37),
+  })
+
+  y -= 16
+  page.drawText("EAL Approved Centre", {
+    x: 50,
+    y,
+    size: 9,
+    font: helvetica,
+    color: rgb(0.4, 0.4, 0.4),
+  })
+
+  y -= 12
+  page.drawText("info@ewatracker.co.uk | 07828 893976", {
+    x: 50,
+    y,
+    size: 9,
+    font: helvetica,
+    color: rgb(0.5, 0.5, 0.5),
+  })
+
+  y -= 12
+  page.drawText("www.ewatracker.co.uk", {
+    x: 50,
+    y,
+    size: 9,
+    font: helvetica,
+    color: rgb(0.5, 0.5, 0.5),
+  })
+
+  // INVOICE badge on right
+  page.drawRectangle({
+    x: width - 130,
+    y: y + 30,
+    width: 80,
+    height: 28,
+    color: rgb(0.12, 0.23, 0.37),
+  })
+
+  page.drawText("INVOICE", {
+    x: width - 118,
+    y: y + 39,
+    size: 12,
+    font: helveticaBold,
+    color: rgb(1, 1, 1),
+  })
+
+  y -= 25
+
+  // Two column layout: Invoice To | Invoice Details
+  const leftColX = 50
+  const rightColX = 320
+
+  // Invoice To section
+  page.drawText("Invoice To", {
+    x: leftColX,
+    y,
+    size: 10,
+    font: helveticaBold,
+    color: rgb(0.12, 0.23, 0.37),
+  })
+
+  // Invoice Details section
+  page.drawText("Invoice Details", {
+    x: rightColX,
+    y,
+    size: 10,
+    font: helveticaBold,
+    color: rgb(0.12, 0.23, 0.37),
+  })
+
+  y -= 16
+
+  // Candidate name
+  page.drawText(invoice.candidateName, {
+    x: leftColX,
+    y,
+    size: 10,
+    font: helveticaBold,
+    color: rgb(0.2, 0.2, 0.2),
+  })
+
+  // Invoice number
+  page.drawText(`Invoice No: ${invoice.invoiceNumber}`, {
+    x: rightColX,
+    y,
+    size: 9,
+    font: helvetica,
+    color: rgb(0.3, 0.3, 0.3),
+  })
+
+  y -= 14
+
+  // Candidate email
+  page.drawText(invoice.candidateEmail, {
+    x: leftColX,
+    y,
+    size: 9,
+    font: helvetica,
+    color: rgb(0.3, 0.3, 0.3),
+  })
+
+  // Invoice date
+  page.drawText(`Invoice Date: ${formatInvoiceDate(invoice.invoiceDate)}`, {
+    x: rightColX,
+    y,
+    size: 9,
+    font: helvetica,
+    color: rgb(0.3, 0.3, 0.3),
+  })
+
+  y -= 14
+
+  // Qualification
+  page.drawText("EAL Level 3 Electrotechnical EWA", {
+    x: leftColX,
+    y,
+    size: 9,
+    font: helvetica,
+    color: rgb(0.3, 0.3, 0.3),
+  })
+
+  // Payment reference
+  page.drawText(`Payment Reference: ${invoice.paymentReference}`, {
+    x: rightColX,
+    y,
+    size: 9,
+    font: helvetica,
+    color: rgb(0.3, 0.3, 0.3),
+  })
+
+  y -= 25
+
+  // Programme section header
+  page.drawRectangle({
+    x: 50,
+    y: y - 4,
+    width: width - 100,
+    height: 18,
+    color: rgb(0.95, 0.97, 1),
+  })
+
+  page.drawText("Programme", {
+    x: 55,
+    y,
+    size: 10,
+    font: helveticaBold,
+    color: rgb(0.12, 0.23, 0.37),
+  })
+
+  y -= 20
+
+  // Programme description
+  const serviceLabel = invoice.serviceOption === "gold" ? "Gold Service" : "Standard Programme"
+  const routeText = `Route: Installation EWA (603/5982/1) - ${serviceLabel}`
+  
+  page.drawText("EAL Level 3 Electrotechnical Experienced Worker Qualification", {
+    x: 50,
+    y,
+    size: 9,
+    font: helvetica,
+    color: rgb(0.3, 0.3, 0.3),
+  })
+
+  y -= 12
+
+  page.drawText(routeText, {
+    x: 50,
+    y,
+    size: 9,
+    font: helvetica,
+    color: rgb(0.3, 0.3, 0.3),
+  })
+
+  y -= 25
+
+  // Line items table header
+  page.drawRectangle({
+    x: 50,
+    y: y - 18,
+    width: width - 100,
+    height: 22,
+    color: rgb(0.12, 0.23, 0.37),
+  })
+
+  page.drawText("Description", {
+    x: 60,
+    y: y - 12,
+    size: 9,
+    font: helveticaBold,
+    color: rgb(1, 1, 1),
+  })
+
+  page.drawText("Amount", {
+    x: width - 110,
+    y: y - 12,
+    size: 9,
+    font: helveticaBold,
+    color: rgb(1, 1, 1),
+  })
+
+  y -= 25
+
+  // Line items
+  for (const item of invoice.lineItems) {
+    page.drawText(item.description, {
+      x: 60,
+      y,
+      size: 9,
+      font: helvetica,
+      color: rgb(0.2, 0.2, 0.2),
+    })
+
+    page.drawText(`GBP ${item.amount.toFixed(2)}`, {
+      x: width - 115,
+      y,
+      size: 9,
+      font: helvetica,
+      color: rgb(0.2, 0.2, 0.2),
+    })
+
+    y -= 18
+  }
+
+  // Total Due Now box
+  y -= 5
+  page.drawRectangle({
+    x: 50,
+    y: y - 22,
+    width: width - 100,
+    height: 26,
+    color: rgb(0.12, 0.23, 0.37),
+  })
+
+  page.drawText("TOTAL DUE NOW", {
+    x: 60,
+    y: y - 15,
+    size: 10,
+    font: helveticaBold,
+    color: rgb(1, 1, 1),
+  })
+
+  page.drawText(`GBP ${invoice.amountDue.toFixed(2)}`, {
+    x: width - 120,
+    y: y - 15,
+    size: 10,
+    font: helveticaBold,
+    color: rgb(1, 1, 1),
+  })
+
+  y -= 40
+
+  // Instalment Payment Schedule (if applicable)
+  if (invoice.paymentOption === "instalments") {
+    page.drawText("Instalment Payment Schedule", {
+      x: 50,
+      y,
+      size: 10,
+      font: helveticaBold,
+      color: rgb(0.12, 0.23, 0.37),
+    })
+
+    y -= 18
+
+    // Schedule table header
+    page.drawRectangle({
+      x: 50,
+      y: y - 16,
+      width: width - 100,
+      height: 20,
+      color: rgb(0.95, 0.95, 0.95),
+    })
+
+    page.drawText("Payment", {
+      x: 60,
+      y: y - 10,
+      size: 8,
+      font: helveticaBold,
+      color: rgb(0.3, 0.3, 0.3),
+    })
+
+    page.drawText("Amount", {
+      x: 220,
+      y: y - 10,
+      size: 8,
+      font: helveticaBold,
+      color: rgb(0.3, 0.3, 0.3),
+    })
+
+    page.drawText("Due Date", {
+      x: 380,
+      y: y - 10,
+      size: 8,
+      font: helveticaBold,
+      color: rgb(0.3, 0.3, 0.3),
+    })
+
+    y -= 22
+
+    // Calculate instalment dates from invoice date
+    const invoiceDate = new Date(invoice.invoiceDate)
+    
+    // Initial payment
+    page.drawText("Initial payment", {
+      x: 60,
+      y,
+      size: 8,
+      font: helvetica,
+      color: rgb(0.2, 0.2, 0.2),
+    })
+    page.drawText(`GBP ${invoice.amountDue.toFixed(2)}`, {
+      x: 220,
+      y,
+      size: 8,
+      font: helvetica,
+      color: rgb(0.2, 0.2, 0.2),
+    })
+    page.drawText("Due on receipt", {
+      x: 380,
+      y,
+      size: 8,
+      font: helvetica,
+      color: rgb(0.2, 0.2, 0.2),
+    })
+    y -= 14
+
+    // Remaining instalments
+    const numInstalments = invoice.serviceOption === "gold" ? 4 : 3
+    for (let i = 1; i <= numInstalments; i++) {
+      const dueDate = new Date(invoiceDate)
+      dueDate.setMonth(dueDate.getMonth() + i)
+      
+      page.drawText(`Instalment ${i + 1}`, {
+        x: 60,
+        y,
+        size: 8,
+        font: helvetica,
+        color: rgb(0.2, 0.2, 0.2),
+      })
+      page.drawText("GBP 500.00", {
+        x: 220,
+        y,
+        size: 8,
+        font: helvetica,
+        color: rgb(0.2, 0.2, 0.2),
+      })
+      page.drawText(formatInvoiceDate(dueDate.toISOString()), {
+        x: 380,
+        y,
+        size: 8,
+        font: helvetica,
+        color: rgb(0.2, 0.2, 0.2),
+      })
+      y -= 14
+    }
+
+    y -= 10
+  }
+
+  // Bank Transfer Details section
+  page.drawText("Bank Transfer Details", {
+    x: 50,
+    y,
+    size: 10,
+    font: helveticaBold,
+    color: rgb(0.12, 0.23, 0.37),
+  })
+
+  y -= 18
+
+  page.drawText(`Account Name: ${bankDetails.accountName}`, {
+    x: 50,
+    y,
+    size: 9,
+    font: helvetica,
+    color: rgb(0.2, 0.2, 0.2),
+  })
+
+  y -= 14
+
+  page.drawText(`Sort Code: ${bankDetails.sortCode}`, {
+    x: 50,
+    y,
+    size: 9,
+    font: helvetica,
+    color: rgb(0.2, 0.2, 0.2),
+  })
+
+  page.drawText(`Account Number: ${bankDetails.accountNumber}`, {
+    x: 200,
+    y,
+    size: 9,
+    font: helvetica,
+    color: rgb(0.2, 0.2, 0.2),
+  })
+
+  y -= 14
+
+  page.drawText(`Reference: ${invoice.paymentReference}`, {
+    x: 50,
+    y,
+    size: 9,
+    font: helveticaBold,
+    color: rgb(0.12, 0.23, 0.37),
+  })
+
+  y -= 25
+
+  // Notes section
+  page.drawText("Notes", {
+    x: 50,
+    y,
+    size: 10,
+    font: helveticaBold,
+    color: rgb(0.12, 0.23, 0.37),
+  })
+
+  y -= 16
+
+  const notes = [
+    "- Initial payment is required before registration/onboarding is processed.",
+    "- Onboarding and pre-registration activities may include finalising the Skills Scan and Candidate",
+    "  Background Form, verifying certificates, and arranging/completing the Technical Discussion.",
+    "- Formal assessment activity and portfolio assessment can only begin once the candidate has",
+    "  been registered with EAL.",
+    "- The Technical Discussion is recorded and retained for EQA purposes.",
+  ]
+
+  // Add service-specific note
+  if (invoice.serviceOption === "gold") {
+    notes.push("- Gold Service includes 4 observations: 1 face-to-face and 3 remote video observations.")
+  } else {
+    notes.push("- Standard Programme includes 3 observations: 1 face-to-face and 2 remote video observations.")
+  }
+
+  // Add instalment note if applicable
+  if (invoice.paymentOption === "instalments") {
+    notes.push("- Continued programme access and assessment support are subject to instalments being")
+    notes.push("  paid by the agreed due dates.")
+  }
+
+  for (const note of notes) {
+    page.drawText(note, {
+      x: 50,
+      y,
+      size: 8,
+      font: helvetica,
+      color: rgb(0.3, 0.3, 0.3),
+    })
+    y -= 11
+  }
+
+  // Footer
+  page.drawLine({
+    start: { x: 50, y: 50 },
+    end: { x: width - 50, y: 50 },
+    thickness: 0.5,
+    color: rgb(0.8, 0.8, 0.8),
+  })
+
+  page.drawText("EWA Tracker Ltd | EAL Approved Centre | www.ewatracker.co.uk", {
+    x: 50,
+    y: 38,
+    size: 8,
+    font: helvetica,
+    color: rgb(0.6, 0.6, 0.6),
+  })
+
+  page.drawText("Thank you for your business", {
+    x: width - 150,
+    y: 38,
+    size: 8,
+    font: helveticaBold,
+    color: rgb(0.12, 0.23, 0.37),
+  })
+
+  return pdfDoc.save()
+}
+
 export async function POST(request: Request) {
   try {
     const body: CourseBookingData = await request.json()
@@ -521,14 +1173,28 @@ export async function POST(request: Request) {
       { access: "public", contentType: "text/plain" }
     )
 
+    // Calculate pricing for metadata
+    const pricingKey = getPricingKey(body.serviceOption, body.paymentOption)
+    const selectedPricing = pricingKey ? pricing[pricingKey] : null
+    const invoiceAmount = selectedPricing 
+      ? ("initialPayment" in selectedPricing ? selectedPricing.initialPayment : selectedPricing.total)
+      : 0
+    const totalAmount = selectedPricing?.total || 0
+
     // Store metadata file for admin listing
     const metadata = {
       id: bookingId,
       candidateName: body.fullName,
       email: body.email,
+      phone: body.contactNumber,
       qualification: body.qualification,
       route: body.route,
+      serviceOption: body.serviceOption,
+      paymentOption: body.paymentOption,
       preferredStartDate: body.preferredStartDate,
+      invoiceAmount,
+      totalAmount,
+      status: "pending" as const,
       submittedAt,
     }
 
@@ -547,6 +1213,9 @@ export async function POST(request: Request) {
     let sharePointPdfUrl: string | undefined
     let sharePointJsonUrl: string | undefined
 
+    // Generate safe filename from candidate name
+    const safeName = body.fullName.replace(/[^a-zA-Z0-9]/g, "-").substring(0, 30)
+
     if (isSharePointConfigured()) {
       try {
         // Generate PDF
@@ -557,7 +1226,6 @@ export async function POST(request: Request) {
         await createFolder(folderPath)
 
         // Generate filenames
-        const safeName = body.fullName.replace(/[^a-zA-Z0-9]/g, "-").substring(0, 30)
         const pdfFileName = `Course-Booking-Form-${safeName}-${dateStr}.pdf`
         const jsonFileName = `Course-Booking-Form-${safeName}-${dateStr}.json`
 
@@ -598,11 +1266,88 @@ export async function POST(request: Request) {
       console.log("SharePoint not configured, skipping upload")
     }
 
+    // Generate and upload invoice automatically
+    let invoiceId: string | undefined
+    let invoiceNumber: string | undefined
+    let sharePointInvoiceUrl: string | undefined
+
+    
+
+    try {
+      // Get pricing details
+      const pricingDetails = getPricing(body.serviceOption as "standard" | "gold", body.paymentOption as "full" | "instalments")
+      
+      if (pricingDetails) {
+        // Create invoice
+        const invoice = createInvoiceFromBooking(
+          bookingId,
+          body.fullName,
+          body.email,
+          body.contactNumber,
+          body.homeAddress,
+          body.qualification,
+          body.serviceOption,
+          body.paymentOption,
+          pricingDetails,
+          1 // First payment
+        )
+
+        invoiceId = invoice.id
+        invoiceNumber = invoice.invoiceNumber
+
+        // Generate invoice PDF
+        const invoicePdfBytes = await generateInvoicePDF(invoice)
+
+        // Store invoice in Blob
+        const encryptedInvoice = encryptJSON(invoice)
+        await put(
+          `invoices/${invoice.id}/invoice.enc`,
+          encryptedInvoice,
+          { access: "public", contentType: "text/plain" }
+        )
+
+        // Upload invoice to SharePoint if configured
+        if (isSharePointConfigured()) {
+          try {
+            // Create Invoices folder structure: Invoices/YYYY-MM
+            const invoiceFolderPath = `Invoices/${dateStr.substring(0, 7)}`
+            await createFolder(invoiceFolderPath)
+
+            const invoiceFileName = `Invoice-${invoice.invoiceNumber}-${safeName}.pdf`
+
+            const invoiceResult = await uploadToSharePoint(
+              invoiceFolderPath,
+              invoiceFileName,
+              Buffer.from(invoicePdfBytes),
+              "application/pdf"
+            )
+
+            if (invoiceResult.success) {
+              sharePointInvoiceUrl = invoiceResult.url
+              console.log("Successfully uploaded invoice to SharePoint:", sharePointInvoiceUrl)
+} else {
+        console.error("SharePoint invoice upload failed:", invoiceResult.error)
+      }
+    } catch (invoiceError) {
+      console.error("Invoice SharePoint upload error:", invoiceError)
+    }
+  }
+
+  console.log(`Invoice ${invoiceNumber} generated for booking ${bookingId}`)
+      }
+    } catch (invoiceError) {
+      console.error("Invoice generation error:", invoiceError)
+      // Don't fail the submission if invoice generation fails
+    }
+
     return NextResponse.json({
       ok: true,
       bookingId,
+      invoiceId,
+      invoiceNumber,
       sharePointPdfUrl,
       sharePointJsonUrl,
+      sharePointInvoiceUrl,
       message: "Booking form submitted successfully",
     })
   } catch (error) {
