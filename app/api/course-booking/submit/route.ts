@@ -1172,9 +1172,15 @@ export async function POST(request: Request) {
     let invoiceNumber: string | undefined
     let sharePointInvoiceUrl: string | undefined
 
+    console.log("[v0] Invoice generation starting...")
+    console.log("[v0] Service option:", body.serviceOption)
+    console.log("[v0] Payment option:", body.paymentOption)
+
     try {
       // Get pricing details
-      const pricingDetails = getPricing(body.serviceOption, body.paymentOption)
+      const pricingDetails = getPricing(body.serviceOption as "standard" | "gold", body.paymentOption as "full" | "instalments")
+      
+      console.log("[v0] Pricing details:", pricingDetails ? "found" : "not found")
       
       if (pricingDetails) {
         // Create invoice
@@ -1193,9 +1199,11 @@ export async function POST(request: Request) {
 
         invoiceId = invoice.id
         invoiceNumber = invoice.invoiceNumber
+        console.log("[v0] Invoice created:", invoiceNumber, "ID:", invoiceId)
 
         // Generate invoice PDF
         const invoicePdfBytes = await generateInvoicePDF(invoice)
+        console.log("[v0] Invoice PDF generated, size:", invoicePdfBytes.length, "bytes")
 
         // Store invoice in Blob
         const encryptedInvoice = encryptJSON(invoice)
@@ -1206,11 +1214,14 @@ export async function POST(request: Request) {
         )
 
         // Upload invoice to SharePoint if configured
+        console.log("[v0] SharePoint configured:", isSharePointConfigured())
         if (isSharePointConfigured()) {
           try {
             // Create Invoices folder structure: Invoices/YYYY-MM
             const invoiceFolderPath = `Invoices/${dateStr.substring(0, 7)}`
+            console.log("[v0] Creating invoice folder:", invoiceFolderPath)
             await createFolder(invoiceFolderPath)
+            console.log("[v0] Invoice folder created successfully")
 
             const invoiceFileName = `Invoice-${invoice.invoiceNumber}-${safeName}.pdf`
 
@@ -1224,18 +1235,22 @@ export async function POST(request: Request) {
             if (invoiceResult.success) {
               sharePointInvoiceUrl = invoiceResult.url
               console.log("Successfully uploaded invoice to SharePoint:", sharePointInvoiceUrl)
-            } else {
-              console.error("SharePoint invoice upload failed:", invoiceResult.error)
-            }
-          } catch (invoiceError) {
-            console.error("Invoice SharePoint upload error:", invoiceError)
-          }
-        }
-
-        console.log(`Invoice ${invoiceNumber} generated for booking ${bookingId}`)
+} else {
+        console.error("[v0] SharePoint invoice upload failed:", invoiceResult.error)
       }
     } catch (invoiceError) {
-      console.error("Invoice generation error:", invoiceError)
+      console.error("[v0] Invoice SharePoint upload error:", invoiceError)
+    }
+  } else {
+    console.log("[v0] SharePoint not configured for invoice upload")
+  }
+
+  console.log(`[v0] Invoice ${invoiceNumber} generated for booking ${bookingId}`)
+      } else {
+        console.log("[v0] No pricing details found - invoice not generated")
+      }
+    } catch (invoiceError) {
+      console.error("[v0] Invoice generation error:", invoiceError)
       // Don't fail the submission if invoice generation fails
     }
 
