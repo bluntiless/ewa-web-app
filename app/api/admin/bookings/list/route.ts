@@ -5,8 +5,6 @@ import { list } from "@vercel/blob"
 import { decryptJSON } from "@/lib/encryption"
 import type { BookingMetadata } from "@/lib/booking-types"
 
-export type { BookingStatus, BookingMetadata } from "@/lib/booking-types"
-
 export async function GET() {
   try {
     const session = await getServerSession(authOptions)

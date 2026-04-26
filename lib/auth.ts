@@ -1,6 +1,6 @@
 import type { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import bcrypt from "bcryptjs"
+import { compare } from "bcryptjs"
 
 // In production, store this in environment variables
 const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH || ""
@@ -25,7 +25,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         // Verify password against hash
-        const isValidPassword = await bcrypt.compare(
+        const isValidPassword = await compare(
           credentials.password,
           ADMIN_PASSWORD_HASH
         )
