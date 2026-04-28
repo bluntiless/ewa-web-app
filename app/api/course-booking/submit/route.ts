@@ -1079,7 +1079,7 @@ async function generateInvoicePDF(invoice: Invoice): Promise<Uint8Array> {
   if (invoice.serviceOption === "gold") {
     notes.push("- Gold Service includes 4 observations: 1 face-to-face and 3 remote video observations.")
   } else {
-    notes.push("- Standard Programme includes 3 observations: 1 face-to-face and 2 remote video observations.")
+    notes.push("- Standard Programme includes 2 observations: 1 face-to-face and 1 remote video observation.")
   }
 
   // Add instalment note if applicable
