@@ -18,8 +18,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Candidate name and email are required" }, { status: 400 })
     }
 
-    // Validate it's a PDF
-    if (!pdfFile.type.includes("pdf")) {
+    // Validate it's a PDF - check both MIME type and file extension
+    const isPdf = pdfFile.type === "application/pdf" || 
+                  pdfFile.type.includes("pdf") || 
+                  pdfFile.name.toLowerCase().endsWith(".pdf")
+    if (!isPdf) {
       return NextResponse.json({ error: "File must be a PDF" }, { status: 400 })
     }
 
