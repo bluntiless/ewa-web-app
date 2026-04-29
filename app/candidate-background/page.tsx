@@ -56,7 +56,11 @@ export default function CandidateBackgroundPage() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      if (file.type === "application/pdf") {
+      // Check both MIME type and file extension for PDF
+      const isPdf = file.type === "application/pdf" || 
+                    file.type.includes("pdf") || 
+                    file.name.toLowerCase().endsWith(".pdf")
+      if (isPdf) {
         setSelectedFile(file)
         setUploadStatus(null)
         setErrorMessage("")
@@ -85,7 +89,7 @@ export default function CandidateBackgroundPage() {
 
     try {
       const formData = new FormData()
-      formData.append("file", selectedFile)
+      formData.append("pdf", selectedFile)
       formData.append("candidateName", candidateName)
       formData.append("email", email)
       formData.append("formType", "candidate-background")
