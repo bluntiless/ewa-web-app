@@ -20,16 +20,33 @@ export default function SiteHeader() {
   return (
     <header className="relative z-50 w-full bg-white shadow-sm py-4 px-6 md:px-8 lg:px-12">
       <div className="flex justify-between items-center">
-        <Link href="/">
-          <Image
-            src="/ewa_logo.png"
-            alt="EWA Tracker Logo"
-            width={120}
-            height={40}
-            className="object-contain w-[120px] h-auto"
-            priority
-          />
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link href="/">
+            <Image
+              src="/ewa_logo_new.png"
+              alt="EWA Tracker Logo"
+              width={50}
+              height={50}
+              className="object-contain w-[50px] h-auto"
+              priority
+            />
+          </Link>
+          <div className="h-8 w-px bg-gray-300" />
+          <a 
+            href="https://eal.org.uk" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="hover:opacity-80 transition-opacity"
+          >
+            <Image
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/EAL_Recognised_Logo_Col_300dpi-OQe79dzdNJ1lbYzo5bBHlOjjdRjIhQ.png"
+              alt="EAL Recognised Centre"
+              width={60}
+              height={40}
+              className="object-contain h-10 w-auto"
+            />
+          </a>
+        </div>
 
         {/* Desktop navigation */}
         <nav className="hidden md:flex gap-6">
