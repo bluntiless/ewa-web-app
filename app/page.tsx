@@ -30,12 +30,12 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-blue-700 to-blue-900 text-white py-20 md:py-28 lg:py-36 overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 opacity-15">
           <Image
-            src="/electrical-images/ewa-advert.png"
+            src="/electrical-images/electrician-hero.jpg"
             alt=""
             fill
-            className="object-cover mix-blend-multiply"
+            className="object-cover object-left mix-blend-multiply"
           />
         </div>
         <div className="max-w-6xl mx-auto px-4 relative z-10 text-center">
