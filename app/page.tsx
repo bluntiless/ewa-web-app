@@ -39,14 +39,24 @@ export default function HomePage() {
           />
         </div>
         <div className="max-w-6xl mx-auto px-4 relative z-10 text-center">
-          <Image
-            src="/ewa_logo.png"
-            alt="EWA Tracker Logo"
-            width={250}
-            height={100}
-            className="mx-auto mb-8 drop-shadow-lg w-[250px] h-auto"
-            priority
-          />
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-8">
+            <Image
+              src="/ewa_logo.png"
+              alt="EWA Tracker Logo"
+              width={250}
+              height={100}
+              className="drop-shadow-lg w-[250px] h-auto"
+              priority
+            />
+            <div className="hidden sm:block w-px h-16 bg-white/30" />
+            <Image
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/EAL_Recognised_Logo_Col_300dpi-OQe79dzdNJ1lbYzo5bBHlOjjdRjIhQ.png"
+              alt="EAL Recognised Centre"
+              width={100}
+              height={67}
+              className="drop-shadow-lg h-16 w-auto"
+            />
+          </div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
             EWA Assessment & ECS Gold Card Route
           </h1>
