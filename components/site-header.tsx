@@ -23,11 +23,11 @@ export default function SiteHeader() {
         <div className="flex items-center gap-3">
           <Link href="/">
             <Image
-              src="/ewa_logo.png"
+              src="/ewa_logo_new.png"
               alt="EWA Tracker Logo"
-              width={120}
-              height={40}
-              className="object-contain w-[120px] h-auto"
+              width={50}
+              height={50}
+              className="object-contain w-[50px] h-auto"
               priority
             />
           </Link>

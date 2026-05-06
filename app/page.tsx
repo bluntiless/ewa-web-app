@@ -40,11 +40,11 @@ export default function HomePage() {
         </div>
         <div className="max-w-6xl mx-auto px-4 relative z-10 text-center">
           <Image
-            src="/ewa_logo.png"
+            src="/ewa_logo_new.png"
             alt="EWA Tracker Logo"
-            width={250}
-            height={100}
-            className="mx-auto mb-8 drop-shadow-lg w-[250px] h-auto"
+            width={180}
+            height={180}
+            className="mx-auto mb-8 drop-shadow-lg w-[180px] h-auto"
             priority
           />
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
