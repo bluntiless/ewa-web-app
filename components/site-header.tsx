@@ -9,6 +9,7 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About Us" },
   { href: "/services", label: "Services" },
+  { href: "/assessment-iqa-services", label: "Assessment & IQA" },
   { href: "/policies", label: "Policies" },
   { href: "/contact", label: "Contact" },
 ]
