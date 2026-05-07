@@ -241,6 +241,24 @@ export default function HomePage() {
                     <div className="bg-black rounded-[1.5rem] overflow-hidden">
                       <div className="relative aspect-[9/19.5]">
                         <Image
+                          src="/app-screenshots/qualifications.png"
+                          alt="Choose Your Route"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-center mt-3 text-xs text-gray-400">Choose Route</p>
+              </div>
+
+              <div className="flex-shrink-0 snap-center">
+                <div className="relative w-[160px]">
+                  <div className="bg-gray-900 rounded-[2rem] p-1.5 shadow-xl">
+                    <div className="bg-black rounded-[1.5rem] overflow-hidden">
+                      <div className="relative aspect-[9/19.5]">
+                        <Image
                           src="/app-screenshots/units-overview.png"
                           alt="Unit Progress"
                           fill
@@ -250,7 +268,7 @@ export default function HomePage() {
                     </div>
                   </div>
                 </div>
-                <p className="text-center mt-3 text-xs text-gray-400">Unit Progress</p>
+                <p className="text-center mt-3 text-xs font-medium text-gray-600">Unit Progress</p>
               </div>
 
               <div className="flex-shrink-0 snap-center">
@@ -259,8 +277,8 @@ export default function HomePage() {
                     <div className="bg-black rounded-[1.5rem] overflow-hidden">
                       <div className="relative aspect-[9/19.5]">
                         <Image
-                          src="/app-screenshots/qualifications.png"
-                          alt="Qualifications Overview"
+                          src="/app-screenshots/evidence-hints.png"
+                          alt="Evidence Hints"
                           fill
                           className="object-cover"
                         />
@@ -268,7 +286,7 @@ export default function HomePage() {
                     </div>
                   </div>
                 </div>
-                <p className="text-center mt-3 text-xs font-medium text-gray-600">Qualifications</p>
+                <p className="text-center mt-3 text-xs text-gray-400">Evidence Hints</p>
               </div>
 
               <div className="flex-shrink-0 snap-center">
@@ -288,13 +306,50 @@ export default function HomePage() {
                 </div>
                 <p className="text-center mt-3 text-xs text-gray-400">Upload Evidence</p>
               </div>
+
+              <div className="flex-shrink-0 snap-center">
+                <div className="relative w-[160px]">
+                  <div className="bg-gray-900 rounded-[2rem] p-1.5 shadow-xl">
+                    <div className="bg-black rounded-[1.5rem] overflow-hidden">
+                      <div className="relative aspect-[9/19.5]">
+                        <Image
+                          src="/app-screenshots/dashboard.png"
+                          alt="Assessor Dashboard"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-center mt-3 text-xs text-gray-400">Assessor Dashboard</p>
+              </div>
             </div>
 
-            {/* Desktop view - tilted 3-phone display */}
-            <div className="hidden md:flex justify-center items-end gap-8">
-              {/* Left phone - tilted */}
-              <div className="transform -rotate-6 translate-y-8">
-                <div className="relative w-[180px]">
+            {/* Desktop view - 5-phone display */}
+            <div className="hidden md:flex justify-center items-end gap-4 lg:gap-6">
+              {/* Far left phone */}
+              <div className="transform -rotate-6 translate-y-12 opacity-80">
+                <div className="relative w-[130px] lg:w-[150px]">
+                  <div className="bg-gray-900 rounded-[2rem] p-1.5 shadow-xl">
+                    <div className="bg-black rounded-[1.5rem] overflow-hidden">
+                      <div className="relative aspect-[9/19.5]">
+                        <Image
+                          src="/app-screenshots/qualifications.png"
+                          alt="Choose Route"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-center mt-3 text-xs text-gray-400">Choose Route</p>
+              </div>
+
+              {/* Left phone */}
+              <div className="transform -rotate-3 translate-y-6">
+                <div className="relative w-[150px] lg:w-[170px]">
                   <div className="bg-gray-900 rounded-[2.5rem] p-2 shadow-2xl">
                     <div className="bg-black rounded-[2rem] overflow-hidden">
                       <div className="relative aspect-[9/19.5]">
@@ -308,18 +363,18 @@ export default function HomePage() {
                     </div>
                   </div>
                 </div>
-                <p className="text-center mt-4 text-xs text-gray-400">Unit Progress</p>
+                <p className="text-center mt-3 text-xs text-gray-400">Unit Progress</p>
               </div>
 
               {/* Center phone - main focus */}
               <div className="relative z-10">
-                <div className="relative w-[260px]">
+                <div className="relative w-[200px] lg:w-[220px]">
                   <div className="bg-gray-900 rounded-[2.5rem] p-2 shadow-2xl ring-1 ring-gray-800">
                     <div className="bg-black rounded-[2rem] overflow-hidden">
                       <div className="relative aspect-[9/19.5]">
                         <Image
-                          src="/app-screenshots/qualifications.png"
-                          alt="Qualifications Overview"
+                          src="/app-screenshots/evidence-hints.png"
+                          alt="Evidence Hints & Examples"
                           fill
                           className="object-cover"
                         />
@@ -327,12 +382,12 @@ export default function HomePage() {
                     </div>
                   </div>
                 </div>
-                <p className="text-center mt-4 text-sm font-medium text-gray-600">Qualifications</p>
+                <p className="text-center mt-3 text-sm font-medium text-gray-600">Evidence Hints</p>
               </div>
 
-              {/* Right phone - tilted */}
-              <div className="transform rotate-6 translate-y-8">
-                <div className="relative w-[180px]">
+              {/* Right phone */}
+              <div className="transform rotate-3 translate-y-6">
+                <div className="relative w-[150px] lg:w-[170px]">
                   <div className="bg-gray-900 rounded-[2.5rem] p-2 shadow-2xl">
                     <div className="bg-black rounded-[2rem] overflow-hidden">
                       <div className="relative aspect-[9/19.5]">
@@ -346,7 +401,26 @@ export default function HomePage() {
                     </div>
                   </div>
                 </div>
-                <p className="text-center mt-4 text-xs text-gray-400">Upload Evidence</p>
+                <p className="text-center mt-3 text-xs text-gray-400">Upload Evidence</p>
+              </div>
+
+              {/* Far right phone */}
+              <div className="transform rotate-6 translate-y-12 opacity-80">
+                <div className="relative w-[130px] lg:w-[150px]">
+                  <div className="bg-gray-900 rounded-[2rem] p-1.5 shadow-xl">
+                    <div className="bg-black rounded-[1.5rem] overflow-hidden">
+                      <div className="relative aspect-[9/19.5]">
+                        <Image
+                          src="/app-screenshots/dashboard.png"
+                          alt="Assessor Dashboard"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-center mt-3 text-xs text-gray-400">Assessor View</p>
               </div>
             </div>
           </div>
@@ -373,13 +447,20 @@ export default function HomePage() {
           </div>
 
           {/* Feature Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6 mb-16">
             <div className="text-center">
               <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-3">
                 <Lightbulb className="w-5 h-5 text-blue-600" />
               </div>
               <h4 className="text-sm font-semibold text-gray-900 mb-1">Progress Tracking</h4>
               <p className="text-xs text-gray-400">Monitor completion across all units</p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <Info className="w-5 h-5 text-amber-600" />
+              </div>
+              <h4 className="text-sm font-semibold text-gray-900 mb-1">Evidence Hints</h4>
+              <p className="text-xs text-gray-400">Guidance on what evidence to upload per criteria</p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-3">
@@ -396,8 +477,8 @@ export default function HomePage() {
               <p className="text-xs text-gray-400">Enterprise-grade cloud storage</p>
             </div>
             <div className="text-center">
-              <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <Info className="w-5 h-5 text-amber-600" />
+              <div className="w-12 h-12 bg-rose-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <CheckCircle className="w-5 h-5 text-rose-600" />
               </div>
               <h4 className="text-sm font-semibold text-gray-900 mb-1">Assessor Feedback</h4>
               <p className="text-xs text-gray-400">Real-time approval status</p>
