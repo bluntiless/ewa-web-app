@@ -43,14 +43,6 @@ export default function SiteFooter() {
           >
             Instagram
           </a>
-          <a
-            href="https://github.com/ewatracker"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-400 hover:text-white transition-colors"
-          >
-            GitHub
-          </a>
         </div>
       </div>
     </footer>
