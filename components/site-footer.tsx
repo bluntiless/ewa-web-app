@@ -36,6 +36,14 @@ export default function SiteFooter() {
             LinkedIn
           </a>
           <a
+            href="https://www.instagram.com/ewa_tracker_ltd/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-white transition-colors"
+          >
+            Instagram
+          </a>
+          <a
             href="https://twitter.com/ewatracker"
             target="_blank"
             rel="noopener noreferrer"
