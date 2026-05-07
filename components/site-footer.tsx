@@ -28,20 +28,12 @@ export default function SiteFooter() {
         <p className="mt-2 text-sm">Registered in England and Wales. Company No. 16413190.</p>
         <div className="flex justify-center gap-4 mt-4">
           <a
-            href="https://linkedin.com/company/ewatracker"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-400 hover:text-white transition-colors"
-          >
-            LinkedIn (Company)
-          </a>
-          <a
             href="https://www.linkedin.com/in/wayne-wright-99649075"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-400 hover:text-white transition-colors"
           >
-            LinkedIn (Wayne Wright)
+            LinkedIn
           </a>
           <a
             href="https://www.instagram.com/ewa_tracker_ltd/"
