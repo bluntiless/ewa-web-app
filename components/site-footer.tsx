@@ -33,23 +33,23 @@ export default function SiteFooter() {
             rel="noopener noreferrer"
             className="text-gray-400 hover:text-white transition-colors"
           >
-            LinkedIn
+            LinkedIn (Company)
           </a>
           <a
-            href="https://twitter.com/ewatracker"
+            href="https://www.linkedin.com/in/wayne-wright-99649075"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-400 hover:text-white transition-colors"
           >
-            Twitter
+            LinkedIn (Wayne Wright)
           </a>
           <a
-            href="https://github.com/ewatracker"
+            href="https://www.instagram.com/ewa_tracker_ltd/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-400 hover:text-white transition-colors"
           >
-            GitHub
+            Instagram
           </a>
         </div>
       </div>
