@@ -33,7 +33,15 @@ export default function SiteFooter() {
             rel="noopener noreferrer"
             className="text-gray-400 hover:text-white transition-colors"
           >
-            LinkedIn
+            LinkedIn (Company)
+          </a>
+          <a
+            href="https://www.linkedin.com/in/wayne-wright-99649075"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-white transition-colors"
+          >
+            LinkedIn (Wayne Wright)
           </a>
           <a
             href="https://www.instagram.com/ewa_tracker_ltd/"
