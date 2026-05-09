@@ -555,8 +555,39 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section className="py-16 md:py-20 bg-gray-50">
+{/* 2365 Revision Tool Promo */}
+        <div className="max-w-4xl mx-auto px-4 mb-16">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-6 md:p-8 shadow-lg">
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              <div className="flex-shrink-0">
+                <Image
+                  src="/revision/icon-192.png"
+                  alt="2365 Revision App"
+                  width={100}
+                  height={100}
+                  className="rounded-2xl shadow-md"
+                />
+              </div>
+              <div className="flex-1 text-center md:text-left">
+                <h3 className="text-xl md:text-2xl font-bold text-white mb-2">Free 2365 Revision Tool</h3>
+                <p className="text-blue-100 mb-4">
+                  Mobile-friendly revision app with Ohm&apos;s Law calculator, AC theory formulas, safety guidance, and flashcard quizzes. Add it to your home screen for offline access.
+                </p>
+                <a
+                  href="/revision"
+                  className="inline-flex items-center gap-2 bg-white text-blue-700 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                  Open Revision Tool
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Pricing Section */}
         <div className="max-w-5xl mx-auto px-4">
           <div className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">Pricing</h2>
