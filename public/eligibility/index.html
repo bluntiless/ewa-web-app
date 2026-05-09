@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>EWA Eligibility & Qualification Checker | EWA Tracker Ltd</title>
+
+<meta name="description" content="Interactive EWA eligibility checker for electricians looking to achieve the ECS Gold Card through the EAL Electrotechnical Experienced Worker Assessment route.">
+
+<style>
+
+body{
+    margin:0;
+    padding:30px;
+    background:#f2f5f9;
+    font-family:Arial, Helvetica, sans-serif;
+    color:#222;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    background:white;
+    border-radius:16px;
+    padding:35px;
+    box-shadow:0 10px 35px rgba(0,0,0,0.12);
+}
+
+h1{
+    text-align:center;
+    color:#003b75;
+    margin-bottom:5px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#666;
+    margin-bottom:35px;
+}
+
+.section{
+    margin-bottom:35px;
+}
+
+.section h2{
+    color:#003b75;
+    border-bottom:2px solid #eef2f7;
+    padding-bottom:10px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+}
+
+label{
+    font-weight:bold;
+    margin-bottom:8px;
+    color:#003b75;
+}
+
+input,
+select{
+    padding:14px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:15px;
+    background:white;
+}
+
+button{
+    background:#003b75;
+    color:white;
+    border:none;
+    padding:16px 22px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:16px;
+    margin-top:25px;
+    width:100%;
+    font-weight:bold;
+}
+
+button:hover{
+    background:#002852;
+}
+
+.output{
+    display:none;
+    margin-top:40px;
+    background:#f8fbff;
+    border-left:6px solid #003b75;
+    padding:30px;
+    border-radius:12px;
+}
+
+.result{
+    font-size:34px;
+    font-weight:bold;
+    margin:20px 0;
+}
+
+.green{
+    color:#2e8b57;
+}
+
+.orange{
+    color:#d17b00;
+}
+
+.red{
+    color:#c00000;
+}
+
+.box{
+    padding:16px;
+    border-radius:10px;
+    margin-top:15px;
+    line-height:1.6;
+}
+
+.greenBox{
+    background:#e8f7e8;
+    border-left:5px solid #2e8b57;
+}
+
+.orangeBox{
+    background:#fff4df;
+    border-left:5px solid #ff9800;
+}
+
+.redBox{
+    background:#ffe5e5;
+    border-left:5px solid #d40000;
+}
+
+pre{
+    background:#eef5ff;
+    padding:20px;
+    border-radius:10px;
+    white-space:pre-wrap;
+    overflow-x:auto;
+}
+
+.disclaimer{
+    background:#eef5ff;
+    border-left:5px solid #003b75;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:30px;
+}
+
+.footer{
+    text-align:center;
+    color:#666;
+    margin-top:40px;
+    font-size:14px;
+}
+
+@media(max-width:850px){
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    body{
+        padding:15px;
+    }
+
+    .container{
+        padding:20px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>EWA Eligibility & Qualification Checker</h1>
+
+<p class="subtitle">
+EWA Tracker Ltd — ECS Gold Card Route Guidance Tool
+</p>
+
+<div class="disclaimer">
+This tool provides an initial guidance assessment only and does not guarantee EAL approval or certification eligibility. Final suitability is dependent on evidence review, qualification mapping, EAL requirements, and EQA guidance.
+</div>
+
+<div class="section">
+
+<h2>Candidate Details</h2>
+
+<div class="grid">
+
+<div class="field">
+<label>Full Name</label>
+<input type="text" id="name">
+</div>
+
+<div class="field">
+<label>Email Address</label>
+<input type="email" id="email">
+</div>
+
+<div class="field">
+<label>Phone Number</label>
+<input type="text" id="phone">
+</div>
+
+<div class="field">
+<label>Years of Relevant Electrical Experience</label>
+<select id="experience">
+<option value="">Select...</option>
+<option value="10plus">10+ Years</option>
+<option value="5plus">5–10 Years</option>
+<option value="under5">Under 5 Years</option>
+<option value="unsure">Unsure</option>
+</select>
+</div>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<h2>Primary Electrotechnical Qualification</h2>
+
+<div class="grid">
+
+<div class="field">
+
+<label>Qualification Held</label>
+
+<select id="qualification">
+
+<option value="">Select Qualification...</option>
+
+<optgroup label="Table A – Strongly Recognised Qualifications">
+
+<option value="tableA">
+C&G 2357 NVQ Level 3 Electrotechnical Qualification
+</option>
+
+<option value="tableA">
+C&G 2365 Level 3 Diploma in Electrical Installations
+</option>
+
+<option value="tableA">
+EAL Level 3 Diploma in Electrical Installation
+</option>
+
+<option value="tableA">
+C&G 2330 Level 3 Certificate
+</option>
+
+<option value="tableA">
+Level 3 Electrotechnical Apprenticeship
+</option>
+
+<option value="tableA">
+NET AM2 / AM2E Completed
+</option>
+
+</optgroup>
+
+<optgroup label="Table B – Additional Technical Discussion Usually Required">
+
+<option value="tableB">
+C&G 236 Part 1 & Part 2
+</option>
+
+<option value="tableB">
+Older JIB Approved Qualification
+</option>
+
+<option value="tableB">
+Legacy Installation Qualification
+</option>
+
+<option value="tableB">
+Overseas Electrical Qualification
+</option>
+
+<option value="tableB">
+Maintenance / Service Engineering Background
+</option>
+
+</optgroup>
+
+<optgroup label="Table C – Further Qualification Mapping Required">
+
+<option value="tableC">
+Partial Technical Qualification
+</option>
+
+<option value="tableC">
+Domestic Installer Qualification Only
+</option>
+
+<option value="tableC">
+Non-Installation Electrical Qualification
+</option>
+
+<option value="tableC">
+No Formal Level 3 Qualification
+</option>
+
+</optgroup>
+
+<option value="unsure">
+Unsure / Qualification Not Listed
+</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>18th Edition Status</label>
+
+<select id="edition">
+
+<option value="">Select...</option>
+
+<option value="2026">
+BS 7671 Amendment 4 / 2026
+</option>
+
+<option value="2024">
+BS 7671 Amendment 3 / 2024
+</option>
+
+<option value="2022">
+BS 7671 Amendment 2 / 2022
+</option>
+
+<option value="2018">
+Original BS 7671:2018
+</option>
+
+<option value="none">
+No 18th Edition
+</option>
+
+<option value="unsure">
+Unsure
+</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>Inspection & Testing Qualification</label>
+
+<select id="it">
+
+<option value="">Select...</option>
+
+<option value="yes">
+C&G 2391 / Inspection & Testing Held
+</option>
+
+<option value="initial">
+Initial Verification Qualification
+</option>
+
+<option value="equivalent">
+Equivalent Inspection & Testing Qualification
+</option>
+
+<option value="none">
+No Inspection & Testing Qualification
+</option>
+
+<option value="unsure">
+Unsure
+</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>Main Work Type</label>
+
+<select id="work">
+
+<option value="">Select...</option>
+
+<option value="commercial">
+Commercial Electrical Installation
+</option>
+
+<option value="industrial">
+Industrial Electrical Installation
+</option>
+
+<option value="domestic">
+Domestic Installation
+</option>
+
+<option value="mixed">
+Mixed Electrical Work
+</option>
+
+<option value="maintenance">
+Maintenance / Service Engineering
+</option>
+
+<option value="other">
+Other / Specialist
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+</div>
+
+<button onclick="evaluateCandidate()">
+Evaluate Candidate
+</button>
+
+<div class="output" id="output">
+
+<h2>Eligibility Assessment</h2>
+
+<div class="result" id="resultText"></div>
+
+<div id="messages"></div>
+
+<h2>Likely EWA Pathway</h2>
+
+<div class="box greenBox" id="pathwayBox"></div>
+
+<h2>Recommended Next Step</h2>
+
+<div class="box orangeBox" id="nextStep"></div>
+
+<h2>Assessment Summary</h2>
+
+<pre id="summary"></pre>
+
+<button onclick="copySummary()">
+Copy Assessment Summary
+</button>
+
+</div>
+
+<div class="footer">
+© EWA Tracker Ltd — EAL Recognised Centre
+</div>
+
+</div>
+
+<script>
+
+function evaluateCandidate(){
+
+    const qualification =
+        document.getElementById("qualification").value;
+
+    const edition =
+        document.getElementById("edition").value;
+
+    const it =
+        document.getElementById("it").value;
+
+    const experience =
+        document.getElementById("experience").value;
+
+    let result = "";
+    let resultClass = "";
+    let messages = "";
+    let pathway = "";
+    let nextStep = "";
+
+    // PATHWAY LOGIC
+
+    switch(edition){
+
+        case "2026":
+        case "none":
+            pathway = "603/5982/1DZ";
+        break;
+
+        case "2024":
+            pathway = "603/5982/1CZ";
+        break;
+
+        case "2022":
+            pathway = "603/5982/1AZ";
+        break;
+
+        case "2018":
+            pathway = "603/5982/1BZ";
+        break;
+
+        default:
+            pathway = "Further Review Required";
+    }
+
+    // MAIN ELIGIBILITY LOGIC
+
+    if(
+        qualification === "tableA" &&
+        (experience === "10plus" || experience === "5plus")
+    ){
+
+        result = "LIKELY SUITABLE";
+        resultClass = "green";
+
+        messages += `
+        <div class="box greenBox">
+        Candidate appears likely suitable for EWA registration subject to evidence verification and review.
+        </div>
+        `;
+
+        nextStep =
+        "Complete full skills scan and provide qualification evidence for formal review.";
+
+    }
+
+    else if(
+        qualification === "tableB"
+    ){
+
+        result = "POTENTIALLY SUITABLE";
+        resultClass = "orange";
+
+        messages += `
+        <div class="box orangeBox">
+        Candidate may still be suitable for EWA however additional technical discussion and qualification mapping will likely be required.
+        </div>
+        `;
+
+        nextStep =
+        "Full skills scan and assessor review recommended before registration.";
+
+    }
+
+    else if(
+        qualification === "tableC"
+    ){
+
+        result = "FURTHER REVIEW REQUIRED";
+        resultClass = "red";
+
+        messages += `
+        <div class="box redBox">
+        Candidate may not currently meet standard qualification expectations for the EWA route.
+        </div>
+        `;
+
+        nextStep =
+        "Detailed qualification mapping and guidance required.";
+
+    }
+
+    else{
+
+        result = "MANUAL REVIEW REQUIRED";
+        resultClass = "orange";
+
+        messages += `
+        <div class="box orangeBox">
+        Candidate qualification requires manual review by assessor.
+        </div>
+        `;
+
+        nextStep =
+        "Contact EWA Tracker Ltd for further guidance.";
+
+    }
+
+    // ADDITIONAL WARNINGS
+
+    if(it === "none"){
+
+        messages += `
+        <div class="box orangeBox">
+        Inspection & Testing qualification still required before certification claim.
+        </div>
+        `;
+    }
+
+    if(experience === "under5"){
+
+        messages += `
+        <div class="box redBox">
+        Candidate may not yet satisfy the typical 5+ year industry experience expectation for the EWA route.
+        </div>
+        `;
+    }
+
+    if(edition === "none"){
+
+        messages += `
+        <div class="box orangeBox">
+        Candidate does not currently hold the 18th Edition qualification.
+        </div>
+        `;
+    }
+
+    // OUTPUT
+
+    document.getElementById("output").style.display = "block";
+
+    document.getElementById("resultText").innerHTML =
+        `<span class="${resultClass}">${result}</span>`;
+
+    document.getElementById("messages").innerHTML =
+        messages;
+
+    document.getElementById("pathwayBox").innerHTML =
+        pathway;
+
+    document.getElementById("nextStep").innerHTML =
+        nextStep;
+
+    // SUMMARY
+
+    const summary = `
+Candidate Name:
+${document.getElementById("name").value}
+
+Email:
+${document.getElementById("email").value}
+
+Phone:
+${document.getElementById("phone").value}
+
+Experience:
+${document.getElementById("experience").selectedOptions[0].text}
+
+Qualification:
+${document.getElementById("qualification").selectedOptions[0].text}
+
+18th Edition:
+${document.getElementById("edition").selectedOptions[0].text}
+
+Inspection & Testing:
+${document.getElementById("it").selectedOptions[0].text}
+
+Likely EWA Pathway:
+${pathway}
+
+Eligibility Outcome:
+${result}
+
+Recommended Next Step:
+${nextStep}
+`;
+
+    document.getElementById("summary").textContent =
+        summary;
+
+}
+
+function copySummary(){
+
+    const summary =
+        document.getElementById("summary").textContent;
+
+    navigator.clipboard.writeText(summary);
+
+    alert("Assessment summary copied.");
+
+}
+
+</script>
+
+</body>
+</html>

@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>EWA Eligibility & Qualification Checker | EWA Tracker Ltd</title>
+<title>EWA Registration Pathway Checker | EWA Tracker Ltd</title>
 
-<meta name="description" content="Interactive EWA eligibility checker for electricians looking to achieve the ECS Gold Card through the EAL Electrotechnical Experienced Worker Assessment route.">
+<meta name="description" content="Interactive EAL EWA registration pathway checker for determining the correct 603/5982/1 pathway based on BS 7671 qualification version and candidate experience.">
 
 <style>
 
@@ -19,12 +19,17 @@ body{
 }
 
 .container{
-    max-width:1200px;
+    max-width:1100px;
     margin:auto;
     background:white;
     border-radius:16px;
     padding:35px;
     box-shadow:0 10px 35px rgba(0,0,0,0.12);
+}
+
+.logo{
+    text-align:center;
+    margin-bottom:10px;
 }
 
 h1{
@@ -39,14 +44,13 @@ h1{
     margin-bottom:35px;
 }
 
-.section{
-    margin-bottom:35px;
-}
-
-.section h2{
-    color:#003b75;
-    border-bottom:2px solid #eef2f7;
-    padding-bottom:10px;
+.disclaimer{
+    background:#eef5ff;
+    border-left:5px solid #003b75;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:30px;
+    line-height:1.5;
 }
 
 .grid{
@@ -83,7 +87,7 @@ button{
     border-radius:10px;
     cursor:pointer;
     font-size:16px;
-    margin-top:25px;
+    margin-top:30px;
     width:100%;
     font-weight:bold;
 }
@@ -101,44 +105,40 @@ button:hover{
     border-radius:12px;
 }
 
-.result{
+.pathway{
     font-size:34px;
     font-weight:bold;
+    color:#003b75;
     margin:20px 0;
 }
 
-.green{
-    color:#2e8b57;
-}
-
-.orange{
-    color:#d17b00;
-}
-
-.red{
-    color:#c00000;
-}
-
-.box{
-    padding:16px;
-    border-radius:10px;
-    margin-top:15px;
+.reason{
     line-height:1.6;
+    margin-bottom:20px;
 }
 
-.greenBox{
-    background:#e8f7e8;
-    border-left:5px solid #2e8b57;
-}
-
-.orangeBox{
+.warning{
     background:#fff4df;
     border-left:5px solid #ff9800;
+    padding:15px;
+    border-radius:8px;
+    margin-top:15px;
 }
 
-.redBox{
+.danger{
     background:#ffe5e5;
     border-left:5px solid #d40000;
+    padding:15px;
+    border-radius:8px;
+    margin-top:15px;
+}
+
+.success{
+    background:#e8f7e8;
+    border-left:5px solid #2e8b57;
+    padding:15px;
+    border-radius:8px;
+    margin-top:15px;
 }
 
 pre{
@@ -146,25 +146,24 @@ pre{
     padding:20px;
     border-radius:10px;
     white-space:pre-wrap;
+    line-height:1.5;
     overflow-x:auto;
 }
 
-.disclaimer{
-    background:#eef5ff;
-    border-left:5px solid #003b75;
-    padding:15px;
-    border-radius:10px;
-    margin-bottom:30px;
+.small{
+    font-size:14px;
+    color:#666;
+    margin-top:10px;
 }
 
 .footer{
+    margin-top:40px;
     text-align:center;
     color:#666;
-    margin-top:40px;
     font-size:14px;
 }
 
-@media(max-width:850px){
+@media(max-width:800px){
 
     .grid{
         grid-template-columns:1fr;
@@ -187,504 +186,358 @@ pre{
 
 <div class="container">
 
-<h1>EWA Eligibility & Qualification Checker</h1>
+    <div class="logo">
+        <h1>EWA Registration Pathway Checker</h1>
+    </div>
+
+    <p class="subtitle">
+        EWA Tracker Ltd — Internal & Guidance Use
+    </p>
 
-<p class="subtitle">
-EWA Tracker Ltd — ECS Gold Card Route Guidance Tool
-</p>
+    <div class="disclaimer">
+        This tool is intended as a guidance aid only. Final registration decisions should always be verified against the latest EAL qualification documentation, EAL Connect guidance, and EQA requirements.
+    </div>
 
-<div class="disclaimer">
-This tool provides an initial guidance assessment only and does not guarantee EAL approval or certification eligibility. Final suitability is dependent on evidence review, qualification mapping, EAL requirements, and EQA guidance.
-</div>
+    <div class="grid">
 
-<div class="section">
+        <div class="field">
+            <label>Candidate Name</label>
+            <input type="text" id="candidateName">
+        </div>
 
-<h2>Candidate Details</h2>
+        <div class="field">
+            <label>Date Checked</label>
+            <input type="date" id="dateChecked">
+        </div>
 
-<div class="grid">
+        <div class="field">
+            <label>Checked By</label>
+            <input type="text" id="checkedBy">
+        </div>
 
-<div class="field">
-<label>Full Name</label>
-<input type="text" id="name">
-</div>
+        <div class="field">
+            <label>Candidate Experience</label>
+            <select id="experience">
+                <option value="">Select...</option>
+                <option value="5plus">5+ Years Relevant Experience</option>
+                <option value="under5">Under 5 Years</option>
+                <option value="unverified">Experience Not Yet Verified</option>
+            </select>
+        </div>
 
-<div class="field">
-<label>Email Address</label>
-<input type="email" id="email">
-</div>
+        <div class="field">
+            <label>18th Edition / BS 7671 Status</label>
+            <select id="eighteenth">
+                <option value="">Select...</option>
 
-<div class="field">
-<label>Phone Number</label>
-<input type="text" id="phone">
-</div>
+                <option value="none">
+                    No 18th Edition / Needs Current Exam
+                </option>
 
-<div class="field">
-<label>Years of Relevant Electrical Experience</label>
-<select id="experience">
-<option value="">Select...</option>
-<option value="10plus">10+ Years</option>
-<option value="5plus">5–10 Years</option>
-<option value="under5">Under 5 Years</option>
-<option value="unsure">Unsure</option>
-</select>
-</div>
+                <option value="2018">
+                    BS 7671:2018 Original / Pre-Amendment 2
+                </option>
 
-</div>
+                <option value="2022">
+                    BS 7671:2018 Amendment 2 / 2022
+                </option>
 
-</div>
+                <option value="2024">
+                    BS 7671:2018 Amendment 3 / 2024
+                </option>
 
-<div class="section">
+                <option value="2026">
+                    BS 7671:2018 Amendment 4 / 2026
+                </option>
 
-<h2>Primary Electrotechnical Qualification</h2>
+                <option value="transfer">
+                    Existing 603/5982/1A Pathway Transfer
+                </option>
 
-<div class="grid">
+                <option value="unclear">
+                    Certificate Wording Unclear / Unsure
+                </option>
 
-<div class="field">
+            </select>
+        </div>
 
-<label>Qualification Held</label>
+        <div class="field">
+            <label>Inspection & Testing Status</label>
+            <select id="itStatus">
+                <option value="">Select...</option>
 
-<select id="qualification">
+                <option value="yes">
+                    Holds Inspection & Testing Qualification
+                </option>
 
-<option value="">Select Qualification...</option>
+                <option value="no">
+                    Does NOT Yet Hold Inspection & Testing
+                </option>
 
-<optgroup label="Table A – Strongly Recognised Qualifications">
+                <option value="unsure">
+                    Unsure / Evidence Not Verified
+                </option>
 
-<option value="tableA">
-C&G 2357 NVQ Level 3 Electrotechnical Qualification
-</option>
+            </select>
+        </div>
 
-<option value="tableA">
-C&G 2365 Level 3 Diploma in Electrical Installations
-</option>
+    </div>
 
-<option value="tableA">
-EAL Level 3 Diploma in Electrical Installation
-</option>
+    <button onclick="generateDecision()">
+        Generate Pathway Decision
+    </button>
 
-<option value="tableA">
-C&G 2330 Level 3 Certificate
-</option>
+    <div class="output" id="outputBox">
 
-<option value="tableA">
-Level 3 Electrotechnical Apprenticeship
-</option>
+        <h2>Recommended Pathway</h2>
 
-<option value="tableA">
-NET AM2 / AM2E Completed
-</option>
+        <div class="pathway" id="pathwayResult"></div>
 
-</optgroup>
+        <div class="reason" id="reasonText"></div>
 
-<optgroup label="Table B – Additional Technical Discussion Usually Required">
+        <div id="warnings"></div>
 
-<option value="tableB">
-C&G 236 Part 1 & Part 2
-</option>
+        <h2>Registration Decision Note</h2>
 
-<option value="tableB">
-Older JIB Approved Qualification
-</option>
+        <pre id="adminNote"></pre>
 
-<option value="tableB">
-Legacy Installation Qualification
-</option>
+        <button onclick="copyNote()">
+            Copy Registration Note
+        </button>
 
-<option value="tableB">
-Overseas Electrical Qualification
-</option>
+        <div class="small">
+            Suggested evidence to retain:
+            18th Edition certificate,
+            Inspection & Testing certificate,
+            experience evidence,
+            candidate background form,
+            skills scan,
+            registration decision note.
+        </div>
 
-<option value="tableB">
-Maintenance / Service Engineering Background
-</option>
+    </div>
 
-</optgroup>
-
-<optgroup label="Table C – Further Qualification Mapping Required">
-
-<option value="tableC">
-Partial Technical Qualification
-</option>
-
-<option value="tableC">
-Domestic Installer Qualification Only
-</option>
-
-<option value="tableC">
-Non-Installation Electrical Qualification
-</option>
-
-<option value="tableC">
-No Formal Level 3 Qualification
-</option>
-
-</optgroup>
-
-<option value="unsure">
-Unsure / Qualification Not Listed
-</option>
-
-</select>
-
-</div>
-
-<div class="field">
-
-<label>18th Edition Status</label>
-
-<select id="edition">
-
-<option value="">Select...</option>
-
-<option value="2026">
-BS 7671 Amendment 4 / 2026
-</option>
-
-<option value="2024">
-BS 7671 Amendment 3 / 2024
-</option>
-
-<option value="2022">
-BS 7671 Amendment 2 / 2022
-</option>
-
-<option value="2018">
-Original BS 7671:2018
-</option>
-
-<option value="none">
-No 18th Edition
-</option>
-
-<option value="unsure">
-Unsure
-</option>
-
-</select>
-
-</div>
-
-<div class="field">
-
-<label>Inspection & Testing Qualification</label>
-
-<select id="it">
-
-<option value="">Select...</option>
-
-<option value="yes">
-C&G 2391 / Inspection & Testing Held
-</option>
-
-<option value="initial">
-Initial Verification Qualification
-</option>
-
-<option value="equivalent">
-Equivalent Inspection & Testing Qualification
-</option>
-
-<option value="none">
-No Inspection & Testing Qualification
-</option>
-
-<option value="unsure">
-Unsure
-</option>
-
-</select>
-
-</div>
-
-<div class="field">
-
-<label>Main Work Type</label>
-
-<select id="work">
-
-<option value="">Select...</option>
-
-<option value="commercial">
-Commercial Electrical Installation
-</option>
-
-<option value="industrial">
-Industrial Electrical Installation
-</option>
-
-<option value="domestic">
-Domestic Installation
-</option>
-
-<option value="mixed">
-Mixed Electrical Work
-</option>
-
-<option value="maintenance">
-Maintenance / Service Engineering
-</option>
-
-<option value="other">
-Other / Specialist
-</option>
-
-</select>
-
-</div>
-
-</div>
-
-</div>
-
-<button onclick="evaluateCandidate()">
-Evaluate Candidate
-</button>
-
-<div class="output" id="output">
-
-<h2>Eligibility Assessment</h2>
-
-<div class="result" id="resultText"></div>
-
-<div id="messages"></div>
-
-<h2>Likely EWA Pathway</h2>
-
-<div class="box greenBox" id="pathwayBox"></div>
-
-<h2>Recommended Next Step</h2>
-
-<div class="box orangeBox" id="nextStep"></div>
-
-<h2>Assessment Summary</h2>
-
-<pre id="summary"></pre>
-
-<button onclick="copySummary()">
-Copy Assessment Summary
-</button>
-
-</div>
-
-<div class="footer">
-© EWA Tracker Ltd — EAL Recognised Centre
-</div>
+    <div class="footer">
+        © EWA Tracker Ltd — EAL Recognised Centre
+    </div>
 
 </div>
 
 <script>
 
-function evaluateCandidate(){
+function generateDecision(){
 
-    const qualification =
-        document.getElementById("qualification").value;
+    const candidate =
+        document.getElementById('candidateName').value;
 
-    const edition =
-        document.getElementById("edition").value;
+    const date =
+        document.getElementById('dateChecked').value;
 
-    const it =
-        document.getElementById("it").value;
+    const checkedBy =
+        document.getElementById('checkedBy').value;
+
+    const eighteenth =
+        document.getElementById('eighteenth').value;
+
+    const itStatus =
+        document.getElementById('itStatus').value;
 
     const experience =
-        document.getElementById("experience").value;
+        document.getElementById('experience').value;
 
-    let result = "";
-    let resultClass = "";
-    let messages = "";
     let pathway = "";
-    let nextStep = "";
+    let reason = "";
+    let warnings = "";
 
-    // PATHWAY LOGIC
+    switch(eighteenth){
 
-    switch(edition){
-
-        case "2026":
         case "none":
+
             pathway = "603/5982/1DZ";
-        break;
 
-        case "2024":
-            pathway = "603/5982/1CZ";
-        break;
+            reason =
+            "Latest Amendment 4 pathway used where learner needs to sit the current 18th Edition exam.";
 
-        case "2022":
-            pathway = "603/5982/1AZ";
         break;
 
         case "2018":
+
             pathway = "603/5982/1BZ";
+
+            reason =
+            "RPL pathway for BS 7671:2018 original / pre-Amendment 2.";
+
+        break;
+
+        case "2022":
+
+            pathway = "603/5982/1AZ";
+
+            reason =
+            "RPL pathway for BS 7671:2018 Amendment 2 / 2022.";
+
+        break;
+
+        case "2024":
+
+            pathway = "603/5982/1CZ";
+
+            reason =
+            "RPL pathway for BS 7671:2018 Amendment 3 / 2024.";
+
+        break;
+
+        case "2026":
+
+            pathway = "603/5982/1DZ";
+
+            reason =
+            "Current Amendment 4 / 2026 pathway.";
+
+        break;
+
+        case "transfer":
+
+            pathway = "603/5982/1AX";
+
+            reason =
+            "Pathway transfer from older 603/5982/1A structure.";
+
+        break;
+
+        case "unclear":
+
+            pathway = "DO NOT REGISTER YET";
+
+            reason =
+            "Certificate wording unclear. Verify latest EAL guidance before registration.";
+
         break;
 
         default:
-            pathway = "Further Review Required";
-    }
 
-    // MAIN ELIGIBILITY LOGIC
+            pathway = "INCOMPLETE";
 
-    if(
-        qualification === "tableA" &&
-        (experience === "10plus" || experience === "5plus")
-    ){
+            reason =
+            "Please complete all required fields.";
 
-        result = "LIKELY SUITABLE";
-        resultClass = "green";
-
-        messages += `
-        <div class="box greenBox">
-        Candidate appears likely suitable for EWA registration subject to evidence verification and review.
-        </div>
-        `;
-
-        nextStep =
-        "Complete full skills scan and provide qualification evidence for formal review.";
-
-    }
-
-    else if(
-        qualification === "tableB"
-    ){
-
-        result = "POTENTIALLY SUITABLE";
-        resultClass = "orange";
-
-        messages += `
-        <div class="box orangeBox">
-        Candidate may still be suitable for EWA however additional technical discussion and qualification mapping will likely be required.
-        </div>
-        `;
-
-        nextStep =
-        "Full skills scan and assessor review recommended before registration.";
-
-    }
-
-    else if(
-        qualification === "tableC"
-    ){
-
-        result = "FURTHER REVIEW REQUIRED";
-        resultClass = "red";
-
-        messages += `
-        <div class="box redBox">
-        Candidate may not currently meet standard qualification expectations for the EWA route.
-        </div>
-        `;
-
-        nextStep =
-        "Detailed qualification mapping and guidance required.";
-
-    }
-
-    else{
-
-        result = "MANUAL REVIEW REQUIRED";
-        resultClass = "orange";
-
-        messages += `
-        <div class="box orangeBox">
-        Candidate qualification requires manual review by assessor.
-        </div>
-        `;
-
-        nextStep =
-        "Contact EWA Tracker Ltd for further guidance.";
-
-    }
-
-    // ADDITIONAL WARNINGS
-
-    if(it === "none"){
-
-        messages += `
-        <div class="box orangeBox">
-        Inspection & Testing qualification still required before certification claim.
-        </div>
-        `;
     }
 
     if(experience === "under5"){
 
-        messages += `
-        <div class="box redBox">
-        Candidate may not yet satisfy the typical 5+ year industry experience expectation for the EWA route.
+        warnings += `
+        <div class="danger">
+            Candidate may not currently meet the minimum 5-year industry experience requirement for the full EWA route.
         </div>
         `;
     }
 
-    if(edition === "none"){
+    if(experience === "unverified"){
 
-        messages += `
-        <div class="box orangeBox">
-        Candidate does not currently hold the 18th Edition qualification.
+        warnings += `
+        <div class="warning">
+            Candidate experience evidence has not yet been verified.
         </div>
         `;
     }
 
-    // OUTPUT
+    if(itStatus === "no"){
 
-    document.getElementById("output").style.display = "block";
+        warnings += `
+        <div class="warning">
+            Candidate must obtain Inspection & Testing / Initial Verification qualification before certification claim.
+        </div>
+        `;
+    }
 
-    document.getElementById("resultText").innerHTML =
-        `<span class="${resultClass}">${result}</span>`;
+    if(itStatus === "unsure"){
 
-    document.getElementById("messages").innerHTML =
-        messages;
+        warnings += `
+        <div class="warning">
+            Inspection & Testing evidence should be verified before registration confirmation.
+        </div>
+        `;
+    }
 
-    document.getElementById("pathwayBox").innerHTML =
+    if(
+        experience === "5plus" &&
+        itStatus === "yes"
+    ){
+
+        warnings += `
+        <div class="success">
+            Candidate appears suitable for EWA registration subject to evidence verification and EAL requirements.
+        </div>
+        `;
+    }
+
+    document.getElementById('outputBox').style.display = "block";
+
+    document.getElementById('pathwayResult').innerText =
         pathway;
 
-    document.getElementById("nextStep").innerHTML =
-        nextStep;
+    document.getElementById('reasonText').innerHTML =
+        "<strong>Reason:</strong> " + reason;
 
-    // SUMMARY
+    document.getElementById('warnings').innerHTML =
+        warnings;
 
-    const summary = `
-Candidate Name:
-${document.getElementById("name").value}
+    const note = `
+Candidate:
+${candidate}
 
-Email:
-${document.getElementById("email").value}
+Date Checked:
+${date}
 
-Phone:
-${document.getElementById("phone").value}
-
-Experience:
-${document.getElementById("experience").selectedOptions[0].text}
+Checked By:
+${checkedBy}
 
 Qualification:
-${document.getElementById("qualification").selectedOptions[0].text}
+603/5982/1
 
-18th Edition:
-${document.getElementById("edition").selectedOptions[0].text}
+18th Edition / BS 7671 Status:
+${document.getElementById('eighteenth').selectedOptions[0].text}
 
-Inspection & Testing:
-${document.getElementById("it").selectedOptions[0].text}
-
-Likely EWA Pathway:
+Recommended Pathway:
 ${pathway}
 
-Eligibility Outcome:
-${result}
+Reason:
+${reason}
 
-Recommended Next Step:
-${nextStep}
+Inspection & Testing Status:
+${document.getElementById('itStatus').selectedOptions[0].text}
+
+Experience Status:
+${document.getElementById('experience').selectedOptions[0].text}
+
+Warnings / Conditions:
+${warnings.replace(/<[^>]*>?/gm, '')}
+
+Suggested Evidence Retained:
+- 18th Edition Certificate
+- Inspection & Testing Certificate
+- Experience Evidence
+- Candidate Background Form
+- Skills Scan
+- Registration Decision Note
 `;
 
-    document.getElementById("summary").textContent =
-        summary;
+    document.getElementById('adminNote').textContent = note;
 
 }
 
-function copySummary(){
+function copyNote(){
 
-    const summary =
-        document.getElementById("summary").textContent;
+    const text =
+        document.getElementById('adminNote').textContent;
 
-    navigator.clipboard.writeText(summary);
+    navigator.clipboard.writeText(text);
 
-    alert("Assessment summary copied.");
+    alert("Registration note copied.");
 
 }
+
+document.getElementById('dateChecked').valueAsDate = new Date();
 
 </script>
 

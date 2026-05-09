@@ -123,25 +123,25 @@ export default function ServicesPage() {
             </p>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-7xl mx-auto">
-              {/* Option 1: Preliminary Self-Check */}
+              {/* Option 1: Eligibility Checker */}
               <div className="bg-white border-2 border-blue-200 rounded-xl p-6 text-left hover:border-blue-400 hover:shadow-lg transition-all">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded">Recommended First</span>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Preliminary Self-Check</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Eligibility Checker</h3>
                 <p className="text-gray-600 text-sm mb-4">
-                  Complete an online self-assessment to get instant feedback on your suitability for the IE/ME EWA.
+                  Quick eligibility check based on your qualifications, 18th Edition status, and experience.
                 </p>
                 <ul className="text-sm text-gray-600 mb-4 space-y-1">
-                  <li>• Instant suitability indication</li>
-                  <li>• Identify knowledge gaps</li>
+                  <li>• Instant pathway guidance</li>
+                  <li>• ECS Gold Card suitability</li>
                   <li>• No document uploads</li>
                 </ul>
                 <Link
-                  href="/candidate-check"
+                  href="/eligibility"
                   className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-colors"
                 >
-                  <FilePenLine className="w-4 h-4 mr-2" /> Start Self-Check
+                  <FilePenLine className="w-4 h-4 mr-2" /> Check Eligibility
                 </Link>
               </div>
 
