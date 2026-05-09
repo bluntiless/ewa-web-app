@@ -1,0 +1,23 @@
+{
+  "name": "2365 Electrical Revision Tool",
+  "short_name": "2365 Revision",
+  "description": "C&G 2365 electrical science and design revision tool",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f7fb",
+  "theme_color": "#0b5cab",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

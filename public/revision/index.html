@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b5cab" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="2365 Revision" />
+  <link rel="apple-touch-icon" href="icon-180.png" />
+  <link rel="manifest" href="manifest.json" />
+  <title>2365 Electrical Revision</title>
+  <style>
+    :root{--bg:#f4f7fb;--panel:#fff;--ink:#142033;--muted:#617087;--brand:#0b5cab;--dark:#073f78;--accent:#f0b429;--line:#d9e2ec;--soft:#eaf2fb;--ok:#16794c;--bad:#b42318;--shadow:0 10px 25px rgba(20,32,51,.10)}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;padding-bottom:86px}
+    .appbar{position:sticky;top:0;z-index:10;background:linear-gradient(135deg,var(--dark),var(--brand));color:white;padding:calc(env(safe-area-inset-top) + 14px) 16px 14px;border-bottom:5px solid var(--accent);box-shadow:0 4px 18px rgba(0,0,0,.18)}
+    .appbar h1{margin:0;font-size:1.25rem}
+    .appbar p{margin:3px 0 12px;color:#eaf2fb;font-size:.88rem}
+    .search{width:100%;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:12px 14px;background:rgba(255,255,255,.14);color:white;outline:none;font-size:16px}
+    .search::placeholder{color:#d9e9ff}
+    .container{max-width:920px;margin:0 auto;padding:14px}
+    .hero{background:white;border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:var(--shadow);margin-bottom:14px}
+    .hero h2{margin:0 0 6px;font-size:1.15rem}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .chip{background:var(--soft);color:var(--dark);border-radius:999px;padding:6px 10px;font-weight:700;font-size:.78rem}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+    .btn{border:0;border-radius:14px;background:var(--brand);color:white;padding:12px 10px;font-weight:800;font-size:.94rem;box-shadow:0 5px 14px rgba(11,92,171,.22);cursor:pointer}
+    .btn.light{background:#fff;color:var(--dark);border:1px solid var(--line)}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:20px;margin:12px 0;box-shadow:var(--shadow);overflow:hidden}
+    .card.hide{display:none}
+    .head{width:100%;border:0;background:#fff;padding:16px;text-align:left;display:flex;justify-content:space-between;gap:10px;align-items:center;color:var(--ink);cursor:pointer}
+    .head h2{font-size:1.05rem;margin:0}
+    .head small{display:block;color:var(--muted);font-weight:500;margin-top:2px}
+    .chev{font-size:1.35rem;color:var(--brand);transition:.2s}
+    .open .chev{transform:rotate(90deg)}
+    .content{display:none;padding:0 16px 16px}
+    .open .content{display:block}
+    table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.9rem}
+    th,td{border:1px solid var(--line);padding:8px;text-align:left}
+    th{background:var(--soft);font-weight:700}
+    .note{background:var(--soft);border-left:4px solid var(--brand);padding:10px 12px;border-radius:0 10px 10px 0;margin:10px 0;font-size:.9rem}
+    .warn{background:#fff3cd;border-left:4px solid var(--accent);padding:10px 12px;border-radius:0 10px 10px 0;margin:10px 0;font-size:.9rem}
+    .formula{background:var(--dark);color:white;padding:12px 14px;border-radius:12px;font-family:monospace;font-size:1rem;margin:10px 0;text-align:center}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .field label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:4px}
+    .field input{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font-size:16px}
+    .result{background:var(--soft);padding:12px;border-radius:12px;margin-top:12px;font-size:.95rem}
+    .flash{display:flex;flex-direction:column;gap:10px}
+    .flash button{background:#fff;border:2px solid var(--line);border-radius:14px;padding:14px;text-align:left;cursor:pointer}
+    .flash button .answer{display:none;margin-top:8px;color:var(--brand);font-weight:700}
+    .flash button.show .answer{display:block}
+    .quiz-option{display:block;width:100%;margin:6px 0;padding:12px;border:2px solid var(--line);border-radius:12px;background:#fff;text-align:left;cursor:pointer;font-size:.95rem}
+    .quiz-option.correct{border-color:var(--ok);background:#e6f4ea}
+    .quiz-option.wrong{border-color:var(--bad);background:#fce8e6}
+    .feedback{margin-top:8px;font-weight:700}
+    .feedback.ok{color:var(--ok)}
+    .feedback.bad{color:var(--bad)}
+    .tabs{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 0 calc(env(safe-area-inset-bottom) + 6px);z-index:20}
+    .tabs a{text-decoration:none;color:var(--muted);font-size:.7rem;font-weight:600;text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px}
+    .tabs a span{font-size:1.3rem}
+    @media print{.appbar,.tabs,.actions{display:none!important}body{padding:0}.card{break-inside:avoid}.content{display:block!important}}
+  </style>
+</head>
+<body>
+  <header class="appbar">
+    <h1>2365 Electrical Revision</h1>
+    <p>Mobile revision tool for C&G 2365 Level 2/3 electrical science and design.</p>
+    <input id="search" class="search" type="search" placeholder="Search Ohm, Ib, Cg, Zs, impedance..." />
+  </header>
+  <main class="container">
+    <section class="hero">
+      <h2>Fast-track revision</h2>
+      <p>Use the sections below for quick recall, formula practice and design-current checking. Add this page to your iPhone Home Screen after uploading it to your website.</p>
+      <div class="chips">
+        <span class="chip">Level 2</span>
+        <span class="chip">Level 3</span>
+        <span class="chip">Ib ≤ In ≤ Iz</span>
+        <span class="chip">Offline capable</span>
+      </div>
+      <div class="actions">
+        <button class="btn" onclick="expandAll()">Expand</button>
+        <button class="btn light" onclick="collapseAll()">Collapse</button>
+        <button class="btn light" onclick="window.print()">Save PDF</button>
+        <button class="btn light" onclick="installHelp()">Install help</button>
+      </div>
+    </section>
+
+    <section id="basics" class="card open" data-key="atomic electrons emf voltage current resistance power si units">
+      <button class="head" onclick="toggle(this)">
+        <span><h2>1. Fundamentals</h2><small>Atoms, EMF and SI units</small></span>
+        <span class="chev">›</span>
+      </button>
+      <div class="content">
+        <p>Electricity involves the movement of free electrons. Copper is a good conductor because its outer-shell electrons can move easily when voltage is applied.</p>
+        <table>
+          <tr><th>Quantity</th><th>Symbol</th><th>Unit</th></tr>
+          <tr><td>Voltage / EMF</td><td>V</td><td>Volt</td></tr>
+          <tr><td>Current</td><td>I</td><td>Ampere</td></tr>
+          <tr><td>Resistance</td><td>R</td><td>Ohm Ω</td></tr>
+          <tr><td>Power</td><td>P</td><td>Watt</td></tr>
+        </table>
+        <div class="note"><b>EMF generation:</b> chemical batteries, magnetic generators and thermal thermocouples.</div>
+      </div>
+    </section>
+
+    <section id="ohm" class="card" data-key="ohms law power series parallel current voltage resistance calculator">
+      <button class="head" onclick="toggle(this)">
+        <span><h2>2. Ohm's Law & Circuits</h2><small>Formula recall and calculator</small></span>
+        <span class="chev">›</span>
+      </button>
+      <div class="content">
+        <div class="formula">V = I × R &nbsp; | &nbsp; I = V ÷ R &nbsp; | &nbsp; R = V ÷ I</div>
+        <div class="formula">P = V × I &nbsp; | &nbsp; P = I² × R</div>
+        <div class="grid2">
+          <div class="note"><b>Series:</b> current is the same; voltage splits; resistance adds.</div>
+          <div class="note"><b>Parallel:</b> voltage is the same; current splits; total resistance reduces.</div>
+        </div>
+        <h3>Ohm's Law calculator</h3>
+        <div class="grid2">
+          <div class="field"><label>Voltage V</label><input id="v" type="number" step="any"></div>
+          <div class="field"><label>Current A</label><input id="i" type="number" step="any"></div>
+          <div class="field"><label>Resistance Ω</label><input id="r" type="number" step="any"></div>
+          <div class="field"><label>&nbsp;</label><button class="btn" onclick="calcOhm()">Calculate</button></div>
+        </div>
+        <div id="ohmOut" class="result">Enter any two values.</div>
+      </div>
+    </section>
+
+    <section id="ac" class="card" data-key="ac rms peak reactance inductive capacitive impedance power factor three phase star delta">
+      <button class="head" onclick="toggle(this)">
+        <span><h2>3. AC Theory</h2><small>Reactance, impedance and power factor</small></span>
+        <span class="chev">›</span>
+      </button>
+      <div class="content">
+        <table>
+          <tr><th>Topic</th><th>Formula</th></tr>
+          <tr><td>RMS</td><td>RMS = Peak × 0.707</td></tr>
+          <tr><td>Capacitive reactance</td><td>Xc = 1 ÷ 2πfC</td></tr>
+          <tr><td>Inductive reactance</td><td>XL = 2πfL</td></tr>
+          <tr><td>Impedance</td><td>Z = √(R² + (XL − Xc)²)</td></tr>
+          <tr><td>True power</td><td>P = V × I × cosφ</td></tr>
+        </table>
+        <div class="note"><b>Three-phase:</b> 400 V line voltage, 120° phase separation. Star: VL = √3 × Vph.</div>
+      </div>
+    </section>
+
+    <section id="design" class="card open" data-key="ib in it iz ca cg ci cf correction factors cable design voltage drop zs ze r1 r2 diversity">
+      <button class="head" onclick="toggle(this)">
+        <span><h2>4. Design Current Workflow</h2><small>Ib, In, It, Iz and correction factors</small></span>
+        <span class="chev">›</span>
+      </button>
+      <div class="content">
+        <div class="warn"><b>Coordination:</b> I<sub>b</sub> ≤ I<sub>n</sub> ≤ I<sub>z</sub>. The protective device must protect the cable.</div>
+        <table>
+          <tr><th>Symbol</th><th>Meaning</th></tr>
+          <tr><td>I<sub>b</sub></td><td>Design current/load current</td></tr>
+          <tr><td>I<sub>n</sub></td><td>Protective device rating</td></tr>
+          <tr><td>I<sub>t</sub></td><td>Tabulated cable capacity before correction factors</td></tr>
+          <tr><td>I<sub>z</sub></td><td>Effective installed cable capacity</td></tr>
+        </table>
+        <div class="formula">I<sub>t</sub> ≥ I<sub>n</sub> ÷ (C<sub>a</sub> × C<sub>g</sub> × C<sub>i</sub> × C<sub>f</sub>)</div>
+        <div class="formula">Vdrop = (mV/A/m × length × current) ÷ 1000</div>
+        <div class="formula">Z<sub>s</sub> = Z<sub>e</sub> + (R<sub>1</sub> + R<sub>2</sub>)</div>
+        <h3>Design checker</h3>
+        <div class="grid2">
+          <div class="field"><label>Load W</label><input id="w" type="number" placeholder="9000"></div>
+          <div class="field"><label>Voltage</label><input id="sv" type="number" value="230"></div>
+          <div class="field"><label>In A</label><input id="inn" type="number" placeholder="40"></div>
+          <div class="field"><label>Power factor</label><input id="pf" type="number" value="1" step="any"></div>
+          <div class="field"><label>Ca</label><input id="ca" type="number" value="1" step="any"></div>
+          <div class="field"><label>Cg</label><input id="cg" type="number" value="1" step="any"></div>
+          <div class="field"><label>Ci</label><input id="ci" type="number" value="1" step="any"></div>
+          <div class="field"><label>Cf</label><input id="cf" type="number" value="1" step="any"></div>
+        </div>
+        <button class="btn" onclick="calcDesign()">Check design values</button>
+        <div id="designOut" class="result">Enter load, voltage and In to check Ib ≤ In.</div>
+      </div>
+    </section>
+
+    <section id="safety" class="card" data-key="safe isolation lock off ads basic protection fault protection mcb fuse rcd">
+      <button class="head" onclick="toggle(this)">
+        <span><h2>5. Safety</h2><small>Isolation and protection</small></span>
+        <span class="chev">›</span>
+      </button>
+      <div class="content">
+        <table>
+          <tr><th>Concept</th><th>Revision point</th></tr>
+          <tr><td>Safe isolation</td><td>Identify, isolate, lock off, prove tester, test for dead, re-prove tester.</td></tr>
+          <tr><td>Basic protection</td><td>Insulation, barriers, enclosures and IP ratings.</td></tr>
+          <tr><td>Fault protection</td><td>Automatic Disconnection of Supply using suitable protective devices.</td></tr>
+        </table>
+        <div class="warn"><b>Do not work live unless strictly justified and controlled.</b> For normal installation work, isolate and prove dead.</div>
+      </div>
+    </section>
+
+    <section id="quiz" class="card open" data-key="quiz flashcards test questions revision">
+      <button class="head" onclick="toggle(this)">
+        <span><h2>6. Flashcards & Quiz</h2><small>Tap cards to reveal answers</small></span>
+        <span class="chev">›</span>
+      </button>
+      <div class="content">
+        <div class="flash">
+          <button onclick="this.classList.toggle('show')"><b>What is Ohm's Law?</b><div class="answer">V = I × R.</div></button>
+          <button onclick="this.classList.toggle('show')"><b>What does Cg correct for?</b><div class="answer">Grouping of cables.</div></button>
+          <button onclick="this.classList.toggle('show')"><b>What is Zs?</b><div class="answer">Earth fault loop impedance: Ze + (R1 + R2).</div></button>
+        </div>
+        <div class="note" style="margin-top:16px">
+          <b>Question:</b> In a parallel circuit, is voltage the same or split across branches?<br>
+          <button class="quiz-option" onclick="quiz(this,true)">Same across each branch</button>
+          <button class="quiz-option" onclick="quiz(this,false)">Split across each branch</button>
+          <div class="feedback"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="tabs">
+    <a href="#basics"><span>⚡</span>Basics</a>
+    <a href="#ohm"><span>Ω</span>Ohm</a>
+    <a href="#design"><span>📐</span>Design</a>
+    <a href="#quiz"><span>✓</span>Quiz</a>
+  </nav>
+
+  <script>
+    function toggle(b){b.closest('.card').classList.toggle('open')}
+    function expandAll(){document.querySelectorAll('.card').forEach(c=>c.classList.add('open'))}
+    function collapseAll(){document.querySelectorAll('.card').forEach(c=>c.classList.remove('open'))}
+    function val(id){const x=parseFloat(document.getElementById(id).value);return Number.isFinite(x)?x:null}
+
+    function calcOhm(){
+      const V=val('v'),I=val('i'),R=val('r'),o=document.getElementById('ohmOut');
+      if(V!==null&&I!==null&&R===null&&I!==0)o.innerHTML='R = '+(V/I).toFixed(2)+' Ω';
+      else if(V!==null&&R!==null&&I===null&&R!==0)o.innerHTML='I = '+(V/R).toFixed(2)+' A';
+      else if(I!==null&&R!==null&&V===null)o.innerHTML='V = '+(I*R).toFixed(2)+' V';
+      else o.textContent='Enter exactly two values and leave the value to calculate blank.';
+    }
+
+    function calcDesign(){
+      const w=val('w'),sv=val('sv'),inn=val('inn'),pf=val('pf')||1,ca=val('ca')||1,cg=val('cg')||1,ci=val('ci')||1,cf=val('cf')||1,o=document.getElementById('designOut');
+      if(!w||!sv||!inn){o.textContent='Enter load, voltage and protective device rating.';return}
+      const ib=w/(sv*pf),corr=ca*cg*ci*cf,it=inn/corr,pass=ib<=inn?'PASS: Ib ≤ In':'FAIL: Ib is greater than In';
+      o.innerHTML='Ib = <b>'+ib.toFixed(2)+' A</b><br>Correction factor total = <b>'+corr.toFixed(3)+'</b><br>Required It ≥ <b>'+it.toFixed(2)+' A</b><br>'+pass+'<br><br>Now select a cable from the tables, then verify voltage drop and Zs.';
+    }
+
+    function quiz(btn,correct){
+      const box=btn.parentElement;
+      box.querySelectorAll('.quiz-option').forEach(b=>b.classList.remove('correct','wrong'));
+      btn.classList.add(correct?'correct':'wrong');
+      const f=box.querySelector('.feedback');
+      f.className='feedback '+(correct?'ok':'bad');
+      f.textContent=correct?'Correct.':'Not quite. In a parallel circuit, voltage is the same across each branch.';
+    }
+
+    function installHelp(){
+      alert('On iPhone: open this page in Safari, tap Share, then Add to Home Screen. It will then open like a native app and work offline.');
+    }
+
+    document.getElementById('search').addEventListener('input',e=>{
+      const q=e.target.value.toLowerCase().trim();
+      document.querySelectorAll('.card').forEach(c=>{
+        const t=(c.innerText+' '+(c.dataset.key||'')).toLowerCase();
+        const show=!q||t.includes(q);
+        c.classList.toggle('hide',!show);
+        if(q&&show)c.classList.add('open');
+      });
+    });
+
+    if('serviceWorker' in navigator){
+      window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
+    }
+  </script>
+</body>
+</html>
