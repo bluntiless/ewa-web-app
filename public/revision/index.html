@@ -305,6 +305,12 @@ pre{
             Copy Registration Note
         </button>
 
+        <button onclick="saveToSharePoint()" style="background:#10b981; margin-top:10px;">
+            Save to SharePoint
+        </button>
+        
+        <div id="sharePointStatus" style="margin-top:10px; display:none;"></div>
+
         <div class="small">
             Suggested evidence to retain:
             18th Edition certificate,
@@ -534,6 +540,49 @@ function copyNote(){
     navigator.clipboard.writeText(text);
 
     alert("Registration note copied.");
+
+}
+
+async function saveToSharePoint(){
+
+    const candidate = document.getElementById('candidateName').value;
+    
+    if(!candidate){
+        alert("Please enter a candidate name before saving.");
+        return;
+    }
+
+    const statusDiv = document.getElementById('sharePointStatus');
+    statusDiv.style.display = "block";
+    statusDiv.innerHTML = '<div style="background:#fef3c7; padding:10px; border-radius:8px;">Saving to SharePoint...</div>';
+
+    const data = {
+        candidateName: candidate,
+        checkDate: document.getElementById('dateChecked').value,
+        pathway: document.getElementById('pathwayResult').innerText,
+        bs7671Status: document.getElementById('eighteenth').selectedOptions[0]?.text || "",
+        itStatus: document.getElementById('itStatus').selectedOptions[0]?.text || "",
+        experience: document.getElementById('experience').selectedOptions[0]?.text || "",
+        adminNotes: document.getElementById('adminNote').textContent
+    };
+
+    try {
+        const response = await fetch('/api/pathway-checker/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if(response.ok){
+            statusDiv.innerHTML = '<div style="background:#d1fae5; padding:10px; border-radius:8px; color:#059669;"><strong>Saved successfully!</strong><br>' + result.message + '</div>';
+        } else {
+            statusDiv.innerHTML = '<div style="background:#fee2e2; padding:10px; border-radius:8px; color:#dc2626;"><strong>Error:</strong> ' + (result.error || 'Failed to save') + '</div>';
+        }
+    } catch(err){
+        statusDiv.innerHTML = '<div style="background:#fee2e2; padding:10px; border-radius:8px; color:#dc2626;"><strong>Error:</strong> Could not connect to server.</div>';
+    }
 
 }
 

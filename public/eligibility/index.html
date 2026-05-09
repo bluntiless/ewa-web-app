@@ -463,6 +463,12 @@ Evaluate Candidate
 Copy Assessment Summary
 </button>
 
+<button onclick="saveToSharePoint()" style="background:#10b981; margin-top:10px;">
+Save to SharePoint
+</button>
+
+<div id="sharePointStatus" style="margin-top:10px; display:none;"></div>
+
 </div>
 
 <div class="footer">
@@ -683,6 +689,61 @@ function copySummary(){
     navigator.clipboard.writeText(summary);
 
     alert("Assessment summary copied.");
+
+}
+
+async function saveToSharePoint(){
+
+    const candidateName = document.getElementById('name').value;
+    
+    if(!candidateName){
+        alert("Please enter a candidate name before saving.");
+        return;
+    }
+
+    const statusDiv = document.getElementById('sharePointStatus');
+    statusDiv.style.display = "block";
+    statusDiv.innerHTML = '<div style="background:#fef3c7; padding:10px; border-radius:8px;">Saving to SharePoint...</div>';
+
+    const data = {
+        candidateName: candidateName,
+        checkDate: new Date().toLocaleDateString('en-GB'),
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        qualificationsA: [],
+        qualificationsB: [],
+        qualificationsC: [],
+        bs7671Status: document.getElementById('edition').selectedOptions[0]?.text || "",
+        itStatus: document.getElementById('it').selectedOptions[0]?.text || "",
+        workTypes: [document.getElementById('work').selectedOptions[0]?.text || ""],
+        eligibilityResult: document.getElementById('resultText').innerText,
+        recommendations: document.getElementById('nextStep').innerText
+    };
+
+    // Categorize qualification
+    const qualValue = document.getElementById('qualification').value;
+    const qualText = document.getElementById('qualification').selectedOptions[0]?.text || "";
+    if(qualValue === 'tableA') data.qualificationsA.push(qualText);
+    else if(qualValue === 'tableB') data.qualificationsB.push(qualText);
+    else if(qualValue === 'tableC') data.qualificationsC.push(qualText);
+
+    try {
+        const response = await fetch('/api/eligibility-checker/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if(response.ok){
+            statusDiv.innerHTML = '<div style="background:#d1fae5; padding:10px; border-radius:8px; color:#059669;"><strong>Saved successfully!</strong><br>' + result.message + '</div>';
+        } else {
+            statusDiv.innerHTML = '<div style="background:#fee2e2; padding:10px; border-radius:8px; color:#dc2626;"><strong>Error:</strong> ' + (result.error || 'Failed to save') + '</div>';
+        }
+    } catch(err){
+        statusDiv.innerHTML = '<div style="background:#fee2e2; padding:10px; border-radius:8px; color:#dc2626;"><strong>Error:</strong> Could not connect to server.</div>';
+    }
 
 }
 
