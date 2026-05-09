@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getSharePointAccessToken, ensureFolderExists, uploadFileToSharePoint } from "@/lib/sharepoint"
+import { uploadToSharePoint, checkFolderExists, createFolder, isSharePointConfigured } from "@/lib/sharepoint"
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,15 +23,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Candidate name is required" }, { status: 400 })
     }
 
-    // Get SharePoint access token
-    const accessToken = await getSharePointAccessToken()
+    if (!isSharePointConfigured()) {
+      return NextResponse.json({ error: "SharePoint is not configured" }, { status: 500 })
+    }
 
     // Create folder structure: Eligibility-Checks/{CandidateName}/
     const sanitizedName = candidateName.replace(/[^a-zA-Z0-9\s-]/g, "").trim()
     const folderPath = `Eligibility-Checks/${sanitizedName}`
     
-    await ensureFolderExists(accessToken, "Eligibility-Checks")
-    await ensureFolderExists(accessToken, folderPath)
+    // Ensure folders exist
+    const parentExists = await checkFolderExists("Eligibility-Checks")
+    if (!parentExists) {
+      await createFolder("Eligibility-Checks")
+    }
+    
+    const candidateFolderExists = await checkFolderExists(folderPath)
+    if (!candidateFolderExists) {
+      await createFolder(folderPath)
+    }
 
     // Generate HTML document
     const timestamp = new Date().toISOString().split("T")[0]
@@ -139,12 +148,17 @@ export async function POST(request: NextRequest) {
 
     // Upload to SharePoint
     const fileBuffer = Buffer.from(htmlContent, "utf-8")
-    await uploadFileToSharePoint(accessToken, folderPath, fileName, fileBuffer)
+    const result = await uploadToSharePoint(folderPath, fileName, fileBuffer, "text/html")
+
+    if (!result.success) {
+      return NextResponse.json({ error: result.error || "Failed to upload" }, { status: 500 })
+    }
 
     return NextResponse.json({ 
       success: true, 
       message: `Eligibility check saved to SharePoint: ${folderPath}/${fileName}`,
-      filePath: `${folderPath}/${fileName}`
+      filePath: `${folderPath}/${fileName}`,
+      url: result.url
     })
 
   } catch (error) {
