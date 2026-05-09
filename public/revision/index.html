@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>EWA Registration Pathway Checker</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        margin: 0;
+        padding: 30px;
+        color: #222;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: auto;
+        background: white;
+        border-radius: 14px;
+        padding: 30px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+        color: #003b75;
+        margin-bottom: 5px;
+    }
+
+    h2 {
+        color: #003b75;
+        margin-top: 35px;
+    }
+
+    .subtitle {
+        color: #666;
+        margin-bottom: 30px;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .field {
+        display: flex;
+        flex-direction: column;
+    }
+
+    label {
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    input, select, textarea {
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 15px;
+    }
+
+    .output {
+        margin-top: 40px;
+        padding: 25px;
+        border-radius: 12px;
+        background: #f8fbff;
+        border-left: 6px solid #003b75;
+    }
+
+    .pathway {
+        font-size: 30px;
+        font-weight: bold;
+        color: #003b75;
+        margin: 15px 0;
+    }
+
+    .warning {
+        background: #fff4e5;
+        border-left: 5px solid #ff9800;
+        padding: 15px;
+        margin-top: 15px;
+        border-radius: 8px;
+    }
+
+    .danger {
+        background: #ffe5e5;
+        border-left: 5px solid #d40000;
+        padding: 15px;
+        margin-top: 15px;
+        border-radius: 8px;
+    }
+
+    button {
+        background: #003b75;
+        color: white;
+        border: none;
+        padding: 14px 22px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        margin-top: 20px;
+    }
+
+    button:hover {
+        background: #00264d;
+    }
+
+    pre {
+        white-space: pre-wrap;
+        background: #eef4fb;
+        padding: 15px;
+        border-radius: 8px;
+        overflow-x: auto;
+    }
+
+    @media(max-width: 768px) {
+        .grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>EAL EWA Registration Pathway Checker</h1>
+    <p class="subtitle">
+        Internal use only — EWA Tracker Ltd
+    </p>
+
+    <div class="grid">
+
+        <div class="field">
+            <label>Candidate Name</label>
+            <input type="text" id="candidateName">
+        </div>
+
+        <div class="field">
+            <label>Date Checked</label>
+            <input type="date" id="dateChecked">
+        </div>
+
+        <div class="field">
+            <label>Checked By</label>
+            <input type="text" id="checkedBy">
+        </div>
+
+        <div class="field">
+            <label>18th Edition Status</label>
+            <select id="eighteenth">
+                <option value="">Select...</option>
+                <option value="none">No 18th Edition / Needs Current Exam</option>
+                <option value="2018">BS 7671:2018 Original / Pre-Amendment 2</option>
+                <option value="2022">BS 7671:2018 Amendment 2 / 2022</option>
+                <option value="2024">BS 7671:2018 Amendment 3 / 2024</option>
+                <option value="transfer">Existing 603/5982/1A Transfer</option>
+                <option value="unclear">Unclear / Unsure</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>Inspection & Testing</label>
+            <select id="itStatus">
+                <option value="">Select...</option>
+                <option value="yes">Holds Inspection & Testing</option>
+                <option value="no">Does NOT yet hold Inspection & Testing</option>
+                <option value="unsure">Unsure</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>Experience</label>
+            <select id="experience">
+                <option value="">Select...</option>
+                <option value="5plus">5+ Years Relevant Experience</option>
+                <option value="under5">Under 5 Years</option>
+                <option value="unverified">Not Yet Verified</option>
+            </select>
+        </div>
+
+    </div>
+
+    <button onclick="generateDecision()">Generate Pathway Decision</button>
+
+    <div class="output" id="outputBox" style="display:none;">
+
+        <h2>Recommended Pathway</h2>
+
+        <div class="pathway" id="pathwayResult"></div>
+
+        <div id="reasonText"></div>
+
+        <div id="warnings"></div>
+
+        <h2>Registration Decision Note</h2>
+
+        <pre id="adminNote"></pre>
+
+        <button onclick="copyNote()">Copy Admin Note</button>
+
+    </div>
+
+</div>
+
+<script>
+
+function generateDecision() {
+
+    const candidate = document.getElementById('candidateName').value;
+    const date = document.getElementById('dateChecked').value;
+    const checkedBy = document.getElementById('checkedBy').value;
+    const eighteenth = document.getElementById('eighteenth').value;
+    const itStatus = document.getElementById('itStatus').value;
+    const experience = document.getElementById('experience').value;
+
+    let pathway = "";
+    let reason = "";
+    let warnings = "";
+
+    switch(eighteenth) {
+
+        case "none":
+            pathway = "603/5982/1CZ";
+            reason = "Current Amendment 3 pathway required where learner needs to sit current 18th Edition exam.";
+            break;
+
+        case "2018":
+            pathway = "603/5982/1BZ";
+            reason = "RPL pathway for original BS 7671:2018 / pre-Amendment 2.";
+            break;
+
+        case "2022":
+            pathway = "603/5982/1AZ";
+            reason = "RPL pathway for BS 7671:2018 Amendment 2 / 2022.";
+            break;
+
+        case "2024":
+            pathway = "603/5982/1CZ";
+            reason = "Current Amendment 3 / 2024 pathway.";
+            break;
+
+        case "transfer":
+            pathway = "603/5982/1AX";
+            reason = "Pathway transfer from older 603/5982/1A structure.";
+            break;
+
+        case "unclear":
+            pathway = "DO NOT REGISTER YET";
+            reason = "Certificate wording unclear. Verify before registration.";
+            break;
+    }
+
+    if(experience === "under5") {
+        warnings += `
+        <div class="danger">
+            Candidate may not meet minimum 5-year experience requirement.
+        </div>`;
+    }
+
+    if(experience === "unverified") {
+        warnings += `
+        <div class="warning">
+            Experience evidence has not yet been verified.
+        </div>`;
+    }
+
+    if(itStatus === "no") {
+        warnings += `
+        <div class="warning">
+            Candidate must obtain Inspection & Testing qualification before certification claim.
+        </div>`;
+    }
+
+    if(itStatus === "unsure") {
+        warnings += `
+        <div class="warning">
+            Inspection & Testing evidence should be verified.
+        </div>`;
+    }
+
+    document.getElementById('outputBox').style.display = "block";
+    document.getElementById('pathwayResult').innerText = pathway;
+    document.getElementById('reasonText').innerHTML = `<strong>Reason:</strong> ${reason}`;
+    document.getElementById('warnings').innerHTML = warnings;
+
+    const note = `
+Candidate: ${candidate}
+Date Checked: ${date}
+Checked By: ${checkedBy}
+
+Qualification:
+603/5982/1
+
+18th Edition Status:
+${document.getElementById('eighteenth').selectedOptions[0].text}
+
+Recommended Pathway:
+${pathway}
+
+Reason:
+${reason}
+
+Inspection & Testing Status:
+${document.getElementById('itStatus').selectedOptions[0].text}
+
+Experience Status:
+${document.getElementById('experience').selectedOptions[0].text}
+
+Warnings / Conditions:
+${warnings.replace(/<[^>]*>?/gm, '')}
+`;
+
+    document.getElementById('adminNote').textContent = note;
+}
+
+function copyNote() {
+
+    const note = document.getElementById('adminNote').textContent;
+
+    navigator.clipboard.writeText(note);
+
+    alert("Admin note copied.");
+}
+
+document.getElementById('dateChecked').valueAsDate = new Date();
+
+</script>
+
+</body>
+</html>
