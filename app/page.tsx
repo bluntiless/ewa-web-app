@@ -555,8 +555,9 @@ export default function HomePage() {
         </div>
       </section>
 
-{/* 2365 Revision Tool Promo */}
-        <div className="max-w-4xl mx-auto px-4 mb-16">
+      {/* 2365 Revision Tool Promo */}
+      <section className="py-12 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4">
           <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-6 md:p-8 shadow-lg">
             <div className="flex flex-col md:flex-row items-center gap-6">
               <div className="flex-shrink-0">
@@ -586,8 +587,10 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+      </section>
 
-        {/* Pricing Section */}
+      {/* Pricing Section */}
+      <section className="py-16 bg-white">
         <div className="max-w-5xl mx-auto px-4">
           <div className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">Pricing</h2>
