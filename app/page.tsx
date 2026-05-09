@@ -555,33 +555,31 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 2365 Revision Tool Promo */}
+      {/* EWA Pathway Checker Tool Promo */}
       <section className="py-12 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4">
           <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-6 md:p-8 shadow-lg">
             <div className="flex flex-col md:flex-row items-center gap-6">
               <div className="flex-shrink-0">
-                <Image
-                  src="/revision/icon-192.png"
-                  alt="2365 Revision App"
-                  width={100}
-                  height={100}
-                  className="rounded-2xl shadow-md"
-                />
+                <div className="w-24 h-24 bg-white rounded-2xl shadow-md flex items-center justify-center">
+                  <svg className="w-12 h-12 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                  </svg>
+                </div>
               </div>
               <div className="flex-1 text-center md:text-left">
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-2">Free 2365 Revision Tool</h3>
+                <h3 className="text-xl md:text-2xl font-bold text-white mb-2">EWA Registration Pathway Checker</h3>
                 <p className="text-blue-100 mb-4">
-                  Mobile-friendly revision app with Ohm&apos;s Law calculator, AC theory formulas, safety guidance, and flashcard quizzes. Add it to your home screen for offline access.
+                  Determine the correct EAL qualification pathway based on 18th Edition status, Inspection &amp; Testing qualifications, and experience. Generates admin notes for registration decisions.
                 </p>
                 <a
                   href="/revision"
                   className="inline-flex items-center gap-2 bg-white text-blue-700 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                   </svg>
-                  Open Revision Tool
+                  Open Pathway Checker
                 </a>
               </div>
             </div>

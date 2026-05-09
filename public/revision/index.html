@@ -1,29 +1,334 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Electrical Science & Design Revision Tool | C&G 2365</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>EWA Registration Pathway Checker</title>
+
 <style>
-:root{--bg:#f4f7fb;--panel:#fff;--ink:#142033;--muted:#5f6f85;--brand:#0b5cab;--brand-dark:#073f78;--accent:#f0b429;--ok:#16794c;--bad:#b42318;--line:#d9e2ec;--soft:#eaf2fb;--shadow:0 10px 30px rgba(20,32,51,.10);--radius:18px}*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}header{background:linear-gradient(135deg,var(--brand-dark),var(--brand));color:#fff;padding:34px 20px 28px;border-bottom:6px solid var(--accent)}.wrap{max-width:1180px;margin:0 auto}header h1{margin:0 0 8px;font-size:clamp(1.7rem,3vw,2.9rem);line-height:1.1}header p{margin:0;max-width:900px;color:#eaf2fb;font-size:1rem}.toolbar{margin-top:20px;display:grid;grid-template-columns:minmax(220px,1fr) repeat(3,auto);gap:10px;align-items:center}input,select,button{font:inherit}.search{width:100%;padding:12px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;outline:none}.search::placeholder{color:#d9e9ff}.btn{border:none;border-radius:999px;padding:12px 16px;background:#fff;color:var(--brand-dark);cursor:pointer;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.12)}.btn.secondary{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.35)}main{padding:24px 20px 50px}.grid{display:grid;grid-template-columns:280px 1fr;gap:22px;align-items:start}nav{position:sticky;top:14px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}nav h2{font-size:.95rem;margin:0 0 10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}nav a{display:block;color:var(--ink);text-decoration:none;padding:9px 10px;border-radius:10px;font-size:.95rem}nav a:hover,nav a.active{background:var(--soft);color:var(--brand-dark);font-weight:700}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}.stat strong{display:block;font-size:1.6rem;color:var(--brand-dark);line-height:1}.stat span{color:var(--muted);font-size:.9rem}section.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:18px;overflow:hidden}.section-head{width:100%;text-align:left;border:0;background:#fff;padding:18px 20px;cursor:pointer;display:flex;justify-content:space-between;gap:12px;align-items:center;color:var(--ink)}.section-head h2{margin:0;font-size:1.18rem}.section-head small{display:block;color:var(--muted);font-weight:normal;margin-top:2px}.chev{font-size:1.4rem;color:var(--brand);transition:transform .2s}.card.open .chev{transform:rotate(90deg)}.content{display:none;padding:0 20px 20px;border-top:1px solid var(--line)}.card.open .content{display:block}.twocol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.note,.formula,.warning,.example{border-radius:14px;padding:14px 16px;margin:12px 0;border:1px solid var(--line)}.note{background:#f8fbff}.formula{background:#0b1f3a;color:#fff;font-family:"Courier New",monospace;font-weight:700;overflow-x:auto}.warning{background:#fff7ed;border-color:#fed7aa}.example{background:#f0fdf4;border-color:#bbf7d0}table{width:100%;border-collapse:collapse;margin:12px 0;background:#fff;overflow:hidden;border-radius:12px}th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}th{background:var(--soft);color:var(--brand-dark)}.flashcards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}.flashcard{min-height:116px;perspective:1000px;cursor:pointer}.flash-inner{position:relative;width:100%;height:100%;min-height:116px;transition:transform .45s;transform-style:preserve-3d}.flashcard.flipped .flash-inner{transform:rotateY(180deg)}.flash-front,.flash-back{position:absolute;inset:0;backface-visibility:hidden;border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff;box-shadow:0 5px 16px rgba(20,32,51,.08)}.flash-front{display:flex;align-items:center;justify-content:center;text-align:center;font-weight:700;color:var(--brand-dark)}.flash-back{transform:rotateY(180deg);background:#f8fbff}.quiz{margin-top:14px;padding:16px;border:1px solid var(--line);border-radius:14px;background:#fff}.quiz h3{margin-top:0}.quiz-option{display:block;width:100%;text-align:left;background:#f8fbff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0;cursor:pointer}.quiz-option.correct{border-color:var(--ok);background:#ecfdf3}.quiz-option.wrong{border-color:var(--bad);background:#fff1f0}.feedback{font-weight:700;margin-top:10px}.feedback.ok{color:var(--ok)}.feedback.bad{color:var(--bad)}.calc{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:12px}.calc-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.field label{display:block;font-size:.88rem;color:var(--muted);margin-bottom:4px;font-weight:700}.field input,.field select{width:100%;padding:10px 11px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink)}.result{margin-top:14px;padding:14px;border-radius:14px;background:var(--soft);border:1px solid #c8ddf4;font-weight:700}.tag{display:inline-block;padding:3px 8px;border-radius:999px;background:var(--soft);color:var(--brand-dark);font-size:.78rem;font-weight:700;margin-left:6px}.hidden-by-search{display:none!important}footer{color:var(--muted);font-size:.88rem;padding:18px 0 0}@media print{header,nav,.toolbar,.quiz,.calc,footer{display:none!important}main{padding:0}.grid{display:block}.card{break-inside:avoid;box-shadow:none;border:1px solid #bbb}.content{display:block!important}.section-head{cursor:default}.chev{display:none}}@media(max-width:900px){.grid{grid-template-columns:1fr}nav{position:static}.stats,.twocol,.flashcards,.calc-grid{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr}}
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        margin: 0;
+        padding: 30px;
+        color: #222;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: auto;
+        background: white;
+        border-radius: 14px;
+        padding: 30px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+        color: #003b75;
+        margin-bottom: 5px;
+    }
+
+    h2 {
+        color: #003b75;
+        margin-top: 35px;
+    }
+
+    .subtitle {
+        color: #666;
+        margin-bottom: 30px;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .field {
+        display: flex;
+        flex-direction: column;
+    }
+
+    label {
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    input, select, textarea {
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 15px;
+    }
+
+    .output {
+        margin-top: 40px;
+        padding: 25px;
+        border-radius: 12px;
+        background: #f8fbff;
+        border-left: 6px solid #003b75;
+    }
+
+    .pathway {
+        font-size: 30px;
+        font-weight: bold;
+        color: #003b75;
+        margin: 15px 0;
+    }
+
+    .warning {
+        background: #fff4e5;
+        border-left: 5px solid #ff9800;
+        padding: 15px;
+        margin-top: 15px;
+        border-radius: 8px;
+    }
+
+    .danger {
+        background: #ffe5e5;
+        border-left: 5px solid #d40000;
+        padding: 15px;
+        margin-top: 15px;
+        border-radius: 8px;
+    }
+
+    button {
+        background: #003b75;
+        color: white;
+        border: none;
+        padding: 14px 22px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        margin-top: 20px;
+    }
+
+    button:hover {
+        background: #00264d;
+    }
+
+    pre {
+        white-space: pre-wrap;
+        background: #eef4fb;
+        padding: 15px;
+        border-radius: 8px;
+        overflow-x: auto;
+    }
+
+    @media(max-width: 768px) {
+        .grid {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
 </head>
+
 <body>
-<header><div class="wrap"><h1>Electrical Science & Design Revision Tool</h1><p>Fast-track recap for City & Guilds 2365 Level 2 and Level 3: electrical principles, circuit theory, AC theory, design currents, correction factors, and BS 7671-style cable selection logic.</p><div class="toolbar"><input id="searchBox" class="search" type="search" placeholder="Search: Ohm, impedance, Ib, Cg, voltage drop..."><button class="btn" onclick="expandAll()">Expand all</button><button class="btn secondary" onclick="collapseAll()">Collapse all</button><button class="btn secondary" onclick="window.print()">Print / Save PDF</button></div></div></header>
-<main><div class="wrap grid"><nav aria-label="Revision navigation"><h2>Sections</h2><a href="#fundamentals">1. Fundamentals</a><a href="#circuit-theory">2. Circuit Theory</a><a href="#resistance">3. Resistance</a><a href="#magnetism">4. Magnetism</a><a href="#ac-theory">5. AC Theory</a><a href="#design">6. Design Currents</a><a href="#safety">7. Safety</a><a href="#quiz-bank">8. Quick Quiz</a></nav><div>
-<div class="stats"><div class="stat"><strong>7</strong><span>Core revision areas</span></div><div class="stat"><strong>20+</strong><span>Key formulas</span></div><div class="stat"><strong>Ib ≤ In ≤ Iz</strong><span>Design coordination</span></div><div class="stat"><strong>Level 2/3</strong><span>C&G 2365 focus</span></div></div>
-<section id="fundamentals" class="card open" data-keywords="atomic structure electrons emf si units voltage current resistance power"><button class="section-head" onclick="toggleCard(this)"><span><h2>1. Fundamental Principles <span class="tag">Level 2</span></h2><small>Atoms, electron flow, EMF and SI units</small></span><span class="chev">›</span></button><div class="content"><div class="twocol"><div><h3>Atomic structure</h3><p>Electricity involves the movement of free electrons. In copper conductors, electrons in the outer shell are loosely held and can move through the material when an electromotive force is applied.</p><div class="note"><strong>Revision point:</strong> Conventional current is treated as flowing from positive to negative, even though electron flow is from negative to positive.</div></div><div><h3>EMF generation</h3><p>Electromotive force can be generated in several ways:</p><ul><li><strong>Chemically:</strong> cells and batteries.</li><li><strong>Magnetically:</strong> generators and alternators.</li><li><strong>Thermally:</strong> thermocouples.</li></ul></div></div><table><thead><tr><th>Quantity</th><th>Symbol</th><th>Unit</th><th>Meaning</th></tr></thead><tbody><tr><td>Voltage</td><td>V</td><td>Volt</td><td>Electrical pressure / EMF</td></tr><tr><td>Current</td><td>I</td><td>Ampere</td><td>Rate of electron flow; coulombs per second</td></tr><tr><td>Resistance</td><td>R</td><td>Ohm Ω</td><td>Opposition to current flow</td></tr><tr><td>Power</td><td>P</td><td>Watt</td><td>Rate of energy transfer</td></tr></tbody></table></div></section>
-<section id="circuit-theory" class="card" data-keywords="ohms law voltage current resistance power series parallel total resistance"><button class="section-head" onclick="toggleCard(this)"><span><h2>2. Circuit Theory <span class="tag">Level 2</span></h2><small>Ohm’s law, power, series and parallel circuits</small></span><span class="chev">›</span></button><div class="content"><h3>Ohm’s Law</h3><div class="formula">V = I × R &nbsp;&nbsp; | &nbsp;&nbsp; I = V ÷ R &nbsp;&nbsp; | &nbsp;&nbsp; R = V ÷ I</div><h3>Power formulas</h3><div class="formula">P = V × I &nbsp;&nbsp; | &nbsp;&nbsp; P = I² × R</div><div class="twocol"><div class="note"><h3>Series circuits</h3><ul><li>Total resistance: R<sub>Total</sub> = R<sub>1</sub> + R<sub>2</sub> + ...</li><li>Current is the same everywhere.</li><li>Voltage divides across components.</li></ul></div><div class="note"><h3>Parallel circuits</h3><ul><li>Total resistance: 1/R<sub>Total</sub> = 1/R<sub>1</sub> + 1/R<sub>2</sub> + ...</li><li>Voltage is the same across each branch.</li><li>Current divides between branches.</li></ul></div></div><div class="calc"><h3>Ohm’s Law Calculator</h3><p>Enter any two values. Leave the third blank.</p><div class="calc-grid"><div class="field"><label>Voltage V</label><input id="ohmV" type="number" step="any"></div><div class="field"><label>Current I</label><input id="ohmI" type="number" step="any"></div><div class="field"><label>Resistance Ω</label><input id="ohmR" type="number" step="any"></div><div class="field"><label>&nbsp;</label><button class="btn" onclick="calcOhm()">Calculate</button></div></div><div id="ohmResult" class="result">Result will appear here.</div></div></div></section>
-<section id="resistance" class="card" data-keywords="resistance resistivity length area temperature coefficient copper insulation"><button class="section-head" onclick="toggleCard(this)"><span><h2>3. Resistance and Resistivity <span class="tag">Level 2/3</span></h2><small>Material, length, area and temperature effects</small></span><span class="chev">›</span></button><div class="content"><div class="formula">R = ρ × L ÷ A</div><table><thead><tr><th>Factor</th><th>Effect on resistance</th></tr></thead><tbody><tr><td>Material</td><td>Different materials have different resistivity values.</td></tr><tr><td>Length</td><td>Longer conductor = higher resistance.</td></tr><tr><td>Cross-sectional area</td><td>Larger area = lower resistance.</td></tr><tr><td>Temperature</td><td>Metal conductor resistance usually increases as temperature rises.</td></tr></tbody></table><div class="warning"><strong>Exam trap:</strong> Conductors and insulators behave differently with temperature. Copper resistance increases as it gets hotter; some insulating materials reduce in resistance as temperature increases.</div></div></section>
-<section id="magnetism" class="card" data-keywords="magnetism electromagnetism flux density weber tesla fleming left hand right hand motor generator"><button class="section-head" onclick="toggleCard(this)"><span><h2>4. Magnetism and Electromagnetism <span class="tag">Level 2/3</span></h2><small>Flux, flux density, motor action and generator action</small></span><span class="chev">›</span></button><div class="content"><div class="twocol"><div><h3>Magnetic flux</h3><p>Magnetic flux is the total magnetic field passing through an area.</p><div class="formula">Φ = magnetic flux, measured in Webers Wb</div></div><div><h3>Flux density</h3><p>Flux density is flux per unit area.</p><div class="formula">B = Φ ÷ A, measured in Tesla T</div></div></div><table><thead><tr><th>Rule</th><th>Used for</th><th>Meaning</th></tr></thead><tbody><tr><td>Fleming’s Left-Hand Rule</td><td>Motor action</td><td>Force/motion produced when current flows in a magnetic field.</td></tr><tr><td>Fleming’s Right-Hand Rule</td><td>Generator action</td><td>EMF induced when a conductor cuts magnetic flux.</td></tr></tbody></table></div></section>
-<section id="ac-theory" class="card" data-keywords="alternating current sine wave rms peak reactance capacitive inductive impedance power factor three phase star delta"><button class="section-head" onclick="toggleCard(this)"><span><h2>5. AC Theory and Advanced Principles <span class="tag">Level 3</span></h2><small>RMS, reactance, impedance, power factor and three phase</small></span><span class="chev">›</span></button><div class="content"><table><thead><tr><th>Topic</th><th>Formula / Rule</th><th>Meaning</th></tr></thead><tbody><tr><td>RMS value</td><td>RMS = Peak × 0.707</td><td>Effective heating value of an AC waveform.</td></tr><tr><td>Capacitive reactance</td><td>X<sub>C</sub> = 1 ÷ 2πfC</td><td>Opposition to changes in voltage.</td></tr><tr><td>Inductive reactance</td><td>X<sub>L</sub> = 2πfL</td><td>Opposition to changes in current.</td></tr><tr><td>Impedance</td><td>Z = √(R² + (X<sub>L</sub> − X<sub>C</sub>)²)</td><td>Total opposition in an AC circuit.</td></tr><tr><td>Power factor</td><td>cosφ = kW ÷ kVA</td><td>Ratio of real power to apparent power.</td></tr><tr><td>True power</td><td>P = V × I × cosφ</td><td>Power actually converted into useful work or heat.</td></tr></tbody></table><div class="note"><strong>Three-phase:</strong> A typical low-voltage three-phase system is 400 V line voltage with 120° phase separation. In star, V<sub>L</sub> = √3 × V<sub>ph</sub>. Delta connections do not have a neutral point in the same way as star.</div></div></section>
-<section id="design" class="card open" data-keywords="design current ib in it iz cable selection correction factors ca cg ci cf voltage drop zs ze r1 r2 maximum demand diversity"><button class="section-head" onclick="toggleCard(this)"><span><h2>6. Design Currents and Cable Selection <span class="tag">Level 3</span></h2><small>Ib, In, It, Iz, correction factors, voltage drop and Zs</small></span><span class="chev">›</span></button><div class="content"><div class="warning"><strong>Key coordination equation:</strong> I<sub>b</sub> ≤ I<sub>n</sub> ≤ I<sub>z</sub>. The design current must not exceed the protective device rating, and the protective device must not exceed the cable’s effective current-carrying capacity.</div><table><thead><tr><th>Symbol</th><th>Meaning</th><th>Role in design</th></tr></thead><tbody><tr><td>I<sub>b</sub></td><td>Design current</td><td>The current the load is expected to draw in normal service.</td></tr><tr><td>I<sub>n</sub></td><td>Nominal rating of protective device</td><td>The selected MCB, RCBO or fuse rating.</td></tr><tr><td>I<sub>t</sub></td><td>Tabulated current-carrying capacity</td><td>The value looked up in BS 7671 / On-Site Guide cable tables before correction factors.</td></tr><tr><td>I<sub>z</sub></td><td>Effective installed current-carrying capacity</td><td>The cable’s real current capacity after correction factors are applied.</td></tr></tbody></table><h3>Design current formulas</h3><div class="formula">Single phase: I<sub>b</sub> = P ÷ V</div><div class="formula">Three phase: I<sub>b</sub> = P ÷ (√3 × V<sub>L</sub> × cosφ)</div><h3>Correction factors</h3><table><thead><tr><th>Factor</th><th>Meaning</th><th>Typical use</th></tr></thead><tbody><tr><td>C<sub>a</sub></td><td>Ambient temperature</td><td>Used where ambient temperature differs from standard table conditions.</td></tr><tr><td>C<sub>g</sub></td><td>Grouping</td><td>Used where multiple circuits are installed together and mutually heat each other.</td></tr><tr><td>C<sub>i</sub></td><td>Thermal insulation</td><td>Used where cable is surrounded by or passes through insulation.</td></tr><tr><td>C<sub>f</sub></td><td>Semi-enclosed / rewireable fuse</td><td>Often 0.725 because this type of fuse has different operating characteristics.</td></tr></tbody></table><div class="formula">I<sub>t</sub> ≥ I<sub>n</sub> ÷ (C<sub>a</sub> × C<sub>g</sub> × C<sub>i</sub> × C<sub>f</sub>)</div><h3>Voltage drop and earth fault loop impedance</h3><div class="formula">V<sub>drop</sub> = (mV/A/m × length × current) ÷ 1000</div><div class="formula">Z<sub>s</sub> = Z<sub>e</sub> + (R<sub>1</sub> + R<sub>2</sub>)</div><p>Z<sub>s</sub> must be low enough to allow the protective device to operate within the required disconnection time.</p><div class="calc"><h3>Design Current and Cable Table Capacity Checker</h3><p>This checks the design sequence. It does not replace BS 7671 tables; use it as a revision aid.</p><div class="calc-grid"><div class="field"><label>Load power W</label><input id="loadW" type="number" step="any" placeholder="e.g. 9000"></div><div class="field"><label>Voltage V</label><input id="supplyV" type="number" step="any" value="230"></div><div class="field"><label>Protective device In A</label><input id="protectiveIn" type="number" step="any" placeholder="e.g. 40"></div><div class="field"><label>Power factor</label><input id="pf" type="number" step="any" value="1"></div><div class="field"><label>Ca</label><input id="ca" type="number" step="any" value="1"></div><div class="field"><label>Cg</label><input id="cg" type="number" step="any" value="1"></div><div class="field"><label>Ci</label><input id="ci" type="number" step="any" value="1"></div><div class="field"><label>Cf</label><input id="cf" type="number" step="any" value="1"></div></div><p><button class="btn" onclick="calcDesign()">Calculate design values</button></p><div id="designResult" class="result">Result will appear here.</div></div></div></section>
-<section id="safety" class="card" data-keywords="safe isolation lock off basic protection fault protection ads ip rating mcb fuse rcd"><button class="section-head" onclick="toggleCard(this)"><span><h2>7. Key Safety Concepts</h2><small>Safe isolation, basic protection and fault protection</small></span><span class="chev">›</span></button><div class="content"><table><thead><tr><th>Concept</th><th>Meaning</th></tr></thead><tbody><tr><td>Safe isolation</td><td>Identify circuit, isolate supply, secure/lock off, prove tester, test for dead, re-prove tester.</td></tr><tr><td>Basic protection</td><td>Protection against direct contact, typically by insulation, barriers, enclosures or IP-rated equipment.</td></tr><tr><td>Fault protection</td><td>Protection during fault conditions, commonly by Automatic Disconnection of Supply using fuses, MCBs, RCBOs or RCDs.</td></tr></tbody></table><div class="warning"><strong>Practical rule:</strong> Never rely on a switch position or someone else’s word. Lock off and prove dead using an approved voltage indicator and proving unit.</div></div></section>
-<section id="quiz-bank" class="card open" data-keywords="quiz revision flashcards test questions"><button class="section-head" onclick="toggleCard(this)"><span><h2>8. Quick Revision Quiz and Flashcards</h2><small>Check recall before an exam or assessment</small></span><span class="chev">›</span></button><div class="content"><div class="flashcards"><div class="flashcard" onclick="flipCard(this)"><div class="flash-inner"><div class="flash-front">What is Ohm’s Law?</div><div class="flash-back">V = I × R. Voltage equals current multiplied by resistance.</div></div></div><div class="flashcard" onclick="flipCard(this)"><div class="flash-inner"><div class="flash-front">What does Cg correct for?</div><div class="flash-back">Grouping. It accounts for cables heating each other when installed together.</div></div></div><div class="flashcard" onclick="flipCard(this)"><div class="flash-inner"><div class="flash-front">What is the design coordination equation?</div><div class="flash-back">I<sub>b</sub> ≤ I<sub>n</sub> ≤ I<sub>z</sub>.</div></div></div><div class="flashcard" onclick="flipCard(this)"><div class="flash-inner"><div class="flash-front">What is Zs?</div><div class="flash-back">Earth fault loop impedance: Z<sub>s</sub> = Z<sub>e</sub> + (R<sub>1</sub> + R<sub>2</sub>).</div></div></div></div><div class="quiz" data-answer="1"><h3>Question 1</h3><p>In a parallel circuit, what happens to the voltage across each branch?</p><button class="quiz-option" onclick="answerQuiz(this,0)">It divides between the branches.</button><button class="quiz-option" onclick="answerQuiz(this,1)">It is the same across each branch.</button><button class="quiz-option" onclick="answerQuiz(this,2)">It becomes zero after the first load.</button><div class="feedback"></div></div><div class="quiz" data-answer="2"><h3>Question 2</h3><p>Which factor is used when several cables are installed together?</p><button class="quiz-option" onclick="answerQuiz(this,0)">C<sub>a</sub></button><button class="quiz-option" onclick="answerQuiz(this,1)">C<sub>i</sub></button><button class="quiz-option" onclick="answerQuiz(this,2)">C<sub>g</sub></button><div class="feedback"></div></div><div class="quiz" data-answer="0"><h3>Question 3</h3><p>What is the correct coordination relationship for a circuit?</p><button class="quiz-option" onclick="answerQuiz(this,0)">I<sub>b</sub> ≤ I<sub>n</sub> ≤ I<sub>z</sub></button><button class="quiz-option" onclick="answerQuiz(this,1)">I<sub>n</sub> ≤ I<sub>b</sub> ≤ I<sub>z</sub></button><button class="quiz-option" onclick="answerQuiz(this,2)">I<sub>z</sub> ≤ I<sub>n</sub> ≤ I<sub>b</sub></button><div class="feedback"></div></div></div></section>
-<footer><p>This tool is for revision and training support. Always verify final design values against the current BS 7671, On-Site Guide, manufacturer data, and centre/awarding-body requirements.</p></footer>
-</div></div></main>
+
+<div class="container">
+
+    <h1>EAL EWA Registration Pathway Checker</h1>
+    <p class="subtitle">
+        Internal use only — EWA Tracker Ltd
+    </p>
+
+    <div class="grid">
+
+        <div class="field">
+            <label>Candidate Name</label>
+            <input type="text" id="candidateName">
+        </div>
+
+        <div class="field">
+            <label>Date Checked</label>
+            <input type="date" id="dateChecked">
+        </div>
+
+        <div class="field">
+            <label>Checked By</label>
+            <input type="text" id="checkedBy">
+        </div>
+
+        <div class="field">
+            <label>18th Edition Status</label>
+            <select id="eighteenth">
+                <option value="">Select...</option>
+                <option value="none">No 18th Edition / Needs Current Exam</option>
+                <option value="2018">BS 7671:2018 Original / Pre-Amendment 2</option>
+                <option value="2022">BS 7671:2018 Amendment 2 / 2022</option>
+                <option value="2024">BS 7671:2018 Amendment 3 / 2024</option>
+                <option value="transfer">Existing 603/5982/1A Transfer</option>
+                <option value="unclear">Unclear / Unsure</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>Inspection & Testing</label>
+            <select id="itStatus">
+                <option value="">Select...</option>
+                <option value="yes">Holds Inspection & Testing</option>
+                <option value="no">Does NOT yet hold Inspection & Testing</option>
+                <option value="unsure">Unsure</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>Experience</label>
+            <select id="experience">
+                <option value="">Select...</option>
+                <option value="5plus">5+ Years Relevant Experience</option>
+                <option value="under5">Under 5 Years</option>
+                <option value="unverified">Not Yet Verified</option>
+            </select>
+        </div>
+
+    </div>
+
+    <button onclick="generateDecision()">Generate Pathway Decision</button>
+
+    <div class="output" id="outputBox" style="display:none;">
+
+        <h2>Recommended Pathway</h2>
+
+        <div class="pathway" id="pathwayResult"></div>
+
+        <div id="reasonText"></div>
+
+        <div id="warnings"></div>
+
+        <h2>Registration Decision Note</h2>
+
+        <pre id="adminNote"></pre>
+
+        <button onclick="copyNote()">Copy Admin Note</button>
+
+    </div>
+
+</div>
+
 <script>
-function toggleCard(button){button.closest('.card').classList.toggle('open')}function expandAll(){document.querySelectorAll('.card').forEach(card=>card.classList.add('open'))}function collapseAll(){document.querySelectorAll('.card').forEach(card=>card.classList.remove('open'))}function flipCard(card){card.classList.toggle('flipped')}function answerQuiz(button,selected){const quiz=button.closest('.quiz');const correct=Number(quiz.dataset.answer);quiz.querySelectorAll('.quiz-option').forEach((opt,index)=>{opt.classList.remove('correct','wrong');if(index===correct)opt.classList.add('correct')});const feedback=quiz.querySelector('.feedback');if(selected===correct){feedback.textContent='Correct.';feedback.className='feedback ok'}else{button.classList.add('wrong');feedback.textContent='Not quite. Review the highlighted correct answer.';feedback.className='feedback bad'}}function n(id){const value=parseFloat(document.getElementById(id).value);return Number.isFinite(value)?value:null}function calcOhm(){const V=n('ohmV');const I=n('ohmI');const R=n('ohmR');const out=document.getElementById('ohmResult');if(V!==null&&I!==null&&R===null&&I!==0){out.innerHTML=`R = V ÷ I = ${V} ÷ ${I} = <strong>${(V/I).toFixed(2)} Ω</strong>`}else if(V!==null&&R!==null&&I===null&&R!==0){out.innerHTML=`I = V ÷ R = ${V} ÷ ${R} = <strong>${(V/R).toFixed(2)} A</strong>`}else if(I!==null&&R!==null&&V===null){out.innerHTML=`V = I × R = ${I} × ${R} = <strong>${(I*R).toFixed(2)} V</strong>`}else{out.textContent='Enter exactly two values and leave the value you want to calculate blank.'}}function calcDesign(){const loadW=n('loadW');const supplyV=n('supplyV');const protectiveIn=n('protectiveIn');const pf=n('pf')||1;const ca=n('ca')||1;const cg=n('cg')||1;const ci=n('ci')||1;const cf=n('cf')||1;const out=document.getElementById('designResult');if(!loadW||!supplyV||!protectiveIn){out.textContent='Enter load power, voltage and protective device rating.';return}const ib=loadW/(supplyV*pf);const correction=ca*cg*ci*cf;const it=protectiveIn/correction;const coordination=ib<=protectiveIn?'PASS: Ib ≤ In':'FAIL: Ib is greater than In';out.innerHTML=`<div>I<sub>b</sub> = ${loadW} ÷ (${supplyV} × ${pf}) = <strong>${ib.toFixed(2)} A</strong></div><div>Total correction factor = ${correction.toFixed(3)}</div><div>I<sub>t</sub> ≥ I<sub>n</sub> ÷ corrections = ${protectiveIn} ÷ ${correction.toFixed(3)} = <strong>${it.toFixed(2)} A</strong></div><div>${coordination}</div><div style="margin-top:8px;">Select a cable from the tables with tabulated capacity at least <strong>${it.toFixed(2)} A</strong>, then verify voltage drop and Z<sub>s</sub>.</div>`}document.getElementById('searchBox').addEventListener('input',function(){const q=this.value.trim().toLowerCase();document.querySelectorAll('.card').forEach(card=>{const text=(card.innerText+' '+(card.dataset.keywords||'')).toLowerCase();const show=!q||text.includes(q);card.classList.toggle('hidden-by-search',!show);if(q&&show)card.classList.add('open')})});
+
+function generateDecision() {
+
+    const candidate = document.getElementById('candidateName').value;
+    const date = document.getElementById('dateChecked').value;
+    const checkedBy = document.getElementById('checkedBy').value;
+    const eighteenth = document.getElementById('eighteenth').value;
+    const itStatus = document.getElementById('itStatus').value;
+    const experience = document.getElementById('experience').value;
+
+    let pathway = "";
+    let reason = "";
+    let warnings = "";
+
+    switch(eighteenth) {
+
+        case "none":
+            pathway = "603/5982/1CZ";
+            reason = "Current Amendment 3 pathway required where learner needs to sit current 18th Edition exam.";
+            break;
+
+        case "2018":
+            pathway = "603/5982/1BZ";
+            reason = "RPL pathway for original BS 7671:2018 / pre-Amendment 2.";
+            break;
+
+        case "2022":
+            pathway = "603/5982/1AZ";
+            reason = "RPL pathway for BS 7671:2018 Amendment 2 / 2022.";
+            break;
+
+        case "2024":
+            pathway = "603/5982/1CZ";
+            reason = "Current Amendment 3 / 2024 pathway.";
+            break;
+
+        case "transfer":
+            pathway = "603/5982/1AX";
+            reason = "Pathway transfer from older 603/5982/1A structure.";
+            break;
+
+        case "unclear":
+            pathway = "DO NOT REGISTER YET";
+            reason = "Certificate wording unclear. Verify before registration.";
+            break;
+    }
+
+    if(experience === "under5") {
+        warnings += `
+        <div class="danger">
+            Candidate may not meet minimum 5-year experience requirement.
+        </div>`;
+    }
+
+    if(experience === "unverified") {
+        warnings += `
+        <div class="warning">
+            Experience evidence has not yet been verified.
+        </div>`;
+    }
+
+    if(itStatus === "no") {
+        warnings += `
+        <div class="warning">
+            Candidate must obtain Inspection & Testing qualification before certification claim.
+        </div>`;
+    }
+
+    if(itStatus === "unsure") {
+        warnings += `
+        <div class="warning">
+            Inspection & Testing evidence should be verified.
+        </div>`;
+    }
+
+    document.getElementById('outputBox').style.display = "block";
+    document.getElementById('pathwayResult').innerText = pathway;
+    document.getElementById('reasonText').innerHTML = `<strong>Reason:</strong> ${reason}`;
+    document.getElementById('warnings').innerHTML = warnings;
+
+    const note = `
+Candidate: ${candidate}
+Date Checked: ${date}
+Checked By: ${checkedBy}
+
+Qualification:
+603/5982/1
+
+18th Edition Status:
+${document.getElementById('eighteenth').selectedOptions[0].text}
+
+Recommended Pathway:
+${pathway}
+
+Reason:
+${reason}
+
+Inspection & Testing Status:
+${document.getElementById('itStatus').selectedOptions[0].text}
+
+Experience Status:
+${document.getElementById('experience').selectedOptions[0].text}
+
+Warnings / Conditions:
+${warnings.replace(/<[^>]*>?/gm, '')}
+`;
+
+    document.getElementById('adminNote').textContent = note;
+}
+
+function copyNote() {
+
+    const note = document.getElementById('adminNote').textContent;
+
+    navigator.clipboard.writeText(note);
+
+    alert("Admin note copied.");
+}
+
+document.getElementById('dateChecked').valueAsDate = new Date();
+
 </script>
+
 </body>
 </html>
