@@ -54,14 +54,18 @@ export async function uploadToSharePoint(
   try {
     const accessToken = await getAccessToken()
 
-    // Clean up folder path
+    // Clean up folder path - encode each path segment separately, not the slashes
     const cleanPath = folderPath.startsWith("/") ? folderPath.slice(1) : folderPath
-    const encodedPath = encodeURIComponent(`${cleanPath}/${fileName}`)
+    const pathSegments = cleanPath.split("/").map(segment => encodeURIComponent(segment))
+    const encodedFileName = encodeURIComponent(fileName)
+    const fullPath = [...pathSegments, encodedFileName].join("/")
 
     // Upload using Microsoft Graph API
     const uploadUrl = SHAREPOINT_CONFIG.driveId
-      ? `https://graph.microsoft.com/v1.0/sites/${SHAREPOINT_CONFIG.siteId}/drives/${SHAREPOINT_CONFIG.driveId}/root:/${encodedPath}:/content`
-      : `https://graph.microsoft.com/v1.0/sites/${SHAREPOINT_CONFIG.siteId}/drive/root:/${encodedPath}:/content`
+      ? `https://graph.microsoft.com/v1.0/sites/${SHAREPOINT_CONFIG.siteId}/drives/${SHAREPOINT_CONFIG.driveId}/root:/${fullPath}:/content`
+      : `https://graph.microsoft.com/v1.0/sites/${SHAREPOINT_CONFIG.siteId}/drive/root:/${fullPath}:/content`
+
+    console.log("[v0] SharePoint upload URL:", uploadUrl)
 
     const response = await fetch(uploadUrl, {
       method: "PUT",
@@ -73,8 +77,14 @@ export async function uploadToSharePoint(
     })
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
-      console.error("SharePoint upload error:", errorData)
+      const errorText = await response.text()
+      console.error("[v0] SharePoint upload error - Status:", response.status, "Response:", errorText)
+      let errorData
+      try {
+        errorData = JSON.parse(errorText)
+      } catch {
+        errorData = { error: { message: errorText } }
+      }
       return {
         success: false,
         error: errorData.error?.message || `Upload failed with status ${response.status}`,
@@ -100,8 +110,10 @@ export async function checkFolderExists(folderPath: string): Promise<boolean> {
   try {
     const accessToken = await getAccessToken()
 
+    // Encode each path segment separately, not the slashes
     const cleanPath = folderPath.startsWith("/") ? folderPath.slice(1) : folderPath
-    const encodedPath = encodeURIComponent(cleanPath)
+    const pathSegments = cleanPath.split("/").map(segment => encodeURIComponent(segment))
+    const encodedPath = pathSegments.join("/")
 
     const url = SHAREPOINT_CONFIG.driveId
       ? `https://graph.microsoft.com/v1.0/sites/${SHAREPOINT_CONFIG.siteId}/drives/${SHAREPOINT_CONFIG.driveId}/root:/${encodedPath}`
