@@ -555,7 +555,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* EWA Pathway Checker Tool Promo */}
+      {/* EWA Eligibility Checker Tool Promo */}
       <section className="py-12 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4">
           <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-6 md:p-8 shadow-lg">
@@ -568,9 +568,9 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="flex-1 text-center md:text-left">
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-2">EWA Registration Pathway Checker</h3>
+                <h3 className="text-xl md:text-2xl font-bold text-white mb-2">EWA Eligibility &amp; Qualification Checker</h3>
                 <p className="text-blue-100 mb-4">
-                  Determine the correct EAL qualification pathway based on 18th Edition status, Inspection &amp; Testing qualifications, and experience. Generates admin notes for registration decisions.
+                  Check your eligibility for the ECS Gold Card route based on your qualifications, 18th Edition status, I&amp;T qualifications, and experience. Get instant pathway guidance and next steps.
                 </p>
                 <a
                   href="/revision"
@@ -579,7 +579,7 @@ export default function HomePage() {
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                   </svg>
-                  Open Pathway Checker
+                  Check Your Eligibility
                 </a>
               </div>
             </div>
