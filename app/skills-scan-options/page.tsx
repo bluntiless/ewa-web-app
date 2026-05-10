@@ -58,9 +58,9 @@ export default function SkillsScanOptionsPage() {
               <strong>Recommended</strong> if you want to check your suitability before completing the official TESP form.
             </p>
 
-            <Link href="/candidate-check">
+            <Link href="/eligibility">
               <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                Start Self-Check
+                Check Eligibility
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </Link>

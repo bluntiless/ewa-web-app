@@ -42,7 +42,7 @@ export default function EAL5982Page() {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
-              href="/candidate-check"
+              href="/eligibility"
               className="bg-white text-blue-700 px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition-colors"
             >
               Check Your Eligibility
@@ -181,7 +181,7 @@ export default function EAL5982Page() {
                 <span className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">1</span>
                 <div>
                   <h3 className="font-semibold text-gray-900">Initial Skills Scan</h3>
-                  <p className="text-gray-600 text-sm">Complete our online <Link href="/candidate-check" className="text-blue-600 hover:underline">TESP Skills Scan</Link> to assess your current knowledge and experience levels. This free assessment helps determine your suitability for the EAL 5982 Experienced Worker Qualification route.</p>
+                  <p className="text-gray-600 text-sm">Complete our online <Link href="/eligibility" className="text-blue-600 hover:underline">Eligibility Checker</Link> to assess your current knowledge and experience levels. This free assessment helps determine your suitability for the EAL 5982 Experienced Worker Qualification route.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4 bg-white border border-gray-200 rounded-lg p-4">
@@ -306,10 +306,10 @@ export default function EAL5982Page() {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link
-                href="/candidate-check"
+                href="/eligibility"
                 className="bg-white text-blue-700 px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition-colors"
               >
-                Start Free Skills Scan
+                Check Your Eligibility
               </Link>
               <a
                 href="https://calendly.com/ewatracker-info/30min"
@@ -406,8 +406,8 @@ export default function EAL5982Page() {
               <Link href="/ewa-electrician-uk" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
                 <ArrowRight className="w-4 h-4" /> EWA for UK Electricians
               </Link>
-              <Link href="/candidate-check" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
-                <ArrowRight className="w-4 h-4" /> Free Skills Scan
+              <Link href="/eligibility" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
+                <ArrowRight className="w-4 h-4" /> Eligibility Checker
               </Link>
               <Link href="/ewa-cost" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
                 <ArrowRight className="w-4 h-4" /> EWA Costs
