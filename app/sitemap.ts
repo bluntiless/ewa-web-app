@@ -105,7 +105,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: "https://ewatracker.co.uk/candidate-check",
+      url: "https://ewatracker.co.uk/eligibility",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.7,

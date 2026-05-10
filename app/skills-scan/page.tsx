@@ -321,11 +321,11 @@ export default function SkillsScanPage() {
           )}
         </div>
 
-        {/* Preliminary Assessment Link */}
+        {/* Eligibility Check Link */}
         <div className="mt-8 text-center">
           <p className="text-gray-600 mb-2">Not sure if you&apos;re ready?</p>
-          <Link href="/candidate-check" className="text-blue-600 hover:text-blue-700 hover:underline font-medium">
-            Take our free preliminary self-assessment first
+          <Link href="/eligibility" className="text-blue-600 hover:text-blue-700 hover:underline font-medium">
+            Check your eligibility first
           </Link>
         </div>
       </main>
