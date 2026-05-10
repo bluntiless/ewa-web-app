@@ -113,7 +113,7 @@ export default function EwaAssessmentPage() {
             rel="noopener noreferrer"
             className="inline-flex items-center px-8 py-3 rounded-full text-lg font-semibold bg-white text-blue-700 hover:bg-gray-100 transition-colors shadow-lg"
           >
-            <Lightbulb className="w-5 h-5 mr-2" /> Book Your EWA Assessment Call
+            <Lightbulb className="w-5 h-5 mr-2" /> Request an EWA Call
           </a>
         </section>
       </main>

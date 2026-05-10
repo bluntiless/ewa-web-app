@@ -154,7 +154,7 @@ export default function AboutPage() {
               rel="noopener noreferrer"
               className="inline-flex items-center px-6 py-3 rounded-lg text-sm font-semibold bg-white text-blue-700 hover:bg-blue-50 shadow-md hover:shadow-lg transition-all duration-200"
             >
-              Book Your EWA Assessment Call
+              Request an EWA Call
             </a>
           </div>
         </section>

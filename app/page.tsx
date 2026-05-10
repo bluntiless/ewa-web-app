@@ -69,7 +69,7 @@ export default function HomePage() {
               rel="noopener noreferrer"
               className="border border-white text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-white hover:text-blue-700 transition-colors shadow-lg"
             >
-              Book Your EWA Assessment Call
+              Request an EWA Call
             </a>
           </div>
           <div className="flex flex-wrap justify-center gap-3 text-sm mt-6">
@@ -90,7 +90,7 @@ export default function HomePage() {
       <section id="qualifications" className="py-16 md:py-24 bg-white">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">EWA to ECS Gold Card — Your Fast-Track Route</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">EWA to ECS Gold Card — Structured Experienced Worker Route</h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               Already working as an electrician but need formal qualification? The EWA is designed for experienced professionals like you. Complete the Level 3 EWA qualification as part of your route towards applying for an ECS Gold Card.
             </p>
@@ -479,7 +479,7 @@ export default function HomePage() {
                 <CheckCircle className="w-5 h-5 text-rose-600" />
               </div>
               <h4 className="text-sm font-semibold text-gray-900 mb-1">Assessor Feedback</h4>
-              <p className="text-xs text-gray-400">Real-time approval status</p>
+              <p className="text-xs text-gray-400">Evidence status and assessor feedback updates</p>
             </div>
           </div>
 
@@ -547,7 +547,7 @@ export default function HomePage() {
               rel="noopener noreferrer"
               className="inline-flex items-center px-8 py-4 rounded-full text-lg font-semibold bg-blue-700 text-white hover:bg-blue-800 transition-colors shadow-lg"
             >
-              Book Your EWA Assessment Call
+              Request an EWA Call
             </a>
           </div>
         </div>
