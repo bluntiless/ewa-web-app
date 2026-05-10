@@ -10,11 +10,11 @@ const navLinks = [
   { href: "/about", label: "About Us" },
   { href: "/services", label: "Services" },
   { href: "/assessment-iqa-services", label: "Assessment & IQA" },
-  { href: "/eligibility", label: "Eligibility Checker" },
-  { href: "/revision", label: "Pathway Checker" },
   { href: "/policies", label: "Policies" },
   { href: "/contact", label: "Contact" },
 ]
+
+const eligibilityLink = { href: "/eligibility", label: "Check Eligibility" }
 
 export default function SiteHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -52,7 +52,7 @@ export default function SiteHeader() {
         </div>
 
         {/* Desktop navigation */}
-        <nav className="hidden md:flex gap-6">
+        <nav className="hidden md:flex items-center gap-6">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -66,6 +66,12 @@ export default function SiteHeader() {
               {link.label}
             </Link>
           ))}
+          <Link
+            href={eligibilityLink.href}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+          >
+            {eligibilityLink.label}
+          </Link>
         </nav>
 
         {/* Hamburger button - mobile only */}
@@ -108,6 +114,13 @@ export default function SiteHeader() {
               {link.label}
             </Link>
           ))}
+          <Link
+            href={eligibilityLink.href}
+            onClick={() => setMobileMenuOpen(false)}
+            className="bg-blue-600 text-white font-semibold py-3 px-4 rounded-md text-lg text-center mt-2"
+          >
+            {eligibilityLink.label}
+          </Link>
         </nav>
       )}
     </header>
