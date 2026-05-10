@@ -54,7 +54,7 @@ export default function HomePage() {
             EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1).
           </p>
           <p className="text-base md:text-lg max-w-2xl mx-auto mb-8 opacity-80">
-            Serving experienced electricians in <strong>London</strong>, the <strong>South East</strong>, and <strong>across the UK</strong>. Fast-track your ECS Gold Card today.
+            Serving experienced electricians in <strong>London</strong>, the <strong>South East</strong>, and <strong>across the UK</strong>. A structured experienced-worker route towards ECS Gold Card eligibility.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 mb-6">
             <Link
@@ -72,7 +72,7 @@ export default function HomePage() {
               Book Your EWA Assessment Call
             </a>
           </div>
-          <div className="flex flex-wrap justify-center gap-3 text-sm">
+          <div className="flex flex-wrap justify-center gap-3 text-sm mt-6">
             <Link href="/skills-scan" className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-full transition-colors">
               Free Skills Scan
             </Link>
@@ -92,7 +92,7 @@ export default function HomePage() {
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">EWA to ECS Gold Card — Your Fast-Track Route</h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Already working as an electrician but need formal qualification? The EWA is designed for experienced professionals like you. Complete your Level 3 assessment and unlock your ECS Gold Card.
+              Already working as an electrician but need formal qualification? The EWA is designed for experienced professionals like you. Complete the Level 3 EWA qualification as part of your route towards applying for an ECS Gold Card.
             </p>
           </div>
 
@@ -203,17 +203,15 @@ export default function HomePage() {
           </div>
 
           <div className="mt-12 text-center">
-            <a
-              href="https://calendly.com/ewatracker-info/30min"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/eligibility"
               className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 shadow-sm hover:shadow-md transition-all duration-200"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
               </svg>
-              Book a Call to Discuss Your Experience
-            </a>
+              Check Eligibility Before Booking
+            </Link>
           </div>
         </div>
       </section>
@@ -677,14 +675,12 @@ export default function HomePage() {
                   Internal quality assurance and certification support
                 </li>
               </ul>
-              <a
-                href="https://calendly.com/ewatracker-info/30min"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/eligibility"
                 className="block w-full text-center px-5 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors"
               >
-                Book a Call
-              </a>
+                Check Eligibility First
+              </Link>
             </div>
 
             {/* Gold Plan */}
@@ -728,14 +724,30 @@ export default function HomePage() {
                   Enhanced assessor support throughout the programme
                 </li>
               </ul>
-              <a
-                href="https://calendly.com/ewatracker-info/30min"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/eligibility"
                 className="block w-full text-center px-5 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
               >
-                Book a Call
-              </a>
+                Check Eligibility First
+              </Link>
+            </div>
+          </div>
+
+          {/* Eligibility CTA */}
+          <div className="mt-8 max-w-xl mx-auto text-center">
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
+              <p className="text-gray-700 mb-4">
+                Not sure which option applies to you? Check your eligibility first before choosing Standard or Gold.
+              </p>
+              <Link
+                href="/eligibility"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+                Check My EWA Eligibility
+              </Link>
             </div>
           </div>
 

@@ -44,6 +44,16 @@ export default function SiteFooter() {
             Instagram
           </a>
         </div>
+        <div className="mt-6">
+          <a
+            href="https://calendly.com/ewatracker-info/30min"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-5 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Request an EWA Call
+          </a>
+        </div>
       </div>
     </footer>
   )
