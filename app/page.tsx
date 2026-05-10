@@ -72,7 +72,7 @@ export default function HomePage() {
               Book Your EWA Assessment Call
             </a>
           </div>
-          <div className="flex flex-wrap justify-center gap-3 text-sm">
+          <div className="flex flex-wrap justify-center gap-3 text-sm mt-6">
             <Link href="/skills-scan" className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-full transition-colors">
               Free Skills Scan
             </Link>
