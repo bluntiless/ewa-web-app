@@ -124,7 +124,7 @@ export default function ServicesPage() {
             
             <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-7xl mx-auto">
               {/* Option 1: Eligibility Checker */}
-              <div className="bg-white border-2 border-blue-200 rounded-xl p-6 text-left hover:border-blue-400 hover:shadow-lg transition-all">
+              <div className="bg-white border-2 border-blue-200 rounded-xl p-6 text-left hover:border-blue-400 hover:shadow-lg transition-all flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded">Recommended First</span>
                 </div>
@@ -132,21 +132,21 @@ export default function ServicesPage() {
                 <p className="text-gray-600 text-sm mb-4">
                   Quick eligibility check based on your qualifications, 18th Edition status, and experience.
                 </p>
-                <ul className="text-sm text-gray-600 mb-4 space-y-1">
+                <ul className="text-sm text-gray-600 mb-4 space-y-1 flex-grow">
                   <li>• Instant pathway guidance</li>
                   <li>• ECS Gold Card suitability</li>
                   <li>• No document uploads</li>
                 </ul>
                 <Link
                   href="/eligibility"
-                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-colors mt-auto"
                 >
                   <FilePenLine className="w-4 h-4 mr-2" /> Check Eligibility
                 </Link>
               </div>
 
               {/* Option 2: EWA Entry Test Mock */}
-              <div className="bg-white border-2 border-purple-200 rounded-xl p-6 text-left hover:border-purple-400 hover:shadow-lg transition-all">
+              <div className="bg-white border-2 border-purple-200 rounded-xl p-6 text-left hover:border-purple-400 hover:shadow-lg transition-all flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="bg-purple-100 text-purple-700 text-xs font-semibold px-2 py-1 rounded">Practice Test</span>
                 </div>
@@ -154,21 +154,21 @@ export default function ServicesPage() {
                 <p className="text-gray-600 text-sm mb-4">
                   Practice with our 50-question mock assessment covering key electrotechnical topics.
                 </p>
-                <ul className="text-sm text-gray-600 mb-4 space-y-1">
+                <ul className="text-sm text-gray-600 mb-4 space-y-1 flex-grow">
                   <li>• 50 random questions</li>
                   <li>• 100-minute timed test</li>
                   <li>• Instant results &amp; feedback</li>
                 </ul>
                 <Link
                   href="/ewa-entry-test"
-                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-purple-600 text-white hover:bg-purple-700 transition-colors"
+                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-purple-600 text-white hover:bg-purple-700 transition-colors mt-auto"
                 >
                   <ClipboardCheck className="w-4 h-4 mr-2" /> Start Mock Test
                 </Link>
               </div>
 
               {/* Option 3: Official TESP Submission */}
-              <div className="bg-white border-2 border-gray-200 rounded-xl p-6 text-left hover:border-blue-400 hover:shadow-lg transition-all">
+              <div className="bg-white border-2 border-gray-200 rounded-xl p-6 text-left hover:border-blue-400 hover:shadow-lg transition-all flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="bg-gray-100 text-gray-700 text-xs font-semibold px-2 py-1 rounded">Official Submission</span>
                 </div>
@@ -176,21 +176,21 @@ export default function ServicesPage() {
                 <p className="text-gray-600 text-sm mb-4">
                   Download the official TESP Skills Scan PDF, complete it in Adobe Reader, and upload.
                 </p>
-                <ul className="text-sm text-gray-600 mb-4 space-y-1">
+                <ul className="text-sm text-gray-600 mb-4 space-y-1 flex-grow">
                   <li>• Official EWA document</li>
                   <li>• Fill in Adobe Reader</li>
                   <li>• Direct submission</li>
                 </ul>
                 <Link
                   href="/skills-scan"
-                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-gray-800 text-white hover:bg-gray-900 transition-colors"
+                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-gray-800 text-white hover:bg-gray-900 transition-colors mt-auto"
                 >
                   <FilePenLine className="w-4 h-4 mr-2" /> Submit TESP
                 </Link>
               </div>
 
               {/* Option 4: Candidate Background Form */}
-              <div className="bg-white border-2 border-green-200 rounded-xl p-6 text-left hover:border-green-400 hover:shadow-lg transition-all">
+              <div className="bg-white border-2 border-green-200 rounded-xl p-6 text-left hover:border-green-400 hover:shadow-lg transition-all flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded">Required Document</span>
                 </div>
@@ -198,21 +198,21 @@ export default function ServicesPage() {
                 <p className="text-gray-600 text-sm mb-4">
                   Complete the Candidate Background form to provide your employment history and qualifications.
                 </p>
-                <ul className="text-sm text-gray-600 mb-4 space-y-1">
+                <ul className="text-sm text-gray-600 mb-4 space-y-1 flex-grow">
                   <li>• Employment history</li>
                   <li>• Qualification details</li>
                   <li>• Required for assessment</li>
                 </ul>
                 <Link
                   href="/candidate-background"
-                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-green-600 text-white hover:bg-green-700 transition-colors"
+                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-green-600 text-white hover:bg-green-700 transition-colors mt-auto"
                 >
                   <FilePenLine className="w-4 h-4 mr-2" /> Complete Form
                 </Link>
               </div>
 
               {/* Option 5: Course Booking Form */}
-              <div className="bg-white border-2 border-orange-200 rounded-xl p-6 text-left hover:border-orange-400 hover:shadow-lg transition-all">
+              <div className="bg-white border-2 border-orange-200 rounded-xl p-6 text-left hover:border-orange-400 hover:shadow-lg transition-all flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="bg-orange-100 text-orange-700 text-xs font-semibold px-2 py-1 rounded">Course Booking</span>
                 </div>
@@ -220,14 +220,14 @@ export default function ServicesPage() {
                 <p className="text-gray-600 text-sm mb-4">
                   Register your interest in the EWA qualification programme with our online booking form.
                 </p>
-                <ul className="text-sm text-gray-600 mb-4 space-y-1">
+                <ul className="text-sm text-gray-600 mb-4 space-y-1 flex-grow">
                   <li>• Online registration</li>
                   <li>• Digital signature</li>
                   <li>• Instant submission</li>
                 </ul>
                 <Link
                   href="/course-booking"
-                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-orange-600 text-white hover:bg-orange-700 transition-colors"
+                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-orange-600 text-white hover:bg-orange-700 transition-colors mt-auto"
                 >
                   <FileEdit className="w-4 h-4 mr-2" /> Book Course
                 </Link>
