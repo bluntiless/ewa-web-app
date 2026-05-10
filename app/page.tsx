@@ -58,10 +58,10 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 mb-6">
             <Link
-              href="/services"
+              href="/eligibility"
               className="bg-white text-blue-700 px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg"
             >
-              Explore Qualifications
+              Check My EWA Eligibility
             </Link>
             <a
               href="https://calendly.com/ewatracker-info/30min"
