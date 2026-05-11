@@ -235,92 +235,100 @@ This tool provides an initial guidance assessment only and does not guarantee EA
 
 <div class="section">
 
-<h2>Primary Electrotechnical Qualification</h2>
+<h2>Electrotechnical Qualifications</h2>
 
 <div class="grid">
 
 <div class="field">
 
-<label>Qualification Held</label>
+<label>Do you hold a full Level 2 electrotechnical qualification?</label>
 
-<select id="qualification">
+<select id="level2">
 
-<option value="">Select Qualification...</option>
+<option value="">Select...</option>
 
-<optgroup label="Table A – Strongly Recognised Qualifications">
-
-<option value="tableA">
-C&G 2357 NVQ Level 3 Electrotechnical Qualification
+<option value="2365L2">
+C&G 2365 Level 2 Diploma in Electrical Installations
 </option>
 
-<option value="tableA">
-C&G 2365 Level 3 Diploma in Electrical Installations
+<option value="2330L2">
+C&G 2330 Level 2 Certificate in Electrotechnical Technology
 </option>
 
-<option value="tableA">
-EAL Level 3 Diploma in Electrical Installation
+<option value="236P1">
+C&G 236 Part 1
 </option>
 
-<option value="tableA">
-C&G 2330 Level 3 Certificate
+<option value="EALL2">
+EAL Level 2 Diploma in Electrical Installation
 </option>
 
-<option value="tableA">
-Level 3 Electrotechnical Apprenticeship
+<option value="apprenticeL2">
+Full Level 2 electrical apprenticeship qualification
 </option>
 
-<option value="tableA">
-NET AM2 / AM2E Completed
+<option value="equivalentL2">
+Equivalent older Level 2 electrical qualification
 </option>
 
-</optgroup>
-
-<optgroup label="Table B – Additional Technical Discussion Usually Required">
-
-<option value="tableB">
-C&G 236 Part 1 & Part 2
+<option value="overseasL2">
+Overseas equivalent electrical qualification
 </option>
 
-<option value="tableB">
-Older JIB Approved Qualification
+<option value="none">
+No Level 2 qualification
 </option>
-
-<option value="tableB">
-Legacy Installation Qualification
-</option>
-
-<option value="tableB">
-Overseas Electrical Qualification
-</option>
-
-<option value="tableB">
-Maintenance / Service Engineering Background
-</option>
-
-</optgroup>
-
-<optgroup label="Table C – Further Qualification Mapping Required">
-
-<option value="tableC">
-Partial Technical Qualification
-</option>
-
-<option value="tableC">
-Domestic Installer Qualification Only
-</option>
-
-<option value="tableC">
-Non-Installation Electrical Qualification
-</option>
-
-<option value="tableC">
-No Formal Level 3 Qualification
-</option>
-
-</optgroup>
 
 <option value="unsure">
-Unsure / Qualification Not Listed
+Not sure
+</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>Do you hold a Level 3 electrotechnical qualification?</label>
+
+<select id="level3">
+
+<option value="">Select...</option>
+
+<option value="2365L3">
+C&G 2365 Level 3 Diploma
+</option>
+
+<option value="2330L3">
+C&G 2330 Level 3
+</option>
+
+<option value="236P2">
+C&G 236 Part 2
+</option>
+
+<option value="2357L3">
+C&G 2357 Level 3 NVQ / apprenticeship
+</option>
+
+<option value="EALL3">
+EAL Level 3 electrical installation qualification
+</option>
+
+<option value="equivalentL3">
+Equivalent older Level 3 electrical qualification
+</option>
+
+<option value="overseasL3">
+Overseas equivalent electrical qualification
+</option>
+
+<option value="none">
+No Level 3 qualification
+</option>
+
+<option value="unsure">
+Not sure
 </option>
 
 </select>
@@ -481,8 +489,11 @@ Send My Eligibility Result to EWA Tracker
 
 function evaluateCandidate(){
 
-    const qualification =
-        document.getElementById("qualification").value;
+    const level2 =
+        document.getElementById("level2").value;
+
+    const level3 =
+        document.getElementById("level3").value;
 
     const edition =
         document.getElementById("edition").value;
@@ -499,7 +510,12 @@ function evaluateCandidate(){
     let pathway = "";
     let nextStep = "";
 
-    // PATHWAY LOGIC
+    // Check qualification status
+    const hasLevel2 = level2 && level2 !== "none" && level2 !== "unsure";
+    const hasLevel3 = level3 && level3 !== "none" && level3 !== "unsure";
+    const has5PlusYears = experience === "10plus" || experience === "5plus";
+
+    // PATHWAY LOGIC based on 18th Edition
 
     switch(edition){
 
@@ -524,19 +540,19 @@ function evaluateCandidate(){
             pathway = "Further Review Required";
     }
 
-    // MAIN ELIGIBILITY LOGIC
+    // MAIN ELIGIBILITY LOGIC based on Level 2 / Level 3 combination
 
-    if(
-        qualification === "tableA" &&
-        (experience === "10plus" || experience === "5plus")
-    ){
+    if(hasLevel2 && hasLevel3 && has5PlusYears){
 
+        // Level 2 + Level 3 with experience
         result = "LIKELY SUITABLE";
         resultClass = "green";
 
         messages += `
         <div class="box greenBox">
-        Candidate appears likely suitable for EWA registration subject to evidence verification and review.
+        <strong>Likely pathway: EWA route with existing Level 2 and Level 3 technical qualifications</strong><br><br>
+        You may be in a strong position for EWA enrolment, subject to evidence review, skills scan, candidate background review and assessor approval.<br><br>
+        You will still need to meet the 18th Edition, Inspection & Testing / Initial Verification, EWA assessment and AM2E requirements before progressing towards ECS Gold Card application.
         </div>
         `;
 
@@ -545,39 +561,60 @@ function evaluateCandidate(){
 
     }
 
-    else if(
-        qualification === "tableB"
-    ){
+    else if(hasLevel2 && !hasLevel3 && has5PlusYears){
 
+        // Level 2 only with experience
         result = "POTENTIALLY SUITABLE";
         resultClass = "orange";
 
         messages += `
         <div class="box orangeBox">
-        Candidate may still be suitable for EWA however additional technical discussion and qualification mapping will likely be required.
+        <strong>Likely pathway: EWA entry route based on Level 2 + experience</strong><br><br>
+        You may meet the minimum qualification entry position for the Experienced Worker Assessment route if your Level 2 qualification is full and relevant, and if you can evidence at least 5 years of suitable industry experience.<br><br>
+        You will still need to complete or evidence the required 18th Edition and Inspection & Testing / Initial Verification qualifications, complete the EWA assessment process, and then complete AM2E before progressing towards ECS Gold Card application.
         </div>
         `;
 
         nextStep =
-        "Full skills scan and assessor review recommended before registration.";
+        "Full skills scan and assessor review recommended to confirm suitability.";
 
     }
 
-    else if(
-        qualification === "tableC"
-    ){
+    else if(!hasLevel2 && !hasLevel3){
 
+        // No Level 2 or Level 3
         result = "FURTHER REVIEW REQUIRED";
         resultClass = "red";
 
         messages += `
         <div class="box redBox">
-        Candidate may not currently meet standard qualification expectations for the EWA route.
+        <strong>Likely pathway: further review required</strong><br><br>
+        You have not indicated a full Level 2 or Level 3 electrotechnical qualification. The standard EWA route normally expects at least a relevant Level 2 qualification alongside sufficient industry experience.<br><br>
+        Your position would need further review before enrolment. You may need to complete an approved underpinning knowledge assessment or additional qualification route before progressing.
         </div>
         `;
 
         nextStep =
-        "Detailed qualification mapping and guidance required.";
+        "Contact EWA Tracker Ltd for detailed qualification mapping and guidance.";
+
+    }
+
+    else if(!has5PlusYears){
+
+        // Has qualifications but insufficient experience
+        result = "EXPERIENCE REVIEW REQUIRED";
+        resultClass = "orange";
+
+        messages += `
+        <div class="box orangeBox">
+        <strong>Likely pathway: experience review required</strong><br><br>
+        The EWA route typically requires at least 5 years of relevant electrical industry experience. Your qualification status appears reasonable, but your experience level may need further review.<br><br>
+        Please contact EWA Tracker Ltd to discuss your specific situation and workplace evidence availability.
+        </div>
+        `;
+
+        nextStep =
+        "Contact EWA Tracker Ltd to discuss experience requirements.";
 
     }
 
@@ -588,7 +625,7 @@ function evaluateCandidate(){
 
         messages += `
         <div class="box orangeBox">
-        Candidate qualification requires manual review by assessor.
+        Your qualification and experience combination requires manual review by an assessor.
         </div>
         `;
 
@@ -603,16 +640,7 @@ function evaluateCandidate(){
 
         messages += `
         <div class="box orangeBox">
-        Inspection & Testing qualification still required before certification claim.
-        </div>
-        `;
-    }
-
-    if(experience === "under5"){
-
-        messages += `
-        <div class="box redBox">
-        Candidate may not yet satisfy the typical 5+ year industry experience expectation for the EWA route.
+        <strong>Inspection & Testing:</strong> You will need to hold an Inspection & Testing / Initial Verification qualification before certification claim. This can be completed alongside the EWA process.
         </div>
         `;
     }
@@ -621,10 +649,26 @@ function evaluateCandidate(){
 
         messages += `
         <div class="box orangeBox">
-        Candidate does not currently hold the 18th Edition qualification.
+        <strong>18th Edition:</strong> You do not currently hold the 18th Edition qualification. This will need to be completed as part of your EWA pathway.
         </div>
         `;
     }
+
+    if(level2 === "unsure" || level3 === "unsure"){
+
+        messages += `
+        <div class="box orangeBox">
+        <strong>Qualification Uncertainty:</strong> You indicated uncertainty about your qualification status. Please provide your qualification certificates for review so we can confirm your eligibility position.
+        </div>
+        `;
+    }
+
+    // AM2E and ECS Gold Card reminder
+    messages += `
+    <div class="box greenBox">
+    <strong>Important:</strong> AM2E and ECS Gold Card progression come after the EWA qualification stage. The EWA is the first step in qualifying for the ECS Gold Card route.
+    </div>
+    `;
 
     // OUTPUT
 
@@ -657,14 +701,20 @@ ${document.getElementById("phone").value}
 Experience:
 ${document.getElementById("experience").selectedOptions[0].text}
 
-Qualification:
-${document.getElementById("qualification").selectedOptions[0].text}
+Level 2 Qualification:
+${document.getElementById("level2").selectedOptions[0].text}
+
+Level 3 Qualification:
+${document.getElementById("level3").selectedOptions[0].text}
 
 18th Edition:
 ${document.getElementById("edition").selectedOptions[0].text}
 
 Inspection & Testing:
 ${document.getElementById("it").selectedOptions[0].text}
+
+Main Work Type:
+${document.getElementById("work").selectedOptions[0].text}
 
 Likely EWA Pathway:
 ${pathway}
@@ -710,22 +760,15 @@ async function saveToSharePoint(){
         checkDate: new Date().toLocaleDateString('en-GB'),
         email: document.getElementById('email').value,
         phone: document.getElementById('phone').value,
-        qualificationsA: [],
-        qualificationsB: [],
-        qualificationsC: [],
+        experience: document.getElementById('experience').selectedOptions[0]?.text || "",
+        level2Qualification: document.getElementById('level2').selectedOptions[0]?.text || "",
+        level3Qualification: document.getElementById('level3').selectedOptions[0]?.text || "",
         bs7671Status: document.getElementById('edition').selectedOptions[0]?.text || "",
         itStatus: document.getElementById('it').selectedOptions[0]?.text || "",
         workTypes: [document.getElementById('work').selectedOptions[0]?.text || ""],
         eligibilityResult: document.getElementById('resultText').innerText,
         recommendations: document.getElementById('nextStep').innerText
     };
-
-    // Categorize qualification
-    const qualValue = document.getElementById('qualification').value;
-    const qualText = document.getElementById('qualification').selectedOptions[0]?.text || "";
-    if(qualValue === 'tableA') data.qualificationsA.push(qualText);
-    else if(qualValue === 'tableB') data.qualificationsB.push(qualText);
-    else if(qualValue === 'tableC') data.qualificationsC.push(qualText);
 
     try {
         const response = await fetch('/api/eligibility-checker/save', {
