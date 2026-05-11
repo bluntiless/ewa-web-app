@@ -178,10 +178,10 @@ export default function ServicesPage() {
             </p>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-              {/* EWA Entry Test Mock */}
-              <div className="bg-white border-2 border-purple-200 rounded-xl p-6 text-left hover:border-purple-400 hover:shadow-lg transition-all flex flex-col h-full">
+              {/* EWA Entry Test Mock - Brown (L1 Phase) */}
+              <div className="bg-white border-2 border-amber-700 rounded-xl p-6 text-left hover:border-amber-800 hover:shadow-lg transition-all flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="bg-purple-100 text-purple-700 text-xs font-semibold px-2 py-1 rounded">Practice Test</span>
+                  <span className="bg-amber-100 text-amber-800 text-xs font-semibold px-2 py-1 rounded">Practice Test</span>
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-2">EWA Entry Test Mock</h3>
                 <p className="text-gray-600 text-sm mb-4">
@@ -189,16 +189,16 @@ export default function ServicesPage() {
                 </p>
                 <Link
                   href="/ewa-entry-test"
-                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-purple-600 text-white hover:bg-purple-700 transition-colors mt-auto"
+                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-amber-700 text-white hover:bg-amber-800 transition-colors mt-auto"
                 >
                   <ClipboardCheck className="w-4 h-4 mr-2" /> Start Mock Test
                 </Link>
               </div>
 
-              {/* Official TESP Submission */}
-              <div className="bg-white border-2 border-gray-200 rounded-xl p-6 text-left hover:border-blue-400 hover:shadow-lg transition-all flex flex-col h-full">
+              {/* Official TESP Submission - Black (L2 Phase) */}
+              <div className="bg-white border-2 border-gray-900 rounded-xl p-6 text-left hover:border-black hover:shadow-lg transition-all flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="bg-gray-100 text-gray-700 text-xs font-semibold px-2 py-1 rounded">Official Submission</span>
+                  <span className="bg-gray-900 text-white text-xs font-semibold px-2 py-1 rounded">Official Submission</span>
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-2">Submit TESP Skills Scan</h3>
                 <p className="text-gray-600 text-sm mb-4">
@@ -206,16 +206,16 @@ export default function ServicesPage() {
                 </p>
                 <Link
                   href="/skills-scan"
-                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-gray-800 text-white hover:bg-gray-900 transition-colors mt-auto"
+                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-gray-900 text-white hover:bg-black transition-colors mt-auto"
                 >
                   <FilePenLine className="w-4 h-4 mr-2" /> Submit TESP
                 </Link>
               </div>
 
-              {/* Candidate Background Form */}
-              <div className="bg-white border-2 border-green-200 rounded-xl p-6 text-left hover:border-green-400 hover:shadow-lg transition-all flex flex-col h-full">
+              {/* Candidate Background Form - Grey (L3 Phase) */}
+              <div className="bg-white border-2 border-gray-400 rounded-xl p-6 text-left hover:border-gray-500 hover:shadow-lg transition-all flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded">Required Document</span>
+                  <span className="bg-gray-300 text-gray-700 text-xs font-semibold px-2 py-1 rounded">Required Document</span>
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-2">Candidate Background Form</h3>
                 <p className="text-gray-600 text-sm mb-4">
@@ -223,7 +223,7 @@ export default function ServicesPage() {
                 </p>
                 <Link
                   href="/candidate-background"
-                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-green-600 text-white hover:bg-green-700 transition-colors mt-auto"
+                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-gray-500 text-white hover:bg-gray-600 transition-colors mt-auto"
                 >
                   <FilePenLine className="w-4 h-4 mr-2" /> Complete Form
                 </Link>
