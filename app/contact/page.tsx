@@ -53,7 +53,7 @@ export default function ContactPage() {
           </div>
 
           <div className="bg-blue-700 text-white rounded-lg p-8 shadow-lg">
-            <h2 className="text-2xl font-bold mb-4">Book Your EWA Assessment Call</h2>
+            <h2 className="text-2xl font-bold mb-4">Request an EWA Call</h2>
             <p className="opacity-90 mb-6">
               Ready to start your EWA journey? Schedule a free 30-minute consultation to discuss your eligibility and next steps.
             </p>
@@ -63,7 +63,7 @@ export default function ContactPage() {
               rel="noopener noreferrer"
               className="inline-flex items-center px-8 py-3 rounded-full text-lg font-semibold bg-white text-blue-700 hover:bg-gray-100 transition-colors shadow-lg"
             >
-              Book Your EWA Assessment Call
+              Request an EWA Call
             </a>
           </div>
         </section>
