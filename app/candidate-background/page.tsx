@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
-import { Download, Upload, CheckCircle, AlertCircle, FileText } from "lucide-react"
+import { Download, Upload, CheckCircle, AlertCircle, FileText, Smartphone } from "lucide-react"
 import Link from "next/link"
 
 export default function CandidateBackgroundPage() {
@@ -131,6 +131,17 @@ export default function CandidateBackgroundPage() {
         {/* Instructions Card */}
         <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 md:p-8 mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">How to Complete Your Background Form</h2>
+          
+          {/* Mobile Warning */}
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+            <div className="flex items-start gap-3">
+              <Smartphone className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+              <div className="text-sm text-red-800">
+                <strong>Important - Mobile Device Users:</strong> Fillable PDF forms often do not render correctly when filled on mobile devices or in browser PDF viewers. 
+                This can cause text misalignment and form corruption. <strong>Please complete this form on a desktop/laptop computer using Adobe Acrobat Reader</strong> to ensure your submission is legible.
+              </div>
+            </div>
+          </div>
           
           <ol className="space-y-6">
             {/* Step 1 */}

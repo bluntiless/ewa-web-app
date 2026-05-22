@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Upload, Download, CheckCircle, AlertCircle, FileText, Info } from "lucide-react"
+import { Upload, Download, CheckCircle, AlertCircle, FileText, Info, Smartphone } from "lucide-react"
 import Link from "next/link"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
@@ -126,7 +126,7 @@ export default function SkillsScanPage() {
         </div>
 
         {/* Adobe Reader Note */}
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8 flex items-start gap-3">
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4 flex items-start gap-3">
           <Info className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
           <div className="text-sm text-amber-800">
             <strong>Important:</strong> We recommend using <strong>Adobe Acrobat Reader</strong> to complete this PDF.
@@ -139,6 +139,15 @@ export default function SkillsScanPage() {
             >
               Download Adobe Reader (free)
             </a>
+          </div>
+        </div>
+
+        {/* Mobile Warning */}
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-8 flex items-start gap-3">
+          <Smartphone className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+          <div className="text-sm text-red-800">
+            <strong>Mobile Device Users:</strong> Fillable PDF forms often render incorrectly when completed on mobile devices, 
+            causing text misalignment and form corruption. <strong>Please use a desktop/laptop computer</strong> to ensure your submission is legible.
           </div>
         </div>
 
