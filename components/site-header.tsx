@@ -16,7 +16,7 @@ const navLinks = [
 ]
 
 const eligibilityLink = { href: "/eligibility", label: "Check Eligibility" }
-const portfolioLink = { href: "https://portfolio.ewatracker.co.uk/access", label: "Candidate Portfolio", external: true }
+const portfolioLink = { href: "https://portfolio.ewatracker.co.uk", label: "Candidate Portfolio", external: true }
 
 export default function SiteHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
