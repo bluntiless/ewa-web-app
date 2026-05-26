@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
-import { Apple, Info, CheckCircle, Lightbulb, Cloud, Smartphone, Award } from "lucide-react"
+import { Apple, Info, CheckCircle, Lightbulb, Cloud, Smartphone, Award, Globe } from "lucide-react"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 
@@ -115,7 +115,7 @@ export default function HomePage() {
               <div className="bg-blue-50 rounded-lg p-6 mt-6 shadow-inner">
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">Flexible Evidence Submission</h3>
                 <p className="text-gray-700 leading-relaxed">
-                  Learners can upload assessment evidence via two secure and convenient methods:
+                  Learners can upload assessment evidence via three secure and convenient methods:
                 </p>
                 <ul className="mt-3 space-y-2 text-gray-700">
                   <li className="flex items-center">
@@ -125,6 +125,10 @@ export default function HomePage() {
                   <li className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-blue-500 mr-2 flex-shrink-0" />
                     Through our dedicated iOS mobile application for on-the-go submissions
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-blue-500 mr-2 flex-shrink-0" />
+                    Via our Web App for Android users and desktop access
                   </li>
                 </ul>
               </div>
@@ -176,7 +180,7 @@ export default function HomePage() {
               </div>
               <h3 className="text-base font-semibold text-gray-900 mb-2">Evidence Collection</h3>
               <p className="text-sm text-gray-500 leading-relaxed mb-3">
-                You capture photo and video evidence of your work using our iOS app. PPE must be visible in all assessment photos.
+                You capture photo and video evidence of your work using our iOS app or Web App. PPE must be visible in all assessment photos.
               </p>
               <ul className="text-xs text-gray-400 space-y-1">
                 <li>• Photos of completed work</li>
@@ -220,10 +224,11 @@ export default function HomePage() {
       <section className="py-20 md:py-28 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
-            <p className="text-sm font-medium text-blue-600 uppercase tracking-wider mb-3">Mobile App</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">EWA Tracker for iOS</h2>
+            <p className="text-sm font-medium text-blue-600 uppercase tracking-wider mb-3">Mobile & Web App</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">EWA Tracker App</h2>
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">
               Track progress, upload evidence, and manage your qualification journey from anywhere.
+              <span className="block mt-2 text-base text-gray-400">Available on iOS, iPad, and as a Web App for Android & desktop users.</span>
             </p>
           </div>
 
@@ -483,17 +488,31 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* App Store CTA */}
+          {/* App Store & Web App CTA */}
           <div className="text-center">
-            <a
-              href="https://apps.apple.com/gb/app/ewa-tracker/id6740567747"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center px-6 py-3 rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition-colors shadow-lg"
-            >
-              <Apple className="w-5 h-5 mr-2" />
-              <span className="text-sm font-medium">Download on the App Store</span>
-            </a>
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <a
+                href="https://apps.apple.com/gb/app/ewa-tracker/id6740567747"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition-colors shadow-lg"
+              >
+                <Apple className="w-5 h-5 mr-2" />
+                <span className="text-sm font-medium">Download on the App Store</span>
+              </a>
+              <a
+                href="https://portfolio.ewatracker.co.uk"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-lg"
+              >
+                <Globe className="w-5 h-5 mr-2" />
+                <span className="text-sm font-medium">Open Web App (Android & Desktop)</span>
+              </a>
+            </div>
+            <p className="text-xs text-gray-400 mt-4">
+              Android users and desktop candidates can use our full-featured Web App with the same functionality as the iOS app.
+            </p>
           </div>
         </div>
       </section>
