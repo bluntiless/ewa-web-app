@@ -491,7 +491,7 @@ export default function HomePage() {
           {/* Web App Screenshots Gallery */}
           <div className="mb-12">
             <h3 className="text-xl font-semibold text-gray-900 text-center mb-6">Web App Screenshots</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
               {/* Login Screen */}
               <div className="group">
                 <div className="bg-gray-900 rounded-xl p-3 shadow-lg transition-transform group-hover:scale-105">
@@ -558,6 +558,23 @@ export default function HomePage() {
                   />
                 </div>
                 <p className="text-center text-xs text-gray-500 mt-2">Profile Settings</p>
+              </div>
+              
+              {/* Progress Tracking */}
+              <div className="group">
+                <div className="bg-gray-900 rounded-xl p-3 shadow-lg transition-transform group-hover:scale-105">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                    <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
+                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  </div>
+                  <img
+                    src="/images/webapp-progress.png"
+                    alt="EWA Tracker Web App progress tracking with unit completion percentages"
+                    className="rounded-lg w-full"
+                  />
+                </div>
+                <p className="text-center text-xs text-gray-500 mt-2">Progress Tracking</p>
               </div>
             </div>
             <p className="text-center text-sm text-gray-500 mt-6">
