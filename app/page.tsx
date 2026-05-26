@@ -488,6 +488,26 @@ export default function HomePage() {
             </div>
           </div>
 
+          {/* Web App Screenshot */}
+          <div className="mb-12">
+            <div className="bg-gray-900 rounded-2xl p-4 shadow-2xl max-w-md mx-auto">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                <span className="text-xs text-gray-400 ml-2">portfolio.ewatracker.co.uk</span>
+              </div>
+              <img
+                src="/images/webapp-login.png"
+                alt="EWA Tracker Web App login screen showing secure Microsoft sign-in"
+                className="rounded-lg w-full"
+              />
+            </div>
+            <p className="text-center text-sm text-gray-500 mt-4">
+              Secure sign-in via Microsoft - works on any device with a browser
+            </p>
+          </div>
+
           {/* App Store & Web App CTA */}
           <div className="text-center">
             <div className="flex flex-col sm:flex-row justify-center gap-4">
