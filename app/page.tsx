@@ -488,23 +488,80 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Web App Screenshot */}
+          {/* Web App Screenshots Gallery */}
           <div className="mb-12">
-            <div className="bg-gray-900 rounded-2xl p-4 shadow-2xl max-w-md mx-auto">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                <span className="text-xs text-gray-400 ml-2">portfolio.ewatracker.co.uk</span>
+            <h3 className="text-xl font-semibold text-gray-900 text-center mb-6">Web App Screenshots</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Login Screen */}
+              <div className="group">
+                <div className="bg-gray-900 rounded-xl p-3 shadow-lg transition-transform group-hover:scale-105">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                    <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
+                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  </div>
+                  <img
+                    src="/images/webapp-login.png"
+                    alt="EWA Tracker Web App secure Microsoft login"
+                    className="rounded-lg w-full"
+                  />
+                </div>
+                <p className="text-center text-xs text-gray-500 mt-2">Secure Microsoft Sign-in</p>
               </div>
-              <img
-                src="/images/webapp-login.png"
-                alt="EWA Tracker Web App login screen showing secure Microsoft sign-in"
-                className="rounded-lg w-full"
-              />
+              
+              {/* Dashboard */}
+              <div className="group">
+                <div className="bg-gray-900 rounded-xl p-3 shadow-lg transition-transform group-hover:scale-105">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                    <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
+                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  </div>
+                  <img
+                    src="/images/webapp-dashboard.png"
+                    alt="EWA Tracker Web App dashboard with route selection"
+                    className="rounded-lg w-full"
+                  />
+                </div>
+                <p className="text-center text-xs text-gray-500 mt-2">Route Selection Dashboard</p>
+              </div>
+              
+              {/* Portfolio */}
+              <div className="group">
+                <div className="bg-gray-900 rounded-xl p-3 shadow-lg transition-transform group-hover:scale-105">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                    <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
+                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  </div>
+                  <img
+                    src="/images/webapp-portfolio.png"
+                    alt="EWA Tracker Web App portfolio and evidence section"
+                    className="rounded-lg w-full"
+                  />
+                </div>
+                <p className="text-center text-xs text-gray-500 mt-2">Portfolio & Evidence</p>
+              </div>
+              
+              {/* Profile */}
+              <div className="group">
+                <div className="bg-gray-900 rounded-xl p-3 shadow-lg transition-transform group-hover:scale-105">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                    <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
+                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  </div>
+                  <img
+                    src="/images/webapp-profile.png"
+                    alt="EWA Tracker Web App profile settings"
+                    className="rounded-lg w-full"
+                  />
+                </div>
+                <p className="text-center text-xs text-gray-500 mt-2">Profile Settings</p>
+              </div>
             </div>
-            <p className="text-center text-sm text-gray-500 mt-4">
-              Secure sign-in via Microsoft - works on any device with a browser
+            <p className="text-center text-sm text-gray-500 mt-6">
+              Full-featured Web App with the same functionality as our iOS app - works on any device with a browser
             </p>
           </div>
 
