@@ -9,15 +9,25 @@ export async function POST(request: NextRequest) {
       checkDate, 
       email,
       phone,
+      // Support both old field names and new field names from the HTML form
       qualificationsA,
       qualificationsB,
       qualificationsC,
+      level2Qualification,
+      level3Qualification,
+      experience,
       bs7671Status,
       itStatus,
       workTypes,
       eligibilityResult,
       recommendations
     } = data
+    
+    // Map the qualifications - the HTML form sends level2Qualification and level3Qualification
+    // but the API was expecting qualificationsA, qualificationsB, qualificationsC
+    const mappedQualificationsA = qualificationsA || (level2Qualification ? [level2Qualification] : [])
+    const mappedQualificationsB = qualificationsB || (level3Qualification ? [level3Qualification] : [])
+    const mappedQualificationsC = qualificationsC || (experience ? [experience] : [])
 
     if (!candidateName) {
       return NextResponse.json({ error: "Candidate name is required" }, { status: 400 })
@@ -101,14 +111,14 @@ export async function POST(request: NextRequest) {
   <div class="section">
     <h2>Qualifications</h2>
     
-    <h3>Category A - Core Electrical Qualifications</h3>
-    <ul>${formatList(qualificationsA)}</ul>
+    <h3>Category A - Level 2 Qualifications</h3>
+    <ul>\${formatList(mappedQualificationsA)}</ul>
     
-    <h3>Category B - Additional Qualifications</h3>
-    <ul>${formatList(qualificationsB)}</ul>
+    <h3>Category B - Level 3 Qualifications</h3>
+    <ul>\${formatList(mappedQualificationsB)}</ul>
     
-    <h3>Category C - Supporting Qualifications</h3>
-    <ul>${formatList(qualificationsC)}</ul>
+    <h3>Category C - Experience & Supporting Info</h3>
+    <ul>\${formatList(mappedQualificationsC)}</ul>
   </div>
   
   <div class="section">
