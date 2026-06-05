@@ -112,13 +112,13 @@ export async function POST(request: NextRequest) {
     <h2>Qualifications</h2>
     
     <h3>Category A - Level 2 Qualifications</h3>
-    <ul>\${formatList(mappedQualificationsA)}</ul>
+    <ul>${formatList(mappedQualificationsA)}</ul>
     
     <h3>Category B - Level 3 Qualifications</h3>
-    <ul>\${formatList(mappedQualificationsB)}</ul>
+    <ul>${formatList(mappedQualificationsB)}</ul>
     
     <h3>Category C - Experience & Supporting Info</h3>
-    <ul>\${formatList(mappedQualificationsC)}</ul>
+    <ul>${formatList(mappedQualificationsC)}</ul>
   </div>
   
   <div class="section">
