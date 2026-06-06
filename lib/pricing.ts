@@ -33,8 +33,8 @@ export const pricing: Record<string, PricingDetails> = {
     type: "full",
     programmeFee: 2000,
     registrationFee: 224,
-    discount: 112,
-    total: 2112,
+    discount: 74,
+    total: 2150,
     description: "Standard Programme - Full Payment",
   },
   standardInstalments: {
@@ -52,8 +52,8 @@ export const pricing: Record<string, PricingDetails> = {
     type: "full",
     programmeFee: 2500,
     registrationFee: 224,
-    discount: 168,
-    total: 2556,
+    discount: 74,
+    total: 2650,
     description: "Gold Service - Full Payment",
   },
   goldInstalments: {
