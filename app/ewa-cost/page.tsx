@@ -70,8 +70,8 @@ export default function EWACostPage() {
             <div className="grid md:grid-cols-2 gap-4">
               <div className="bg-white border border-blue-100 rounded-lg p-5">
                 <h3 className="font-semibold text-gray-900 mb-2">New Registration</h3>
-                <p className="text-3xl font-bold text-blue-700 mb-2">£224</p>
-                <p className="text-gray-600 text-sm">For candidates registering for the first time with EAL</p>
+                <p className="text-3xl font-bold text-blue-700 mb-2">£268.80</p>
+                <p className="text-gray-600 text-sm">For candidates registering for the first time with EAL (inc. VAT)</p>
               </div>
               <div className="bg-white border border-blue-100 rounded-lg p-5">
                 <h3 className="font-semibold text-gray-900 mb-2">Transfer Registration</h3>
@@ -80,7 +80,7 @@ export default function EWACostPage() {
               </div>
             </div>
             <p className="text-gray-600 text-sm mt-4 italic">
-              Registration fees are subject to change by EAL. Current pricing confirmed as of 2024.
+              Registration fees are subject to change by EAL. Current pricing confirmed as of 2026.
             </p>
           </div>
 

@@ -260,7 +260,7 @@ export default function EAL5982Page() {
               The investment for your EAL 5982 Experienced Worker Qualification includes EAL registration fees and centre assessment costs. During your initial consultation, we provide a full breakdown based on your individual circumstances.
             </p>
             <div className="bg-white border border-amber-300 rounded-lg p-4 mb-4">
-              <p className="text-gray-800"><strong>EAL Registration Fee:</strong> Currently £224 for new registrations (£15 for transfers from another centre)</p>
+              <p className="text-gray-800"><strong>EAL Registration Fee:</strong> Currently £268.80 for new registrations inc. VAT (£15 for transfers from another centre)</p>
             </div>
             <p className="text-gray-700 mb-4">
               Assessment and centre fees are discussed during your consultation, as these vary depending on your location, evidence requirements, and the number of assessment sessions needed. We offer competitive pricing and payment plans where appropriate.
@@ -344,7 +344,7 @@ export default function EAL5982Page() {
                   How much does the EAL 5982 Experienced Worker Qualification cost?
                 </summary>
                 <div className="px-4 pb-4 text-gray-700 text-sm">
-                  The EAL registration fee is currently £224 for new registrations. Centre assessment fees vary depending on your circumstances. We provide a full breakdown during your free consultation. Visit our <Link href="/ewa-cost" className="text-blue-600 hover:underline">EWA costs page</Link> for more information.
+                  The EAL registration fee is currently £268.80 for new registrations (inc. VAT). Centre assessment fees vary depending on your circumstances. We provide a full breakdown during your free consultation. Visit our <Link href="/ewa-cost" className="text-blue-600 hover:underline">EWA costs page</Link> for more information.
                 </div>
               </details>
 
