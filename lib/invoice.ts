@@ -134,9 +134,9 @@ export function createInvoiceFromBooking(
 
     if (paymentNumber === 1) {
       // Initial payment invoice - split into programme initial + registration fee
-      // Initial payment of £724 = £500 programme + £224 registration
+      // Initial payment of £768.80 = £500 programme + £268.80 registration (inc. VAT)
       const programmeInitial = 500
-      const registrationFee = 224
+      const registrationFee = 268.8
       
       lineItems.push({
         description: `${serviceOption === "gold" ? "Gold Service" : "Standard Programme"} - Initial Instalment`,

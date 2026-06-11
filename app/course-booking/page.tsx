@@ -70,37 +70,37 @@ const initialFormData: FormData = {
 const pricing = {
   standardFull: {
     programmeFee: 2000,
-    registrationFee: 224,
-    discount: 74,
-    total: 2150,
+    registrationFee: 268.8,
+    discount: 0,
+    total: 2268.8,
     description: "Standard Programme - Full Payment",
   },
   standardInstalments: {
-    initialPayment: 724,
+    initialPayment: 768.8,
     remainingPayments: [
       { amount: 500, due: "1 month after start" },
       { amount: 500, due: "2 months after start" },
       { amount: 500, due: "3 months after start" },
     ],
-    total: 2224,
+    total: 2268.8,
     description: "Standard Programme - Instalments",
   },
   goldFull: {
     programmeFee: 2500,
-    registrationFee: 224,
-    discount: 74,
-    total: 2650,
+    registrationFee: 268.8,
+    discount: 0,
+    total: 2768.8,
     description: "Gold Service - Full Payment",
   },
   goldInstalments: {
-    initialPayment: 724,
+    initialPayment: 768.8,
     remainingPayments: [
       { amount: 500, due: "1 month after start" },
       { amount: 500, due: "2 months after start" },
       { amount: 500, due: "3 months after start" },
       { amount: 500, due: "4 months after start" },
     ],
-    total: 2724,
+    total: 2768.8,
     description: "Gold Service - Instalments",
   },
 }
