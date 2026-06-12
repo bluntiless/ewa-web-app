@@ -16,7 +16,7 @@ import {
   type PricingDetails
 } from "@/lib/pricing"
 
-interface CourseBookingData {
+export interface CourseBookingData {
   // Section A - Candidate Details
   fullName: string
   dateOfBirth: string
@@ -115,7 +115,7 @@ function formatDateDisplay(dateStr: string): string {
   return date.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })
 }
 
-async function generateBookingPDF(data: CourseBookingData, bookingId: string, submittedAt: string): Promise<Uint8Array> {
+export async function generateBookingPDF(data: CourseBookingData, bookingId: string, submittedAt: string): Promise<Uint8Array> {
   const pdfDoc = await PDFDocument.create()
   const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
   const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica)
@@ -289,7 +289,7 @@ async function generateBookingPDF(data: CourseBookingData, bookingId: string, su
   }
 
   // Section A - Candidate Details
-  drawSectionHeader("SECTION A �� CANDIDATE DETAILS")
+  drawSectionHeader("SECTION A - CANDIDATE DETAILS")
 
   drawField("Full Name", data.fullName)
   y -= 16

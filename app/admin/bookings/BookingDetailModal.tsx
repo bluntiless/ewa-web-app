@@ -15,6 +15,7 @@ import {
   User,
   Building2,
   CreditCard,
+  RefreshCw,
 } from "lucide-react"
 import type { BookingStatus } from "@/lib/booking-types"
 
@@ -89,6 +90,7 @@ export default function BookingDetailModal({ bookingId, onClose, onUpdate }: Pro
   const [isGeneratingInvoice, setIsGeneratingInvoice] = useState(false)
   const [isSendingEmail, setIsSendingEmail] = useState(false)
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false)
+  const [isResyncing, setIsResyncing] = useState(false)
   const [actionMessage, setActionMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
 
   useEffect(() => {
@@ -175,6 +177,33 @@ export default function BookingDetailModal({ bookingId, onClose, onUpdate }: Pro
       })
     } finally {
       setIsSendingEmail(false)
+    }
+  }
+
+  const handleResyncSharePoint = async () => {
+    setIsResyncing(true)
+    setActionMessage(null)
+
+    try {
+      const response = await fetch(`/api/admin/bookings/${bookingId}/resync-sharepoint`, {
+        method: "POST",
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) throw new Error(data.error || "Failed to resync booking form")
+
+      setActionMessage({
+        type: "success",
+        text: `Booking form uploaded to SharePoint as ${data.fileName}`,
+      })
+    } catch (err) {
+      setActionMessage({
+        type: "error",
+        text: err instanceof Error ? err.message : "Failed to resync booking form",
+      })
+    } finally {
+      setIsResyncing(false)
     }
   }
 
@@ -286,6 +315,20 @@ export default function BookingDetailModal({ bookingId, onClose, onUpdate }: Pro
                       <Mail className="w-4 h-4 mr-2" />
                     )}
                     Email Invoice
+                  </Button>
+
+                  <Button
+                    onClick={handleResyncSharePoint}
+                    disabled={isResyncing}
+                    variant="outline"
+                    className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                  >
+                    {isResyncing ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <RefreshCw className="w-4 h-4 mr-2" />
+                    )}
+                    Resync Form to SharePoint
                   </Button>
 
                   <Button

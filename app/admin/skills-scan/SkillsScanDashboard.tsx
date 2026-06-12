@@ -20,6 +20,8 @@ import {
 } from "lucide-react"
 import type { SkillsScanSubmission, SubmissionStatus } from "@/lib/skills-scan-submission"
 import SubmissionDetailModal from "./SubmissionDetailModal"
+import Link from "next/link"
+import { ChevronRight } from "lucide-react"
 
 const statusConfig: Record<SubmissionStatus, { label: string; color: string; icon: typeof Clock }> = {
   pending: { label: "Pending Review", color: "bg-yellow-100 text-yellow-800", icon: Clock },
@@ -119,6 +121,12 @@ export default function SkillsScanDashboard() {
             <p className="text-sm text-gray-500">Admin Dashboard</p>
           </div>
           <div className="flex items-center gap-3">
+            <Link href="/admin/bookings">
+              <Button variant="ghost" size="sm">
+                Course Bookings
+                <ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
+            </Link>
             <span className="text-sm text-gray-500">{session?.user?.email}</span>
             <Button
               variant="outline"
