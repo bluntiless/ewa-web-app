@@ -289,7 +289,7 @@ async function generateBookingPDF(data: CourseBookingData, bookingId: string, su
   }
 
   // Section A - Candidate Details
-  drawSectionHeader("SECTION A �� CANDIDATE DETAILS")
+  drawSectionHeader("SECTION A - CANDIDATE DETAILS")
 
   drawField("Full Name", data.fullName)
   y -= 16
