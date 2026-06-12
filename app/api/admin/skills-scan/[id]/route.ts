@@ -86,7 +86,7 @@ export async function PATCH(
     await put(
       `skills-scan-submissions/${id}/metadata.enc`,
       encryptJSON(updatedMetadata),
-      { access: "public", contentType: "text/plain" }
+      { access: "public", contentType: "text/plain", allowOverwrite: true }
     )
 
     return NextResponse.json({ success: true, metadata: updatedMetadata })
@@ -134,7 +134,7 @@ export async function DELETE(
     await put(
       `skills-scan-submissions/${id}/metadata.enc`,
       encryptJSON(updatedMetadata),
-      { access: "public", contentType: "text/plain" }
+      { access: "public", contentType: "text/plain", allowOverwrite: true }
     )
 
     return NextResponse.json({ success: true })

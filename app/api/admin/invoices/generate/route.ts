@@ -530,7 +530,7 @@ export async function POST(request: Request) {
       await put(
         `course-bookings/${bookingId}/metadata.enc`,
         encryptedMetadata,
-        { access: "public", contentType: "text/plain" }
+        { access: "public", contentType: "text/plain", allowOverwrite: true }
       )
     }
 
