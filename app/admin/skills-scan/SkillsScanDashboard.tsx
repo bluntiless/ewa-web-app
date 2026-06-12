@@ -127,6 +127,12 @@ export default function SkillsScanDashboard() {
                 <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             </Link>
+            <Link href="/admin/candidate-background">
+              <Button variant="ghost" size="sm">
+                Background Forms
+                <ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
+            </Link>
             <span className="text-sm text-gray-500">{session?.user?.email}</span>
             <Button
               variant="outline"
