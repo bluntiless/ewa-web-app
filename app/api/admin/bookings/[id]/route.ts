@@ -91,7 +91,7 @@ export async function PATCH(
     await put(
       `course-bookings/${id}/metadata.enc`,
       encryptedMetadata,
-      { access: "public", contentType: "text/plain" }
+      { access: "public", contentType: "text/plain", allowOverwrite: true }
     )
 
     return NextResponse.json({ ok: true, metadata: updatedMetadata })
@@ -139,7 +139,7 @@ export async function DELETE(
     await put(
       `course-bookings/${id}/metadata.enc`,
       encryptedMetadata,
-      { access: "public", contentType: "text/plain" }
+      { access: "public", contentType: "text/plain", allowOverwrite: true }
     )
 
     return NextResponse.json({ ok: true })

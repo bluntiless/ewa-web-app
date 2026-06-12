@@ -132,7 +132,7 @@ export async function POST(
         await put(
           `skills-scan-submissions/${id}/metadata.enc`,
           encryptJSON(updatedMetadata),
-          { access: "public", contentType: "text/plain" }
+          { access: "public", contentType: "text/plain", allowOverwrite: true }
         )
       }
     }
@@ -162,7 +162,7 @@ export async function POST(
           await put(
             `skills-scan-submissions/${id}/metadata.enc`,
             encryptJSON({ ...metadata, status: "failed" }),
-            { access: "public", contentType: "text/plain" }
+            { access: "public", contentType: "text/plain", allowOverwrite: true }
           )
         }
       }
