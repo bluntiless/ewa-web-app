@@ -122,13 +122,18 @@ export default function BookingsDashboard() {
     })
   }
 
+  // Statuses that mean the candidate has paid (at least their initial payment).
+  // EAL registration / in progress / completed all happen AFTER payment, so they
+  // must still count towards revenue.
+  const paidStatuses = ["paid", "registered_eal", "in_progress", "completed"]
+
   // Stats
   const stats = {
     pending: bookings.filter((b) => b.status === "pending").length,
     awaitingPayment: bookings.filter((b) => ["invoice_generated", "invoice_sent"].includes(b.status)).length,
-    paid: bookings.filter((b) => b.status === "paid").length,
+    paid: bookings.filter((b) => paidStatuses.includes(b.status)).length,
     totalRevenue: bookings
-      .filter((b) => b.status === "paid")
+      .filter((b) => paidStatuses.includes(b.status))
       .reduce((sum, b) => {
         // For instalment plans, only the initial payment has actually been
         // received when marked as paid, so count invoiceAmount (the initial

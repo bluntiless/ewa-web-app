@@ -16,8 +16,10 @@ import {
   Building2,
   CreditCard,
   RefreshCw,
+  Pencil,
 } from "lucide-react"
 import type { BookingStatus } from "@/lib/booking-types"
+import { getPricing, type ServiceOption, type PaymentOption } from "@/lib/pricing"
 
 interface BookingData {
   id: string
@@ -92,6 +94,16 @@ export default function BookingDetailModal({ bookingId, onClose, onUpdate }: Pro
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false)
   const [isResyncing, setIsResyncing] = useState(false)
   const [actionMessage, setActionMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
+
+  // Pricing editor (used to set/correct pricing on legacy bookings)
+  const [isEditingPricing, setIsEditingPricing] = useState(false)
+  const [isSavingPricing, setIsSavingPricing] = useState(false)
+  const [pricingForm, setPricingForm] = useState<{
+    serviceOption: ServiceOption
+    paymentOption: PaymentOption
+    invoiceAmount: string
+    totalAmount: string
+  }>({ serviceOption: "standard", paymentOption: "full", invoiceAmount: "", totalAmount: "" })
 
   useEffect(() => {
     fetchBooking()
@@ -237,6 +249,67 @@ export default function BookingDetailModal({ bookingId, onClose, onUpdate }: Pro
     }
   }
 
+  const openPricingEditor = () => {
+    setActionMessage(null)
+    setPricingForm({
+      serviceOption: booking?.serviceOption ?? "standard",
+      paymentOption: booking?.paymentOption ?? "full",
+      invoiceAmount: metadata?.invoiceAmount != null ? String(metadata.invoiceAmount) : "",
+      totalAmount: metadata?.totalAmount != null ? String(metadata.totalAmount) : "",
+    })
+    setIsEditingPricing(true)
+  }
+
+  const fillFromCurrentPricing = () => {
+    const details = getPricing(pricingForm.serviceOption, pricingForm.paymentOption)
+    if (!details) return
+    const initial = details.type === "full" ? details.total : details.initialPayment
+    setPricingForm((prev) => ({
+      ...prev,
+      invoiceAmount: String(initial),
+      totalAmount: String(details.total),
+    }))
+  }
+
+  const handleSavePricing = async () => {
+    setIsSavingPricing(true)
+    setActionMessage(null)
+
+    try {
+      const invoiceAmount = Number.parseFloat(pricingForm.invoiceAmount)
+      const totalAmount = Number.parseFloat(pricingForm.totalAmount)
+
+      if (Number.isNaN(invoiceAmount) || Number.isNaN(totalAmount)) {
+        throw new Error("Please enter valid amounts for both fields")
+      }
+
+      const response = await fetch(`/api/admin/bookings/${bookingId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          serviceOption: pricingForm.serviceOption,
+          paymentOption: pricingForm.paymentOption,
+          invoiceAmount,
+          totalAmount,
+        }),
+      })
+
+      if (!response.ok) throw new Error("Failed to save pricing")
+
+      setActionMessage({ type: "success", text: "Pricing details saved" })
+      setIsEditingPricing(false)
+      await fetchBooking()
+      onUpdate()
+    } catch (err) {
+      setActionMessage({
+        type: "error",
+        text: err instanceof Error ? err.message : "Failed to save pricing",
+      })
+    } finally {
+      setIsSavingPricing(false)
+    }
+  }
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl shadow-xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
@@ -374,36 +447,120 @@ export default function BookingDetailModal({ bookingId, onClose, onUpdate }: Pro
 
               {/* Financial Summary */}
               <div className="bg-white border border-gray-200 rounded-lg p-4">
-                <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                  <CreditCard className="w-4 h-4 text-gray-500" />
-                  Financial Summary
-                </h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div>
-                    <p className="text-sm text-gray-500">Initial Due</p>
-                    <p className="text-lg font-semibold text-gray-900">
-                      {metadata?.invoiceAmount ? formatCurrency(metadata.invoiceAmount) : "—"}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Total Programme</p>
-                    <p className="text-lg font-semibold text-gray-900">
-                      {metadata?.totalAmount ? formatCurrency(metadata.totalAmount) : "—"}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Invoices Generated</p>
-                    <p className="text-lg font-semibold text-gray-900">
-                      {metadata?.invoiceIds?.length || 0}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Status</p>
-                    <p className="text-lg font-semibold text-gray-900 capitalize">
-                      {metadata?.status?.replace(/_/g, " ") || "Pending"}
-                    </p>
-                  </div>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                    <CreditCard className="w-4 h-4 text-gray-500" />
+                    Financial Summary
+                  </h3>
+                  {!isEditingPricing && (
+                    <Button variant="outline" size="sm" onClick={openPricingEditor}>
+                      <Pencil className="w-3.5 h-3.5 mr-1.5" />
+                      {metadata?.invoiceAmount || metadata?.totalAmount ? "Edit Pricing" : "Set Pricing"}
+                    </Button>
+                  )}
                 </div>
+
+                {isEditingPricing ? (
+                  <div className="space-y-4">
+                    <p className="text-sm text-gray-500">
+                      Set the pricing for this booking. Use {'"'}Fill from current pricing{'"'} for today&apos;s rates, or
+                      enter the amounts manually for legacy bookings on older pricing.
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Service</label>
+                        <select
+                          value={pricingForm.serviceOption}
+                          onChange={(e) =>
+                            setPricingForm((prev) => ({ ...prev, serviceOption: e.target.value as ServiceOption }))
+                          }
+                          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                        >
+                          <option value="standard">Standard Programme</option>
+                          <option value="gold">Gold Service</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Payment Plan</label>
+                        <select
+                          value={pricingForm.paymentOption}
+                          onChange={(e) =>
+                            setPricingForm((prev) => ({ ...prev, paymentOption: e.target.value as PaymentOption }))
+                          }
+                          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                        >
+                          <option value="full">Full Payment</option>
+                          <option value="instalments">Instalments</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Initial Due (£)</label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={pricingForm.invoiceAmount}
+                          onChange={(e) => setPricingForm((prev) => ({ ...prev, invoiceAmount: e.target.value }))}
+                          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                          placeholder="e.g. 724"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Total Programme (£)</label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={pricingForm.totalAmount}
+                          onChange={(e) => setPricingForm((prev) => ({ ...prev, totalAmount: e.target.value }))}
+                          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                          placeholder="e.g. 2724"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Button onClick={handleSavePricing} disabled={isSavingPricing}>
+                        {isSavingPricing && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                        Save Pricing
+                      </Button>
+                      <Button variant="outline" onClick={fillFromCurrentPricing} disabled={isSavingPricing}>
+                        Fill from current pricing
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        onClick={() => setIsEditingPricing(false)}
+                        disabled={isSavingPricing}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div>
+                      <p className="text-sm text-gray-500">Initial Due</p>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {metadata?.invoiceAmount ? formatCurrency(metadata.invoiceAmount) : "—"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Total Programme</p>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {metadata?.totalAmount ? formatCurrency(metadata.totalAmount) : "—"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Invoices Generated</p>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {metadata?.invoiceIds?.length || 0}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Status</p>
+                      <p className="text-lg font-semibold text-gray-900 capitalize">
+                        {metadata?.status?.replace(/_/g, " ") || "Pending"}
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Candidate Details */}
