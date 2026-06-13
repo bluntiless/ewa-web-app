@@ -129,7 +129,15 @@ export default function BookingsDashboard() {
     paid: bookings.filter((b) => b.status === "paid").length,
     totalRevenue: bookings
       .filter((b) => b.status === "paid")
-      .reduce((sum, b) => sum + (b.totalAmount || 0), 0),
+      .reduce((sum, b) => {
+        // For instalment plans, only the initial payment has actually been
+        // received when marked as paid, so count invoiceAmount (the initial
+        // payment) rather than the full programme total.
+        if (b.paymentOption === "instalments") {
+          return sum + (b.invoiceAmount || 0)
+        }
+        return sum + (b.totalAmount || b.invoiceAmount || 0)
+      }, 0),
   }
 
   return (
