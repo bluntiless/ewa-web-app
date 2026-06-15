@@ -9,7 +9,6 @@ import {
   X,
   Download,
   Upload,
-  FileText,
   CheckCircle,
   Clock,
   User,
@@ -37,7 +36,6 @@ export default function SubmissionDetailModal({
   const [error, setError] = useState<string | null>(null)
   const [sharePointPath, setSharePointPath] = useState("")
   const [isUpdating, setIsUpdating] = useState(false)
-  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadResult, setUploadResult] = useState<{ success: boolean; message: string } | null>(null)
 
@@ -93,30 +91,6 @@ export default function SubmissionDetailModal({
     a.download = `Skills Scan Response - ${data.metadata.candidateName} - ${data.metadata.submittedAt.split("T")[0]}.json`
     a.click()
     URL.revokeObjectURL(url)
-  }
-
-  const handleGeneratePdf = async () => {
-    setIsGeneratingPdf(true)
-    try {
-      const response = await fetch(`/api/admin/skills-scan/${submissionId}/pdf`, {
-        method: "POST",
-      })
-
-      if (!response.ok) throw new Error("Failed to generate PDF")
-
-      const blob = await response.blob()
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement("a")
-      a.href = url
-      a.download = `Skills Scan - ${data?.metadata.candidateName} - ${data?.metadata.submittedAt.split("T")[0]}.pdf`
-      a.click()
-      URL.revokeObjectURL(url)
-    } catch (err) {
-      alert("Failed to generate PDF")
-      console.error(err)
-    } finally {
-      setIsGeneratingPdf(false)
-    }
   }
 
   const handleUploadToSharePoint = async () => {
@@ -439,10 +413,6 @@ export default function SubmissionDetailModal({
             <Button variant="outline" onClick={handleDownloadJson}>
               <Download className="w-4 h-4 mr-2" />
               Download JSON
-            </Button>
-            <Button onClick={handleGeneratePdf} disabled={isGeneratingPdf}>
-              <FileText className="w-4 h-4 mr-2" />
-              {isGeneratingPdf ? "Generating..." : "Generate TESP PDF"}
             </Button>
           </div>
         </div>
