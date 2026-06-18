@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -8,8 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
-import { CheckCircle, AlertCircle, FileText, Calendar, User, Building2, BookOpen, PenLine } from "lucide-react"
-import Link from "next/link"
+import { AlertCircle, Calendar, User, Building2, BookOpen, PenLine } from "lucide-react"
 
 interface FormData {
   // Section A - Candidate Details
@@ -118,11 +118,10 @@ function formatCurrency(amount: number): string {
 }
 
 export default function CourseBookingPage() {
+  const router = useRouter()
   const [formData, setFormData] = useState<FormData>(initialFormData)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null)
   const [errorMessage, setErrorMessage] = useState("")
-  const [submittedData, setSubmittedData] = useState<FormData | null>(null)
 
   const handleInputChange = (field: keyof FormData, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
@@ -193,103 +192,43 @@ export default function CourseBookingPage() {
         throw new Error(data.error || "Submission failed")
       }
 
-      setSubmittedData(formData)
-      setSubmitStatus("success")
+      // Compute the booking value for conversion tracking
+      const pricingKey = getPricingKey(formData.serviceOption, formData.paymentOption)
+      const selectedPricing = pricingKey ? pricing[pricingKey] : null
+      const totalValue = selectedPricing?.total ?? 0
+      const amountDueNow = selectedPricing
+        ? "initialPayment" in selectedPricing
+          ? selectedPricing.initialPayment
+          : selectedPricing.total
+        : 0
+
+      // Persist a summary so the dedicated Thank You page can render it.
+      // Kept in sessionStorage (not the URL) to avoid exposing personal data.
+      const summary = {
+        fullName: formData.fullName,
+        email: formData.email,
+        qualification: formData.qualification,
+        route: formData.route,
+        serviceOption: formData.serviceOption,
+        paymentOption: formData.paymentOption,
+        preferredStartDate: formData.preferredStartDate,
+        digitalSignature: formData.digitalSignature,
+        value: amountDueNow,
+        totalValue,
+        currency: "GBP",
+        submittedAt: new Date().toISOString(),
+      }
+      sessionStorage.setItem("courseBookingSubmission", JSON.stringify(summary))
+
+      // Redirect to the dedicated Thank You page. Its unique URL is the
+      // conversion destination and fires the tracking event on load.
+      router.push("/course-booking/thank-you")
     } catch (error) {
       console.error("Submission error:", error)
-      setSubmitStatus("error")
       setErrorMessage(error instanceof Error ? error.message : "Failed to submit booking form")
     } finally {
       setIsSubmitting(false)
     }
-  }
-
-  if (submitStatus === "success" && submittedData) {
-    return (
-      <div className="min-h-screen flex flex-col bg-gray-50">
-        <SiteHeader />
-        <main className="flex-1 container mx-auto px-4 py-8 max-w-4xl">
-          <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 md:p-8">
-            <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="w-8 h-8 text-green-600" />
-              </div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">Booking Form Submitted</h1>
-              <p className="text-gray-600">
-                Thank you for submitting your course booking form. We have received your application.
-              </p>
-            </div>
-
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8">
-              <h3 className="font-semibold text-amber-900 mb-2">Important Information</h3>
-              <ul className="text-amber-800 text-sm space-y-2">
-                <li>• Submission of this form <strong>does not confirm registration or acceptance</strong> onto the programme.</li>
-                <li>• Registration is subject to verification of certificates, completion of the Technical Discussion, and EAL registration requirements.</li>
-                <li>• We will review your details and send your invoice once eligibility checks are complete.</li>
-                <li>• We will contact you at <strong>{submittedData.email}</strong> with next steps.</li>
-              </ul>
-            </div>
-
-            <div className="border border-gray-200 rounded-lg p-6 mb-8">
-              <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <FileText className="w-5 h-5 text-blue-600" />
-                Submission Summary
-              </h3>
-              <dl className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div>
-                  <dt className="text-gray-500">Candidate Name</dt>
-                  <dd className="font-medium text-gray-900">{submittedData.fullName}</dd>
-                </div>
-                <div>
-                  <dt className="text-gray-500">Email</dt>
-                  <dd className="font-medium text-gray-900">{submittedData.email}</dd>
-                </div>
-                <div>
-                  <dt className="text-gray-500">Qualification</dt>
-                  <dd className="font-medium text-gray-900">{submittedData.qualification}</dd>
-                </div>
-                <div>
-                  <dt className="text-gray-500">Route</dt>
-                  <dd className="font-medium text-gray-900">{submittedData.route}</dd>
-                </div>
-                <div>
-                  <dt className="text-gray-500">Service Option</dt>
-                  <dd className="font-medium text-gray-900">
-                    {submittedData.serviceOption === "standard" ? "Standard Programme" : "Gold Service"}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-gray-500">Payment Option</dt>
-                  <dd className="font-medium text-gray-900">
-                    {submittedData.paymentOption === "full" ? "Full Payment" : "Instalments"}
-                  </dd>
-                </div>
-                {submittedData.preferredStartDate && (
-                  <div>
-                    <dt className="text-gray-500">Preferred Start Date</dt>
-                    <dd className="font-medium text-gray-900">{submittedData.preferredStartDate}</dd>
-                  </div>
-                )}
-                <div>
-                  <dt className="text-gray-500">Digital Signature</dt>
-                  <dd className="font-medium text-gray-900">{submittedData.digitalSignature}</dd>
-                </div>
-              </dl>
-            </div>
-
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link href="/services">
-                <Button variant="outline">Return to Services</Button>
-              </Link>
-              <Link href="/skills-scan">
-                <Button className="bg-blue-600 hover:bg-blue-700">Submit Skills Scan</Button>
-              </Link>
-            </div>
-          </div>
-        </main>
-        <SiteFooter />
-      </div>
-    )
   }
 
   return (
