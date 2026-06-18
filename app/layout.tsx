@@ -129,26 +129,32 @@ export default function RootLayout({
     ],
   }
 
-  // Google Ads / Google tag (gtag.js). Configured via env so we never hardcode
-  // the account ID. Set NEXT_PUBLIC_GOOGLE_ADS_ID to your Conversion ID, e.g. "AW-123456789".
+  // Google tag (gtag.js), configured via env so we never hardcode account IDs.
+  //   NEXT_PUBLIC_GA_MEASUREMENT_ID  -> GA4, e.g. "G-XXXXXXXXXX"
+  //   NEXT_PUBLIC_GOOGLE_ADS_ID      -> Google Ads, e.g. "AW-123456789"
+  // GA4 is the primary tracker; Ads is optional and only configured if present.
+  const ga4Id = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
   const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID
+  // The base script can be loaded with any one configured ID.
+  const primaryTagId = ga4Id || googleAdsId
 
   return (
     <html lang="en">
       <body className={inter.className}>
-        {googleAdsId ? (
+        {primaryTagId ? (
           <>
             <Script
               id="gtag-base"
               strategy="afterInteractive"
-              src={`https://www.googletagmanager.com/gtag/js?id=${googleAdsId}`}
+              src={`https://www.googletagmanager.com/gtag/js?id=${primaryTagId}`}
             />
             <Script id="gtag-init" strategy="afterInteractive">
               {`
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
-                gtag('config', '${googleAdsId}');
+                ${ga4Id ? `gtag('config', '${ga4Id}');` : ""}
+                ${googleAdsId ? `gtag('config', '${googleAdsId}');` : ""}
               `}
             </Script>
           </>
