@@ -65,10 +65,22 @@ export default function CourseBookingThankYouPage() {
       currency: parsed?.currency || "GBP",
     })
 
-    // Fire the Google Ads conversion via gtag (loaded site-wide in layout.tsx).
-    // Requires:
-    //   NEXT_PUBLIC_GOOGLE_ADS_ID              e.g. "AW-123456789"
-    //   NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL e.g. "AbC-D_efGh12345"
+    // Fire a GA4 event (primary). Mark "course_booking_submitted" as a key event
+    // in GA4, then import it into Google Ads as a conversion.
+    // Requires NEXT_PUBLIC_GA_MEASUREMENT_ID (e.g. "G-XXXXXXXXXX") in layout.tsx.
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "course_booking_submitted", {
+        booking_service: parsed?.serviceOption || "unknown",
+        booking_payment: parsed?.paymentOption || "unknown",
+        value: parsed?.value ?? 0,
+        currency: parsed?.currency || "GBP",
+        transaction_id: parsed?.submittedAt || String(Date.now()),
+      })
+    }
+
+    // Optional: also fire a Google Ads–native conversion if you set up an
+    // Ads conversion action directly (Conversion ID + Label). Safe to leave
+    // unset when using the GA4 import path above.
     const adsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID
     const conversionLabel = process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL
 
