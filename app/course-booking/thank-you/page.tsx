@@ -65,11 +65,20 @@ export default function CourseBookingThankYouPage() {
       currency: parsed?.currency || "GBP",
     })
 
-    // If gtag (Google Ads / GA4) is loaded directly, also fire a standard event.
-    if (typeof window.gtag === "function") {
-      window.gtag("event", "course_booking_submitted", {
+    // Fire the Google Ads conversion via gtag (loaded site-wide in layout.tsx).
+    // Requires:
+    //   NEXT_PUBLIC_GOOGLE_ADS_ID              e.g. "AW-123456789"
+    //   NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL e.g. "AbC-D_efGh12345"
+    const adsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID
+    const conversionLabel = process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_LABEL
+
+    if (typeof window.gtag === "function" && adsId && conversionLabel) {
+      window.gtag("event", "conversion", {
+        send_to: `${adsId}/${conversionLabel}`,
         value: parsed?.value ?? 0,
         currency: parsed?.currency || "GBP",
+        // A unique-ish id lets Google Ads de-duplicate repeat page loads.
+        transaction_id: parsed?.submittedAt || String(Date.now()),
       })
     }
   }, [])
