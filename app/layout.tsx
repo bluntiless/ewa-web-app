@@ -1,6 +1,7 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
+import Script from "next/script"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -128,9 +129,30 @@ export default function RootLayout({
     ],
   }
 
+  // Google Ads / Google tag (gtag.js). Configured via env so we never hardcode
+  // the account ID. Set NEXT_PUBLIC_GOOGLE_ADS_ID to your Conversion ID, e.g. "AW-123456789".
+  const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID
+
   return (
     <html lang="en">
       <body className={inter.className}>
+        {googleAdsId ? (
+          <>
+            <Script
+              id="gtag-base"
+              strategy="afterInteractive"
+              src={`https://www.googletagmanager.com/gtag/js?id=${googleAdsId}`}
+            />
+            <Script id="gtag-init" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${googleAdsId}');
+              `}
+            </Script>
+          </>
+        ) : null}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
