@@ -1,12 +1,12 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Award, CheckCircle, ArrowRight, FileText, Users, Clock, HelpCircle, CreditCard } from "lucide-react"
+import { Award, CheckCircle, ArrowRight, FileText, Users, Clock, HelpCircle, CreditCard, AlertTriangle, CalendarClock } from "lucide-react"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 
 export const metadata: Metadata = {
-  title: "EAL 5982 Experienced Worker Qualification | EWA Tracker Ltd",
-  description: "Complete your EAL 5982 Experienced Worker Qualification and achieve ECS Gold Card status. Check eligibility and start your EWA today.",
+  title: "EAL 5982 Experienced Worker Qualification | Beat the Oct 2026 Deadline | EWA Tracker Ltd",
+  description: "Grandfather rights end October 2026. Time-served electricians must now formally evidence competence to keep an ECS Gold Card. Complete your EAL 5982 Experienced Worker Qualification with EWA Tracker. Check eligibility today.",
   keywords: [
     "EAL 5982 Experienced Worker Qualification",
     "EAL 603/5982/1",
@@ -15,6 +15,10 @@ export const metadata: Metadata = {
     "ECS Gold Card experienced worker",
     "EWA electrician UK",
     "NVQ Level 3 electrician",
+    "grandfather rights ECS Gold Card",
+    "October 2026 EAS update",
+    "Industry Accreditation route ending",
+    "time-served electrician qualification",
   ],
   alternates: {
     canonical: "https://ewatracker.co.uk/eal-5982-experienced-worker",
@@ -34,6 +38,10 @@ export default function EAL5982Page() {
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-700 to-blue-900 text-white py-16 md:py-20">
         <div className="max-w-4xl mx-auto px-4 text-center">
+          <div className="inline-flex items-center gap-2 bg-amber-400 text-blue-950 px-4 py-1.5 rounded-full text-sm font-bold mb-6">
+            <CalendarClock className="w-4 h-4" />
+            Grandfather Rights End October 2026 &mdash; Act Now
+          </div>
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight">
             EAL 5982 Experienced Worker Qualification (Level 3)
           </h1>
@@ -55,6 +63,60 @@ export default function EAL5982Page() {
             >
               Book Free Consultation
             </a>
+          </div>
+        </div>
+      </section>
+
+      {/* October 2026 Deadline / Grandfather Rights Section */}
+      <section className="bg-amber-50 border-y-4 border-amber-400 py-12 md:py-16">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="flex items-center gap-3 mb-4">
+            <AlertTriangle className="w-8 h-8 text-amber-700 flex-shrink-0" />
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-balance">
+              October 2026: The End of &ldquo;Grandfather Rights&rdquo; for Electricians
+            </h2>
+          </div>
+          <p className="text-gray-700 leading-relaxed mb-4">
+            The <strong>October 2026 Electrotechnical Assessment Specification (EAS) update</strong> formalises a major industry shift: <strong>competence must now be formally evidenced, not assumed.</strong> The expiring &ldquo;grandfather rights&rdquo; (officially the Industry Accreditation or Conditional grading route) mean you can <strong>no longer renew an ECS Gold Card based on years of experience alone.</strong>
+          </p>
+          <p className="text-gray-700 leading-relaxed mb-6">
+            What you need to do depends on your individual circumstances. Here are the three most common situations:
+          </p>
+
+          <div className="grid gap-4 md:grid-cols-3 mb-6">
+            <div className="bg-white border border-amber-200 rounded-lg p-5">
+              <h3 className="font-semibold text-gray-900 mb-2">Completed a formal apprenticeship</h3>
+              <p className="text-gray-600 text-sm">
+                If you trained under legacy rules (e.g. a traditional JIB/City &amp; Guilds apprenticeship), your completion certificate usually counts as an NVQ Level 3 equivalent. You can typically renew normally with current 18th Edition (BS 7671) and the ECS Health, Safety &amp; Environmental Assessment.
+              </p>
+            </div>
+            <div className="bg-white border-2 border-amber-400 rounded-lg p-5">
+              <div className="inline-block bg-amber-400 text-blue-950 text-xs font-bold px-2 py-0.5 rounded mb-2">
+                THIS IS THE EWA ROUTE
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">&ldquo;Time-served&rdquo; without a formal NVQ Level 3</h3>
+              <p className="text-gray-600 text-sm">
+                If your status came purely from experience and employer sign-offs, your card <strong>cannot be renewed</strong> without a formal qualification. You must complete the <strong>Experienced Worker Assessment (EWA)</strong> to achieve a Level 3 equivalent &mdash; exactly what we deliver.
+              </p>
+            </div>
+            <div className="bg-white border border-amber-200 rounded-lg p-5">
+              <h3 className="font-semibold text-gray-900 mb-2">Qualifying Supervisor (QS)</h3>
+              <p className="text-gray-600 text-sm">
+                Under the new rules, scheme providers can no longer directly process standard ECS Gold Cards. If you are a QS for a firm, you will need to transition to the new ECS QS Card arrangements and evidence your competence formally.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-blue-700 text-white rounded-lg p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <p className="font-medium">
+              No classroom required. The EWA recognises your real, on-site experience through a portfolio, professional discussion and workplace assessment.
+            </p>
+            <Link
+              href="/eligibility"
+              className="bg-amber-400 text-blue-950 px-6 py-3 rounded-full font-semibold hover:bg-amber-300 transition-colors whitespace-nowrap text-center"
+            >
+              Check Your Eligibility
+            </Link>
           </div>
         </div>
       </section>
@@ -330,6 +392,15 @@ export default function EAL5982Page() {
             </div>
             
             <div className="space-y-4">
+              <details className="bg-white border border-amber-300 rounded-lg" open>
+                <summary className="p-4 cursor-pointer font-semibold text-gray-900 hover:bg-amber-50">
+                  What is changing in October 2026 and how does it affect my ECS Gold Card?
+                </summary>
+                <div className="px-4 pb-4 text-gray-700 text-sm">
+                  From October 2026, the Electrotechnical Assessment Specification (EAS) update ends the &ldquo;grandfather rights&rdquo; (Industry Accreditation / Conditional grading) route. This means you can no longer renew an ECS Gold Card based on experience alone &mdash; your competence must be formally evidenced with a recognised Level 3 qualification. If you are time-served without a formal NVQ Level 3, the <strong>EAL 5982 Experienced Worker Qualification</strong> is the route designed for you. We recommend starting now, as demand is expected to rise sharply ahead of the deadline.
+                </div>
+              </details>
+
               <details className="bg-white border border-gray-200 rounded-lg">
                 <summary className="p-4 cursor-pointer font-semibold text-gray-900 hover:bg-gray-50">
                   What is the difference between EAL 5982 and NVQ Level 3?
