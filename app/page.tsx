@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
-import { Apple, Info, CheckCircle, Lightbulb, Cloud, Smartphone, Award, Globe } from "lucide-react"
+import { Apple, Info, CheckCircle, Lightbulb, Cloud, Smartphone, Award, Globe, AlertTriangle, CalendarClock } from "lucide-react"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 
@@ -47,6 +47,10 @@ export default function HomePage() {
             className="mx-auto mb-8 drop-shadow-lg w-[180px] h-auto"
             priority
           />
+          <div className="inline-flex items-center gap-2 bg-amber-400 text-blue-950 px-4 py-1.5 rounded-full text-sm font-bold mb-6">
+            <CalendarClock className="w-4 h-4" />
+            Grandfather Rights End October 2026 &mdash; Act Now
+          </div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
             EWA Assessment & ECS Gold Card Route
           </h1>
@@ -81,6 +85,35 @@ export default function HomePage() {
             </Link>
             <Link href="/ecs-gold-card-experienced-worker" className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full transition-colors">
               ECS Gold Card Route
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* October 2026 Deadline / Grandfather Rights Section */}
+      <section className="bg-amber-50 border-y-4 border-amber-400 py-12 md:py-16">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="flex items-center gap-3 mb-4">
+            <AlertTriangle className="w-8 h-8 text-amber-700 flex-shrink-0" />
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-balance">
+              October 2026: The End of &ldquo;Grandfather Rights&rdquo; for Electricians
+            </h2>
+          </div>
+          <p className="text-gray-700 leading-relaxed mb-4 max-w-3xl">
+            The <strong>October 2026 Electrotechnical Assessment Specification (EAS) update</strong> formalises a major industry shift: <strong>competence must now be formally evidenced, not assumed.</strong> The expiring &ldquo;grandfather rights&rdquo; (the Industry Accreditation route) mean you can <strong>no longer renew an ECS Gold Card based on years of experience alone.</strong>
+          </p>
+          <p className="text-gray-700 leading-relaxed mb-6 max-w-3xl">
+            If you are <strong>time-served without a formal NVQ Level 3</strong>, the Experienced Worker Assessment (EWA) is the route designed for you &mdash; it recognises your real, on-site experience through a portfolio, professional discussion and workplace assessment. <strong>No classroom required.</strong>
+          </p>
+          <div className="bg-blue-700 text-white rounded-lg p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <p className="font-medium">
+              Demand is expected to rise sharply ahead of the deadline. Start your route towards an ECS Gold Card now.
+            </p>
+            <Link
+              href="/eligibility"
+              className="bg-amber-400 text-blue-950 px-6 py-3 rounded-full font-semibold hover:bg-amber-300 transition-colors whitespace-nowrap text-center"
+            >
+              Check Your Eligibility
             </Link>
           </div>
         </div>
