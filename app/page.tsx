@@ -764,9 +764,13 @@ export default function HomePage() {
               <div>
                 <h3 className="text-sm font-semibold text-blue-900">Skills Scan / Eligibility Review</h3>
                 <p className="text-xs text-blue-700 mt-1">
-                  A short pre-enrolment review to confirm suitability for the Experienced Worker route.
-                  <br />
-                  <span className="text-blue-600">This fee is deducted from the programme fee if you proceed to enrolment.</span>
+                  A short pre-enrolment review of your suitability for the Experienced Worker Assessment route. This may include review of your Skills Scan, Candidate Background Form, qualification evidence, work-history information and initial route guidance.
+                </p>
+                <p className="text-xs font-semibold text-blue-900 mt-2">
+                  This fee is payable before any formal review is carried out.
+                </p>
+                <p className="text-xs text-blue-600 mt-1">
+                  It will be deducted from your programme fee if you proceed to enrolment.
                 </p>
               </div>
               <div className="text-right">
