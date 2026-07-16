@@ -259,14 +259,28 @@ export default function SkillsScanDashboard() {
                       </td>
                       <td className="px-4 py-4">
                         <div className="flex items-center justify-end gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setSelectedSubmission(submission.id)}
-                          >
-                            <Eye className="w-4 h-4 mr-1" />
-                            View
-                          </Button>
+                          {submission.pdfUrl ? (
+                            <a
+                              href={submission.pdfUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              download
+                            >
+                              <Button variant="outline" size="sm">
+                                <Download className="w-4 h-4 mr-1" />
+                                Download PDF
+                              </Button>
+                            </a>
+                          ) : (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setSelectedSubmission(submission.id)}
+                            >
+                              <Eye className="w-4 h-4 mr-1" />
+                              View
+                            </Button>
+                          )}
                           {submission.status !== "archived" && (
                             <Button
                               variant="ghost"

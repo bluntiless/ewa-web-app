@@ -12,6 +12,13 @@ export interface SkillsScanSubmission {
   uploadedAt?: string
   archivedAt?: string
   notes?: string
+  // Present for PDF-upload submissions (current candidate flow). When set, the
+  // admin can download the completed PDF directly rather than opening the
+  // legacy questionnaire detail view.
+  pdfUrl?: string
+  originalFileName?: string
+  // "enc" = legacy encrypted questionnaire submission, "json" = PDF upload.
+  source?: "enc" | "json"
 }
 
 export interface SkillsScanSubmissionData {
