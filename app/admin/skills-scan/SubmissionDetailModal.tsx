@@ -197,33 +197,53 @@ export default function SubmissionDetailModal({
                 <User className="w-4 h-4" />
                 Name
               </div>
-              <p className="font-medium text-gray-900">{formData.fullName}</p>
+              <p className="font-medium text-gray-900">{formData?.fullName || metadata.candidateName}</p>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="flex items-center gap-2 text-gray-500 text-sm mb-1">
                 <Mail className="w-4 h-4" />
                 Email
               </div>
-              <p className="font-medium text-gray-900 text-sm break-all">{formData.email}</p>
+              <p className="font-medium text-gray-900 text-sm break-all">{formData?.email || metadata.email}</p>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="flex items-center gap-2 text-gray-500 text-sm mb-1">
                 <Phone className="w-4 h-4" />
                 Phone
               </div>
-              <p className="font-medium text-gray-900">{formData.phone || "Not provided"}</p>
+              <p className="font-medium text-gray-900">{formData?.phone || metadata.phone || "Not provided"}</p>
             </div>
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="flex items-center gap-2 text-gray-500 text-sm mb-1">
                 <Briefcase className="w-4 h-4" />
                 Experience
               </div>
-              <p className="font-medium text-gray-900">{formData.yearsExperience || "Not provided"}</p>
+              <p className="font-medium text-gray-900">{formData?.yearsExperience || metadata.yearsExperience || "Not provided"}</p>
             </div>
           </div>
 
+          {/* PDF-upload submissions have no questionnaire data — offer the PDF instead */}
+          {!formData && (
+            <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6">
+              <h3 className="font-semibold text-gray-900 mb-1">Completed Skills Scan PDF</h3>
+              <p className="text-sm text-gray-600 mb-3">
+                This candidate uploaded a completed PDF. There is no on-site questionnaire data to display.
+              </p>
+              {metadata.pdfUrl ? (
+                <a href={metadata.pdfUrl} target="_blank" rel="noopener noreferrer" download>
+                  <Button variant="outline" size="sm">
+                    <Download className="w-4 h-4 mr-2" />
+                    Download Completed PDF
+                  </Button>
+                </a>
+              ) : (
+                <p className="text-sm text-gray-500">PDF link unavailable.</p>
+              )}
+            </div>
+          )}
+
           {/* Preliminary Suitability Result */}
-          {formData.suitabilityResult && (
+          {formData?.suitabilityResult && (
             <div className={`rounded-lg p-4 mb-6 border ${
               formData.suitabilityResult.result === "likely-suitable"
                 ? "bg-green-50 border-green-200"
@@ -285,6 +305,7 @@ export default function SubmissionDetailModal({
           </div>
 
           {/* Skills Summary */}
+          {formData?.skills && (
           <div className="mb-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Skills Assessment Summary</h3>
             <div className="space-y-4">
@@ -360,6 +381,7 @@ export default function SubmissionDetailModal({
               })}
             </div>
           </div>
+          )}
 
           {/* SharePoint Path */}
           <div className="bg-gray-50 rounded-lg p-4 mb-6">
