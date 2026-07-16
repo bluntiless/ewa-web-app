@@ -235,7 +235,7 @@ export default function SkillsScanDashboard() {
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {filteredSubmissions.map((submission) => {
-                  const status = statusConfig[submission.status]
+                  const status = statusConfig[submission.status] ?? statusConfig.pending
                   const StatusIcon = status.icon
 
                   return (
