@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { list } from "@vercel/blob"
 
+export type CandidateBackgroundStatus = "pending" | "reviewed" | "failed"
+
 export interface CandidateBackgroundSubmission {
   id: string
   candidateName: string
@@ -11,6 +13,8 @@ export interface CandidateBackgroundSubmission {
   submittedAt: string
   originalFileName?: string
   pdfUrl?: string
+  status?: CandidateBackgroundStatus
+  reviewedAt?: string
 }
 
 export async function GET() {
@@ -35,7 +39,7 @@ export async function GET() {
         // Attach the matching PDF download URL (same submission folder)
         const folder = blob.pathname.replace(/metadata\.json$/, "")
         const pdf = pdfBlobs.find((p) => p.pathname.startsWith(folder))
-        submissions.push({ ...metadata, pdfUrl: pdf?.url })
+        submissions.push({ ...metadata, status: metadata.status || "pending", pdfUrl: pdf?.url })
       } catch (error) {
         console.error(`Failed to read candidate background metadata: ${blob.pathname}`, error)
       }
