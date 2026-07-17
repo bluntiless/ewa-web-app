@@ -3,6 +3,9 @@ import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 import { authOptions } from "@/lib/auth"
 
+// Reads the per-request session; must run per-request, never prerendered.
+export const dynamic = "force-dynamic"
+
 export type EligibilityStatus = "pending" | "reviewed" | "failed"
 
 export interface EligibilityCheckSubmission {

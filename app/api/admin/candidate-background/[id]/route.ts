@@ -4,6 +4,9 @@ import { type NextRequest, NextResponse } from "next/server"
 import { authOptions } from "@/lib/auth"
 import type { CandidateBackgroundSubmission } from "../list/route"
 
+// Reads the per-request session; must run per-request, never prerendered.
+export const dynamic = "force-dynamic"
+
 const VALID_STATUSES = ["pending", "reviewed", "failed"] as const
 
 // Find the metadata.json blob URL for a given submission id.

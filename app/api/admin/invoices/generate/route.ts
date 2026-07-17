@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
+
+// Reads the per-request session; must run per-request, never prerendered.
+export const dynamic = "force-dynamic"
 import { put, list } from "@vercel/blob"
 import { decryptJSON, encryptJSON } from "@/lib/encryption"
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib"

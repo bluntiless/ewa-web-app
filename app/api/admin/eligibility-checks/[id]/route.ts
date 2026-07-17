@@ -4,6 +4,9 @@ import { type NextRequest, NextResponse } from "next/server"
 import { authOptions } from "@/lib/auth"
 import type { EligibilityCheckSubmission } from "../list/route"
 
+// Reads the per-request session; must run per-request, never prerendered.
+export const dynamic = "force-dynamic"
+
 const VALID_STATUSES = ["pending", "reviewed", "failed"] as const
 
 async function getMetadataUrl(id: string): Promise<string | null> {
