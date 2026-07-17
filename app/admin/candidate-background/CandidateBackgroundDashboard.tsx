@@ -135,6 +135,12 @@ export default function CandidateBackgroundDashboard() {
                 <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             </Link>
+            <Link href="/admin/eligibility-checks">
+              <Button variant="ghost" size="sm">
+                Eligibility Checks
+                <ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
+            </Link>
             <span className="text-sm text-gray-500">{session?.user?.email}</span>
             <Button variant="outline" size="sm" onClick={() => signOut({ callbackUrl: "/admin/login" })}>
               <LogOut className="w-4 h-4 mr-2" />

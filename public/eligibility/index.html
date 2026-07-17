@@ -780,6 +780,28 @@ ${nextStep}
     document.getElementById("summary").textContent =
         summary;
 
+    // Log this evaluation to the admin dashboard (fire-and-forget).
+    try {
+        fetch('/api/eligibility-checker/log', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                candidateName: document.getElementById("name").value,
+                email: document.getElementById("email").value,
+                phone: document.getElementById("phone").value,
+                experience: document.getElementById("experience").selectedOptions[0]?.text || "",
+                level2Qualification: document.getElementById("level2").selectedOptions[0]?.text || "",
+                level3Qualification: document.getElementById("level3").selectedOptions[0]?.text || "",
+                bs7671Status: document.getElementById("edition").selectedOptions[0]?.text || "",
+                itStatus: document.getElementById("it").selectedOptions[0]?.text || "",
+                workType: document.getElementById("work").selectedOptions[0]?.text || "",
+                pathway: pathway,
+                eligibilityResult: result,
+                recommendations: nextStep
+            })
+        }).catch(function(){ /* non-blocking */ });
+    } catch(e) { /* non-blocking */ }
+
 }
 
 function copySummary(){
