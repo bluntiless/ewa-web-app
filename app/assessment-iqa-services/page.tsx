@@ -22,7 +22,7 @@ import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 
 export const metadata: Metadata = {
-  title: "Assessment & IQA Services | EWA Tracker Ltd",
+  title: "Assessment & IQA Services",
   description:
     "Professional electrotechnical assessment and Internal Quality Assurance (IQA) services for training providers, colleges, and private centres. Face-to-face and remote assessment support.",
   keywords: ["electrotechnical assessment", "IQA services", "internal quality assurance", "assessor services", "remote observation", "training provider support", "portfolio assessment", "EAL assessment"],

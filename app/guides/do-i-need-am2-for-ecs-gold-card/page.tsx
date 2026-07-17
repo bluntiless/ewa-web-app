@@ -5,7 +5,7 @@ import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 
 export const metadata: Metadata = {
-  title: "Do I Need AM2E for an ECS Gold Card? | EWA Tracker Ltd",
+  title: "Do I Need AM2E for an ECS Gold Card?",
   description: "Understanding the AM2 assessment requirement for ECS Gold Card applications. Learn about AM2E vs AM2ED and when you need to complete this practical test.",
   keywords: [
     "AM2 assessment",

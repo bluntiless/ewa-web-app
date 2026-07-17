@@ -5,7 +5,7 @@ import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 
 export const metadata: Metadata = {
-  title: "What is the EAL 5982 Experienced Worker Qualification? | EWA Tracker Ltd",
+  title: "What is the EAL 5982 Experienced Worker Qualification?",
   description: "Comprehensive guide to the EAL Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1). Learn who it's for, requirements, and how to achieve it.",
   keywords: [
     "EAL 5982",

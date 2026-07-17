@@ -5,7 +5,7 @@ import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 
 export const metadata: Metadata = {
-  title: "EWA Cost | Experienced Worker Assessment Pricing | EWA Tracker Ltd",
+  title: "EWA Cost | Experienced Worker Assessment Pricing",
   description: "Find out the costs of Experienced Worker Assessment (EWA) qualifications. EAL registration fees, assessment costs, and what's included in the EWA route.",
   keywords: [
     "EWA cost",

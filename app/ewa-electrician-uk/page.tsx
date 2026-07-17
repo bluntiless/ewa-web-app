@@ -5,7 +5,7 @@ import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 
 export const metadata: Metadata = {
-  title: "EWA for Electricians UK | Experienced Worker Assessment | EWA Tracker Ltd",
+  title: "EWA for Electricians UK | Experienced Worker Assessment",
   description: "Experienced Worker Assessment for UK electricians. Get qualified through the EWA route and achieve your ECS Gold Card. Available across London, South East and nationwide.",
   keywords: [
     "EWA electrician UK",
