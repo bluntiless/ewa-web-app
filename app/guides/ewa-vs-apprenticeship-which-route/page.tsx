@@ -5,7 +5,7 @@ import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 
 export const metadata: Metadata = {
-  title: "EWA vs Apprenticeship – Which Route is Right? | EWA Tracker Ltd",
+  title: "EWA vs Apprenticeship – Which Route is Right?",
   description: "Comparing the Experienced Worker Assessment route with traditional apprenticeship pathways. Find out which electrician qualification route suits your career situation.",
   keywords: [
     "EWA vs apprenticeship",

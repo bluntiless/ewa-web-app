@@ -5,7 +5,7 @@ import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 
 export const metadata: Metadata = {
-  title: "ECS Gold Card Experienced Worker Route | EWA Tracker Ltd",
+  title: "ECS Gold Card Experienced Worker Route",
   description: "Achieve your ECS Gold Card through the Experienced Worker route. Complete your EAL Level 3 qualification and AM2 assessment with EWA Tracker Ltd.",
   keywords: [
     "ECS Gold Card",

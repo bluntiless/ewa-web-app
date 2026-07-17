@@ -5,7 +5,7 @@ import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 
 export const metadata: Metadata = {
-  title: "EAL 5982 Experienced Worker Qualification | Beat the Oct 2026 Deadline | EWA Tracker Ltd",
+  title: "EAL 5982 Experienced Worker Qualification | Beat the Oct 2026 Deadline",
   description: "Grandfather rights end October 2026. Time-served electricians must now formally evidence competence to keep an ECS Gold Card. Complete your EAL 5982 Experienced Worker Qualification with EWA Tracker. Check eligibility today.",
   keywords: [
     "EAL 5982 Experienced Worker Qualification",
