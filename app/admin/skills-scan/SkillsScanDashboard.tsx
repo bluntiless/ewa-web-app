@@ -101,6 +101,31 @@ export default function SkillsScanDashboard() {
     }
   }
 
+  const [updatingId, setUpdatingId] = useState<string | null>(null)
+
+  const handleStatusChange = async (id: string, status: SubmissionStatus) => {
+    setUpdatingId(id)
+    // Optimistically update the row so the UI feels instant.
+    setSubmissions((prev) => prev.map((s) => (s.id === id ? { ...s, status } : s)))
+
+    try {
+      const response = await fetch(`/api/admin/skills-scan/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      })
+
+      if (!response.ok) throw new Error("Failed to update status")
+      await fetchSubmissions()
+    } catch (err) {
+      alert("Failed to update status")
+      console.error(err)
+      await fetchSubmissions()
+    } finally {
+      setUpdatingId(null)
+    }
+  }
+
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString("en-GB", {
       day: "numeric",
@@ -259,6 +284,25 @@ export default function SkillsScanDashboard() {
                       </td>
                       <td className="px-4 py-4">
                         <div className="flex items-center justify-end gap-2">
+                          {submission.status !== "archived" && (
+                            <select
+                              value={
+                                ["pending", "reviewed", "failed"].includes(submission.status)
+                                  ? submission.status
+                                  : "pending"
+                              }
+                              onChange={(e) =>
+                                handleStatusChange(submission.id, e.target.value as SubmissionStatus)
+                              }
+                              disabled={updatingId === submission.id}
+                              aria-label="Update review status"
+                              className="px-2 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-700 disabled:opacity-50"
+                            >
+                              <option value="pending">Mark Pending</option>
+                              <option value="reviewed">Mark Reviewed</option>
+                              <option value="failed">Mark Failed</option>
+                            </select>
+                          )}
                           {submission.pdfUrl ? (
                             <a
                               href={submission.pdfUrl}

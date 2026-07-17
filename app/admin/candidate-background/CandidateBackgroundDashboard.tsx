@@ -13,8 +13,13 @@ import {
   AlertCircle,
   ClipboardList,
   ChevronRight,
+  Clock,
+  Eye,
+  XCircle,
 } from "lucide-react"
 import Link from "next/link"
+
+type CandidateBackgroundStatus = "pending" | "reviewed" | "failed"
 
 interface CandidateBackgroundSubmission {
   id: string
@@ -24,6 +29,14 @@ interface CandidateBackgroundSubmission {
   submittedAt: string
   originalFileName?: string
   pdfUrl?: string
+  status?: CandidateBackgroundStatus
+  reviewedAt?: string
+}
+
+const statusConfig: Record<CandidateBackgroundStatus, { label: string; color: string; icon: typeof Clock }> = {
+  pending: { label: "Pending Review", color: "bg-yellow-100 text-yellow-800", icon: Clock },
+  reviewed: { label: "Reviewed", color: "bg-blue-100 text-blue-800", icon: Eye },
+  failed: { label: "Failed", color: "bg-red-100 text-red-800", icon: XCircle },
 }
 
 export default function CandidateBackgroundDashboard() {
@@ -64,6 +77,31 @@ export default function CandidateBackgroundDashboard() {
       submission.id.toLowerCase().includes(query)
     )
   })
+
+  const [updatingId, setUpdatingId] = useState<string | null>(null)
+
+  const handleStatusChange = async (id: string, status: CandidateBackgroundStatus) => {
+    setUpdatingId(id)
+    // Optimistic update for instant feedback.
+    setSubmissions((prev) => prev.map((s) => (s.id === id ? { ...s, status } : s)))
+
+    try {
+      const response = await fetch(`/api/admin/candidate-background/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      })
+
+      if (!response.ok) throw new Error("Failed to update status")
+      await fetchSubmissions()
+    } catch (err) {
+      alert("Failed to update status")
+      console.error(err)
+      await fetchSubmissions()
+    } finally {
+      setUpdatingId(null)
+    }
+  }
 
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString("en-GB", {
@@ -179,6 +217,9 @@ export default function CandidateBackgroundDashboard() {
                     <th className="text-left px-4 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                       Submitted
                     </th>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                      Status
+                    </th>
                     <th className="text-right px-4 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                       Actions
                     </th>
@@ -203,7 +244,34 @@ export default function CandidateBackgroundDashboard() {
                         <p className="text-sm text-gray-600">{formatDate(submission.submittedAt)}</p>
                       </td>
                       <td className="px-4 py-4">
+                        {(() => {
+                          const status = statusConfig[submission.status ?? "pending"]
+                          const StatusIcon = status.icon
+                          return (
+                            <span
+                              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${status.color}`}
+                            >
+                              <StatusIcon className="w-3.5 h-3.5" />
+                              {status.label}
+                            </span>
+                          )
+                        })()}
+                      </td>
+                      <td className="px-4 py-4">
                         <div className="flex items-center justify-end gap-2">
+                          <select
+                            value={submission.status ?? "pending"}
+                            onChange={(e) =>
+                              handleStatusChange(submission.id, e.target.value as CandidateBackgroundStatus)
+                            }
+                            disabled={updatingId === submission.id}
+                            aria-label="Update review status"
+                            className="px-2 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-700 disabled:opacity-50"
+                          >
+                            <option value="pending">Mark Pending</option>
+                            <option value="reviewed">Mark Reviewed</option>
+                            <option value="failed">Mark Failed</option>
+                          </select>
                           {submission.pdfUrl ? (
                             <a href={submission.pdfUrl} target="_blank" rel="noopener noreferrer" download>
                               <Button variant="outline" size="sm">
