@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
+
+// Reads the per-request session; must run per-request, never prerendered.
+export const dynamic = "force-dynamic"
 import { list } from "@vercel/blob"
 import { decryptJSON } from "@/lib/encryption"
 import type { BookingMetadata } from "@/lib/booking-types"

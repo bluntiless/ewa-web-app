@@ -2,6 +2,9 @@ import { list, put } from "@vercel/blob"
 import { getServerSession } from "next-auth"
 import { type NextRequest, NextResponse } from "next/server"
 import { authOptions } from "@/lib/auth"
+
+// Reads the per-request session; must run per-request, never prerendered.
+export const dynamic = "force-dynamic"
 import type { SkillsScanSubmission, SkillsScanSubmissionData } from "@/lib/skills-scan-submission"
 import { decryptJSON, encryptJSON } from "@/lib/encryption"
 

@@ -3,6 +3,9 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { list } from "@vercel/blob"
 
+// Reads the per-request session; must run per-request, never prerendered.
+export const dynamic = "force-dynamic"
+
 export type CandidateBackgroundStatus = "pending" | "reviewed" | "failed"
 
 export interface CandidateBackgroundSubmission {

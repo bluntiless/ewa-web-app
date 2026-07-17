@@ -5,6 +5,9 @@ import { authOptions } from "@/lib/auth"
 import type { SkillsScanSubmission } from "@/lib/skills-scan-submission"
 import { decryptJSON } from "@/lib/encryption"
 
+// Reads the per-request session; must run per-request, never prerendered.
+export const dynamic = "force-dynamic"
+
 export async function GET() {
   const session = await getServerSession(authOptions)
 
