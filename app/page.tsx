@@ -762,19 +762,20 @@ export default function HomePage() {
           <div className="bg-blue-50 border border-blue-100 rounded-lg p-5 mb-8 max-w-2xl mx-auto">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
+                <div className="inline-flex items-center gap-2 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-bold mb-2">
+                  Limited Time Offer &mdash; Fee Waived
+                </div>
                 <h3 className="text-sm font-semibold text-blue-900">Skills Scan / Eligibility Review</h3>
                 <p className="text-xs text-blue-700 mt-1">
                   A short pre-enrolment review of your suitability for the Experienced Worker Assessment route. This may include review of your Skills Scan, Candidate Background Form, qualification evidence, work-history information and initial route guidance.
                 </p>
-                <p className="text-xs font-semibold text-blue-900 mt-2">
-                  This fee is payable before any formal review is carried out.
-                </p>
-                <p className="text-xs text-blue-600 mt-1">
-                  It will be deducted from your programme fee if you proceed to enrolment.
+                <p className="text-xs font-semibold text-green-700 mt-2">
+                  For a limited time only, we are offering a FREE Skills Scan and Candidate Background Form review &mdash; the usual £50 fee is waived.
                 </p>
               </div>
               <div className="text-right">
-                <span className="text-xl font-bold text-blue-900">£50</span>
+                <span className="block text-sm font-medium text-gray-400 line-through">£50</span>
+                <span className="text-xl font-bold text-green-700">FREE</span>
               </div>
             </div>
           </div>
