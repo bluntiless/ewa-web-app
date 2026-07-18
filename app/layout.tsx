@@ -73,9 +73,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  alternates: {
-    canonical: "https://ewatracker.co.uk",
-  },
   generator: "v0.app",
 }
 
