@@ -87,16 +87,9 @@ export async function POST(request: Request) {
 
     await saveBooking(booking)
 
-    console.log(
-      `[v0] booking saved id=${id} | microsoftEvent=${microsoftEventId ? "created" : "SKIPPED"} | resendConfigured=${Boolean(
-        process.env.RESEND_API_KEY,
-      )}`,
-    )
-
     // Emails carry the .ics invite; failure here shouldn't lose the booking.
     try {
       await sendBookingEmails(booking, settings.timezone)
-      console.log(`[v0] booking emails sent for id=${id}`)
     } catch (err) {
       console.error("[v0] sendBookingEmails failed (booking still saved):", err)
     }
