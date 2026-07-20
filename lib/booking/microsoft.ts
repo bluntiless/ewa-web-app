@@ -5,11 +5,18 @@
 // interactive login. Requires an Azure app registration with the
 // Calendars.ReadWrite APPLICATION permission and admin consent granted.
 //
+// Credentials: this reuses the SAME Azure app registration already configured
+// for SharePoint (SHAREPOINT_TENANT_ID / SHAREPOINT_CLIENT_ID /
+// SHAREPOINT_CLIENT_SECRET). It also accepts MS_* names as an override if you
+// ever want a separate app. The Azure app MUST have the Calendars.ReadWrite
+// APPLICATION permission with admin consent granted, in addition to whatever
+// SharePoint permissions it already has.
+//
 // Env vars:
-//   MS_TENANT_ID     - Directory (tenant) ID
-//   MS_CLIENT_ID     - Application (client) ID
-//   MS_CLIENT_SECRET - A client secret value
-//   MS_USER_ID       - The mailbox to manage (email or object id), e.g. you@ewatracker.co.uk
+//   SHAREPOINT_TENANT_ID / MS_TENANT_ID       - Directory (tenant) ID
+//   SHAREPOINT_CLIENT_ID / MS_CLIENT_ID       - Application (client) ID
+//   SHAREPOINT_CLIENT_SECRET / MS_CLIENT_SECRET - A client secret value
+//   BOOKING_CALENDAR_USER / MS_USER_ID        - Mailbox to manage (defaults to ADMIN_EMAIL)
 //
 // Every function degrades gracefully: if credentials are missing or a request
 // fails, we log and return a safe fallback so a calendar outage never takes the
@@ -19,13 +26,22 @@ import { ConfidentialClientApplication } from "@azure/msal-node"
 
 const GRAPH = "https://graph.microsoft.com/v1.0"
 
+function tenantId(): string | undefined {
+  return process.env.SHAREPOINT_TENANT_ID || process.env.MS_TENANT_ID
+}
+function clientId(): string | undefined {
+  return process.env.SHAREPOINT_CLIENT_ID || process.env.MS_CLIENT_ID
+}
+function clientSecret(): string | undefined {
+  return process.env.SHAREPOINT_CLIENT_SECRET || process.env.MS_CLIENT_SECRET
+}
+// The mailbox whose calendar we read/write. Falls back to the admin email.
+export function calendarUser(): string | undefined {
+  return process.env.BOOKING_CALENDAR_USER || process.env.MS_USER_ID || process.env.ADMIN_EMAIL
+}
+
 export function microsoftConfigured(): boolean {
-  return Boolean(
-    process.env.MS_TENANT_ID &&
-      process.env.MS_CLIENT_ID &&
-      process.env.MS_CLIENT_SECRET &&
-      process.env.MS_USER_ID,
-  )
+  return Boolean(tenantId() && clientId() && clientSecret() && calendarUser())
 }
 
 let cachedApp: ConfidentialClientApplication | null = null
@@ -34,9 +50,9 @@ function getApp(): ConfidentialClientApplication {
   if (!cachedApp) {
     cachedApp = new ConfidentialClientApplication({
       auth: {
-        clientId: process.env.MS_CLIENT_ID!,
-        authority: `https://login.microsoftonline.com/${process.env.MS_TENANT_ID}`,
-        clientSecret: process.env.MS_CLIENT_SECRET!,
+        clientId: clientId()!,
+        authority: `https://login.microsoftonline.com/${tenantId()}`,
+        clientSecret: clientSecret()!,
       },
     })
   }
@@ -69,14 +85,15 @@ export async function getMicrosoftBusy(rangeStart: Date, rangeEnd: Date): Promis
   if (!token) return []
 
   try {
-    const res = await fetch(`${GRAPH}/users/${encodeURIComponent(process.env.MS_USER_ID!)}/calendar/getSchedule`, {
+    const mailbox = calendarUser()!
+    const res = await fetch(`${GRAPH}/users/${encodeURIComponent(mailbox)}/calendar/getSchedule`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        schedules: [process.env.MS_USER_ID],
+        schedules: [mailbox],
         startTime: { dateTime: rangeStart.toISOString(), timeZone: "UTC" },
         endTime: { dateTime: rangeEnd.toISOString(), timeZone: "UTC" },
         availabilityViewInterval: 30,
@@ -118,7 +135,7 @@ export async function createMicrosoftEvent(params: {
   if (!token) return null
 
   try {
-    const res = await fetch(`${GRAPH}/users/${encodeURIComponent(process.env.MS_USER_ID!)}/events`, {
+    const res = await fetch(`${GRAPH}/users/${encodeURIComponent(calendarUser()!)}/events`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -159,7 +176,7 @@ export async function cancelMicrosoftEvent(eventId: string): Promise<void> {
   if (!token) return
 
   try {
-    await fetch(`${GRAPH}/users/${encodeURIComponent(process.env.MS_USER_ID!)}/events/${eventId}`, {
+    await fetch(`${GRAPH}/users/${encodeURIComponent(calendarUser()!)}/events/${eventId}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     })
