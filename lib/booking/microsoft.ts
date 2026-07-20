@@ -189,54 +189,47 @@ export async function diagnoseMicrosoft(): Promise<Record<string, unknown>> {
     return out
   }
 
-  // List up to 25 real users in the tenant so we can identify a valid mailbox.
-  // Requires User.Read.All (application) on the Azure app; if missing, this
-  // step reports the permission error rather than crashing.
+  // MOST IMPORTANT TEST FIRST: actually create then delete a real event on the
+  // configured mailbox. This is exactly what a booking does, so it is the true
+  // verdict on whether native M365 calendar writing will work.
+  const mailbox = calendarUser()
+  if (!mailbox) {
+    out.calendarWriteOk = false
+    out.calendarWriteError = "No mailbox configured. Set BOOKING_CALENDAR_USER."
+    return out
+  }
   try {
-    const res = await fetch(
-      `${GRAPH}/users?$select=displayName,userPrincipalName,mail&$top=25`,
-      { headers: { Authorization: `Bearer ${token}` } },
-    )
-    if (res.ok) {
-      const data = await res.json()
-      out.tenantUsers = (data?.value ?? []).map((u: any) => ({
-        displayName: u.displayName,
-        userPrincipalName: u.userPrincipalName,
-        mail: u.mail,
-      }))
+    const start = new Date(Date.now() + 24 * 3600_000)
+    const end = new Date(start.getTime() + 30 * 60_000)
+    const createRes = await fetch(`${GRAPH}/users/${encodeURIComponent(mailbox)}/events`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        subject: "EWA Tracker — diagnostic test (safe to ignore)",
+        start: { dateTime: start.toISOString(), timeZone: "UTC" },
+        end: { dateTime: end.toISOString(), timeZone: "UTC" },
+      }),
+    })
+    if (createRes.ok) {
+      const created = await createRes.json()
+      out.calendarWriteOk = true
+      // Clean up the test event immediately so it doesn't linger.
+      if (created?.id) {
+        await fetch(`${GRAPH}/users/${encodeURIComponent(mailbox)}/events/${created.id}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        out.testEventCleanedUp = true
+      }
     } else {
-      out.tenantUsersError = `${res.status}: ${await res.text()}`
-      out.tenantUsersHint =
-        "If this is a 403, add the User.Read.All APPLICATION permission (with admin consent) to list mailboxes. Not required for booking itself."
+      out.calendarWriteOk = false
+      out.calendarWriteError = `${createRes.status}: ${await createRes.text()}`
+      out.calendarWriteHint =
+        "'MailboxNotEnabledForRESTAPI' or 'ErrorInvalidUser' = this account has no Exchange Online mailbox/licence, so native M365 writing isn't possible (Apple Calendar via email invite still works). A permission error = add Calendars.ReadWrite (application) with admin consent in Azure."
     }
   } catch (err) {
-    out.tenantUsersError = String(err)
-  }
-
-  // Test calendar read on the currently-configured mailbox.
-  const mailbox = calendarUser()
-  if (mailbox) {
-    try {
-      const now = new Date()
-      const res = await fetch(`${GRAPH}/users/${encodeURIComponent(mailbox)}/calendar/getSchedule`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          schedules: [mailbox],
-          startTime: { dateTime: now.toISOString(), timeZone: "UTC" },
-          endTime: { dateTime: new Date(now.getTime() + 3600_000).toISOString(), timeZone: "UTC" },
-          availabilityViewInterval: 30,
-        }),
-      })
-      out.calendarAccessOk = res.ok
-      if (!res.ok) {
-        out.calendarAccessError = `${res.status}: ${await res.text()}`
-        out.calendarAccessHint =
-          "If this is 'ErrorInvalidUser', BOOKING_CALENDAR_USER is not a licensed mailbox in this tenant. Pick one from tenantUsers above. If it's a permission error, add Calendars.ReadWrite (application) with admin consent."
-      }
-    } catch (err) {
-      out.calendarAccessError = String(err)
-    }
+    out.calendarWriteOk = false
+    out.calendarWriteError = String(err)
   }
 
   return out
