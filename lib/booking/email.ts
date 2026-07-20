@@ -64,7 +64,7 @@ export async function sendBookingEmails(booking: CallBooking, tz: string): Promi
   ]
 
   // Notification to you (the business).
-  await resend.emails.send({
+  const adminRes = await resend.emails.send({
     from: FROM,
     to: [ADMIN_EMAIL],
     subject: `New call booking: ${booking.name} — ${when}`,
@@ -79,9 +79,12 @@ export async function sendBookingEmails(booking: CallBooking, tz: string): Promi
     `,
     attachments,
   })
+  if (adminRes.error) {
+    throw new Error(`Resend rejected admin notification: ${JSON.stringify(adminRes.error)}`)
+  }
 
   // Confirmation to the person who booked.
-  await resend.emails.send({
+  const bookerRes = await resend.emails.send({
     from: FROM,
     to: [booking.email],
     subject: `Your call with EWA Tracker is booked — ${when}`,
@@ -98,6 +101,9 @@ export async function sendBookingEmails(booking: CallBooking, tz: string): Promi
     `,
     attachments,
   })
+  if (bookerRes.error) {
+    throw new Error(`Resend rejected booker confirmation: ${JSON.stringify(bookerRes.error)}`)
+  }
 }
 
 export async function sendCancellationEmails(booking: CallBooking, tz: string): Promise<void> {

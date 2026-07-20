@@ -45,13 +45,63 @@ export async function GET() {
     if (errorField) {
       diagnostics.sendError = errorField.message || JSON.stringify(errorField)
       return NextResponse.json(
-        { ok: false, message: "Resend rejected the send. See sendError.", diagnostics },
+        { ok: false, message: "Resend rejected the plain send. See sendError.", diagnostics },
+        { status: 200 },
+      )
+    }
+
+    // Second send: identical to the real booking path, WITH the .ics attachment.
+    // This is what actually fires on a booking, so it reveals attachment-specific
+    // rejections that the plain send above would not surface.
+    const { buildIcs } = await import("@/lib/booking/ics")
+    const now = new Date()
+    const ics = buildIcs({
+      uid: `test-${now.getTime()}@ewatracker.co.uk`,
+      start: new Date(now.getTime() + 3600_000),
+      end: new Date(now.getTime() + 5400_000),
+      summary: "EWA Tracker — test invite",
+      description: "Test calendar invite from the booking system.",
+      location: "Phone call",
+      organizerName: "EWA Tracker Ltd",
+      organizerEmail: from.match(/<(.+)>/)?.[1] || from,
+      attendeeName: "Test",
+      attendeeEmail: adminEmail,
+      method: "REQUEST",
+      sequence: 0,
+    })
+    const attachmentResult = await resend.emails.send({
+      from,
+      to: [adminEmail],
+      subject: "EWA Tracker — booking email test (with calendar invite)",
+      html: `<p>This test includes the .ics calendar attachment, exactly like a real booking.</p>`,
+      attachments: [
+        {
+          filename: "invite.ics",
+          content: Buffer.from(ics, "utf-8").toString("base64"),
+          contentType: "text/calendar; method=REQUEST",
+        },
+      ],
+    })
+    ;(diagnostics as Record<string, unknown>).attachmentSendResult = attachmentResult
+    const attachErr = (attachmentResult as { error?: { message?: string } | null })?.error
+    if (attachErr) {
+      diagnostics.sendError = attachErr.message || JSON.stringify(attachErr)
+      return NextResponse.json(
+        {
+          ok: false,
+          message: "Plain send worked but the ATTACHMENT send was rejected. See sendError.",
+          diagnostics,
+        },
         { status: 200 },
       )
     }
 
     return NextResponse.json(
-      { ok: true, message: `Test email sent to ${adminEmail}. Check that inbox (and spam).`, diagnostics },
+      {
+        ok: true,
+        message: `Two test emails sent to ${adminEmail} (one plain, one with calendar invite). Check that inbox and spam.`,
+        diagnostics,
+      },
       { status: 200 },
     )
   } catch (err) {
