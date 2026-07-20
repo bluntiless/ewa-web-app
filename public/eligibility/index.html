@@ -802,6 +802,42 @@ ${nextStep}
         }).catch(function(){ /* non-blocking */ });
     } catch(e) { /* non-blocking */ }
 
+    // Auto-save to SharePoint so a candidate folder is ALWAYS created on
+    // evaluation, even if the candidate never clicks the green "Send" button.
+    // Fire-and-forget and non-blocking; the manual button below remains as a
+    // backup and gives the candidate visible confirmation. Because the save
+    // route only creates the folder if missing and uses a date-based filename,
+    // this auto-save and a later manual click simply overwrite the same file
+    // rather than creating duplicates.
+    try {
+        if (document.getElementById("name").value) {
+            fetch('/api/eligibility-checker/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(buildEligibilityPayload())
+            }).catch(function(){ /* non-blocking */ });
+        }
+    } catch(e) { /* non-blocking */ }
+
+}
+
+// Shared payload builder used by both the automatic save (on evaluation) and
+// the manual "Send My Eligibility Result" button, so the two stay identical.
+function buildEligibilityPayload(){
+    return {
+        candidateName: document.getElementById('name').value,
+        checkDate: new Date().toLocaleDateString('en-GB'),
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        experience: document.getElementById('experience').selectedOptions[0]?.text || "",
+        level2Qualification: document.getElementById('level2').selectedOptions[0]?.text || "",
+        level3Qualification: document.getElementById('level3').selectedOptions[0]?.text || "",
+        bs7671Status: document.getElementById('edition').selectedOptions[0]?.text || "",
+        itStatus: document.getElementById('it').selectedOptions[0]?.text || "",
+        workTypes: [document.getElementById('work').selectedOptions[0]?.text || ""],
+        eligibilityResult: document.getElementById('resultText').innerText,
+        recommendations: document.getElementById('nextStep').innerText
+    };
 }
 
 function copySummary(){
@@ -828,20 +864,7 @@ async function saveToSharePoint(){
     statusDiv.style.display = "block";
     statusDiv.innerHTML = '<div style="background:#fef3c7; padding:10px; border-radius:8px;">Saving to SharePoint...</div>';
 
-    const data = {
-        candidateName: candidateName,
-        checkDate: new Date().toLocaleDateString('en-GB'),
-        email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value,
-        experience: document.getElementById('experience').selectedOptions[0]?.text || "",
-        level2Qualification: document.getElementById('level2').selectedOptions[0]?.text || "",
-        level3Qualification: document.getElementById('level3').selectedOptions[0]?.text || "",
-        bs7671Status: document.getElementById('edition').selectedOptions[0]?.text || "",
-        itStatus: document.getElementById('it').selectedOptions[0]?.text || "",
-        workTypes: [document.getElementById('work').selectedOptions[0]?.text || ""],
-        eligibilityResult: document.getElementById('resultText').innerText,
-        recommendations: document.getElementById('nextStep').innerText
-    };
+    const data = buildEligibilityPayload();
 
     try {
         const response = await fetch('/api/eligibility-checker/save', {
