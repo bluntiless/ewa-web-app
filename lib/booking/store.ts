@@ -12,12 +12,20 @@ const SETTINGS_PATH = "call-booking-settings/settings.json"
 
 export type BookingStatus = "confirmed" | "cancelled"
 
+// Answers to the fixed intake questions (Yes / No / Not sure).
+export type YesNoUnsure = "Yes" | "No" | "Not sure"
+
 export interface CallBooking {
   id: string
   name: string
   email: string
   phone: string
   notes?: string
+  // Intake questions (mirrors the previous Calendly form). Optional on the type
+  // for backwards-compatibility with any bookings saved before these existed.
+  experience?: string
+  has18thEdition?: YesNoUnsure
+  hasInspectionTesting?: YesNoUnsure
   // ISO instants (UTC) for the slot.
   start: string
   end: string
