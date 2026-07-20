@@ -169,6 +169,79 @@ export async function createMicrosoftEvent(params: {
   }
 }
 
+// Diagnostic helper: reports config state, token acquisition, the tenant's
+// real user mailboxes (so we can pick a valid BOOKING_CALENDAR_USER), and
+// whether calendar access works for the currently configured mailbox. This is
+// used by a temporary admin diagnostic endpoint and is safe to remove later.
+export async function diagnoseMicrosoft(): Promise<Record<string, unknown>> {
+  const out: Record<string, unknown> = {
+    configured: microsoftConfigured(),
+    tenantIdPresent: Boolean(tenantId()),
+    clientIdPresent: Boolean(clientId()),
+    clientSecretPresent: Boolean(clientSecret()),
+    currentMailbox: calendarUser() ?? null,
+  }
+
+  const token = await getToken()
+  out.tokenAcquired = Boolean(token)
+  if (!token) {
+    out.hint = "Token failed. Check SHAREPOINT_* credentials are correct."
+    return out
+  }
+
+  // List up to 25 real users in the tenant so we can identify a valid mailbox.
+  // Requires User.Read.All (application) on the Azure app; if missing, this
+  // step reports the permission error rather than crashing.
+  try {
+    const res = await fetch(
+      `${GRAPH}/users?$select=displayName,userPrincipalName,mail&$top=25`,
+      { headers: { Authorization: `Bearer ${token}` } },
+    )
+    if (res.ok) {
+      const data = await res.json()
+      out.tenantUsers = (data?.value ?? []).map((u: any) => ({
+        displayName: u.displayName,
+        userPrincipalName: u.userPrincipalName,
+        mail: u.mail,
+      }))
+    } else {
+      out.tenantUsersError = `${res.status}: ${await res.text()}`
+      out.tenantUsersHint =
+        "If this is a 403, add the User.Read.All APPLICATION permission (with admin consent) to list mailboxes. Not required for booking itself."
+    }
+  } catch (err) {
+    out.tenantUsersError = String(err)
+  }
+
+  // Test calendar read on the currently-configured mailbox.
+  const mailbox = calendarUser()
+  if (mailbox) {
+    try {
+      const now = new Date()
+      const res = await fetch(`${GRAPH}/users/${encodeURIComponent(mailbox)}/calendar/getSchedule`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          schedules: [mailbox],
+          startTime: { dateTime: now.toISOString(), timeZone: "UTC" },
+          endTime: { dateTime: new Date(now.getTime() + 3600_000).toISOString(), timeZone: "UTC" },
+          availabilityViewInterval: 30,
+        }),
+      })
+      out.calendarAccessOk = res.ok
+      if (!res.ok) {
+        out.calendarAccessError = `${res.status}: ${await res.text()}`
+        out.calendarAccessHint =
+          "If this is 'ErrorInvalidUser', BOOKING_CALENDAR_USER is not a licensed mailbox in this tenant. Pick one from tenantUsers above. If it's a permission error, add Calendars.ReadWrite (application) with admin consent."
+      }
+    } catch (err) {
+      out.calendarAccessError = String(err)
+    }
+  }
+
+  return out
+}
+
 // Cancel a previously created Microsoft event. Best-effort.
 export async function cancelMicrosoftEvent(eventId: string): Promise<void> {
   if (!microsoftConfigured() || !eventId) return
