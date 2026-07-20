@@ -108,7 +108,7 @@ export default function EwaAssessmentPage() {
             Electrotechnical Experienced Worker Qualification (603/5982/1) and ECS Gold Card.
           </p>
           <a
-            href="https://calendly.com/ewatracker-info/30min"
+            href="/book-a-call"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center px-8 py-3 rounded-full text-lg font-semibold bg-white text-blue-700 hover:bg-gray-100 transition-colors shadow-lg"

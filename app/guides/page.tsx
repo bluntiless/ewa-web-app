@@ -111,7 +111,7 @@ export default function GuidesPage() {
                 Complete Skills Scan
               </Link>
               <a
-                href="https://calendly.com/ewatracker-info/30min"
+                href="/book-a-call"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="border-2 border-blue-600 text-blue-600 px-8 py-3 rounded-full text-lg font-semibold hover:bg-blue-600 hover:text-white transition-colors"

@@ -68,7 +68,7 @@ export default function HomePage() {
               Check My EWA Eligibility
             </Link>
             <a
-              href="https://calendly.com/ewatracker-info/30min"
+              href="/book-a-call"
               target="_blank"
               rel="noopener noreferrer"
               className="border border-white text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-white hover:text-blue-700 transition-colors shadow-lg"
@@ -688,7 +688,7 @@ export default function HomePage() {
 
           <div className="text-center mt-12">
             <a
-              href="https://calendly.com/ewatracker-info/30min"
+              href="/book-a-call"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center px-8 py-4 rounded-full text-lg font-semibold bg-blue-700 text-white hover:bg-blue-800 transition-colors shadow-lg"

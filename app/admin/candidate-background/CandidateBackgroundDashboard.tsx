@@ -123,6 +123,12 @@ export default function CandidateBackgroundDashboard() {
             <p className="text-sm text-gray-500">Admin Dashboard</p>
           </div>
           <div className="flex items-center gap-3">
+            <Link href="/admin/call-bookings">
+              <Button variant="ghost" size="sm">
+                Call Bookings
+                <ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
+            </Link>
             <Link href="/admin/skills-scan">
               <Button variant="ghost" size="sm">
                 Skills Scans
