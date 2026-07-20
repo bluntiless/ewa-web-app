@@ -58,7 +58,7 @@ export default function ContactPage() {
               Ready to start your EWA journey? Schedule a free 30-minute consultation to discuss your eligibility and next steps.
             </p>
             <a
-              href="https://calendly.com/ewatracker-info/30min"
+              href="/book-a-call"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center px-8 py-3 rounded-full text-lg font-semibold bg-white text-blue-700 hover:bg-gray-100 transition-colors shadow-lg"

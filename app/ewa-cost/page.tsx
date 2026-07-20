@@ -233,7 +233,7 @@ export default function EWACostPage() {
                 Complete Skills Scan
               </Link>
               <a
-                href="https://calendly.com/ewatracker-info/30min"
+                href="/book-a-call"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="border-2 border-white text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-white hover:text-blue-700 transition-colors"

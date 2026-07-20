@@ -149,7 +149,7 @@ export default function AboutPage() {
               Book a free consultation to discuss your eligibility for the EWA qualification.
             </p>
             <a
-              href="https://calendly.com/ewatracker-info/30min"
+              href="/book-a-call"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center px-6 py-3 rounded-lg text-sm font-semibold bg-white text-blue-700 hover:bg-blue-50 shadow-md hover:shadow-lg transition-all duration-200"

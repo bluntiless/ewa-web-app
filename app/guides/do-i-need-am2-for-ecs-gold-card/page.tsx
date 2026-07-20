@@ -181,7 +181,7 @@ export default function AM2GuidePage() {
               Book a free consultation to discuss your pathway to the ECS Gold Card, including AM2 preparation and timing.
             </p>
             <a
-              href="https://calendly.com/ewatracker-info/30min"
+              href="/book-a-call"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 transition-colors"

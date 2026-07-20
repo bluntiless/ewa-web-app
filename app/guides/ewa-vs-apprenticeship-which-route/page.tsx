@@ -209,7 +209,7 @@ export default function EWAvsApprenticeshipPage() {
                 Complete Skills Scan <ArrowRight className="w-4 h-4" />
               </Link>
               <a
-                href="https://calendly.com/ewatracker-info/30min"
+                href="/book-a-call"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 border-2 border-blue-600 text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-blue-600 hover:text-white transition-colors"

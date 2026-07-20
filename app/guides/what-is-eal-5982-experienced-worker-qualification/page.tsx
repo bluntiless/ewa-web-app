@@ -160,7 +160,7 @@ export default function EAL5982GuidePage() {
             If you believe you meet the eligibility criteria and want to explore the EAL 5982 route, the first step is to complete a <Link href="/skills-scan">Skills Scan assessment</Link>. This helps determine your current competence level and identifies any gaps that may need addressing.
           </p>
           <p>
-            You can also <a href="https://calendly.com/ewatracker-info/30min" target="_blank" rel="noopener noreferrer">book a free consultation</a> to discuss your individual circumstances with our team.
+            You can also <a href="/book-a-call" target="_blank" rel="noopener noreferrer">book a free consultation</a> to discuss your individual circumstances with our team.
           </p>
 
           {/* CTA Box */}
