@@ -28,6 +28,9 @@ interface CallBooking {
   name: string
   email: string
   phone: string
+  experience?: string
+  has18thEdition?: string
+  hasInspectionTesting?: string
   notes?: string
   start: string
   end: string
@@ -238,6 +241,27 @@ function BookingCard({
               </a>
             </span>
           </div>
+          {(booking.experience || booking.has18thEdition || booking.hasInspectionTesting) && (
+            <div className="mt-3 border-t border-gray-100 pt-3 space-y-1.5 text-sm text-gray-600">
+              {booking.experience && (
+                <p>
+                  <span className="font-medium text-gray-700">Experience:</span> {booking.experience}
+                </p>
+              )}
+              {booking.has18thEdition && (
+                <p>
+                  <span className="font-medium text-gray-700">18th Edition (BS 7671):</span>{" "}
+                  {booking.has18thEdition}
+                </p>
+              )}
+              {booking.hasInspectionTesting && (
+                <p>
+                  <span className="font-medium text-gray-700">Inspection &amp; Testing:</span>{" "}
+                  {booking.hasInspectionTesting}
+                </p>
+              )}
+            </div>
+          )}
           {booking.notes && (
             <p className="mt-2 text-sm text-gray-600 flex items-start gap-1.5">
               <FileText className="w-3.5 h-3.5 text-gray-400 mt-0.5 shrink-0" />

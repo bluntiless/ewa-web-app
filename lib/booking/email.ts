@@ -41,9 +41,15 @@ export async function sendBookingEmails(booking: CallBooking, tz: string): Promi
     start: new Date(booking.start),
     end: new Date(booking.end),
     summary: MEETING.title,
-    description: `${MEETING.description}\n\nCaller: ${booking.name}\nPhone: ${booking.phone}${
-      booking.notes ? `\nNotes: ${booking.notes}` : ""
-    }`,
+    description:
+      `${MEETING.description}\n\n` +
+      `Caller: ${booking.name}\n` +
+      `Phone: ${booking.phone}\n` +
+      `Email: ${booking.email}\n\n` +
+      `Electrical experience: ${booking.experience ?? "-"}\n` +
+      `Holds 18th Edition (BS 7671): ${booking.has18thEdition ?? "-"}\n` +
+      `Holds Inspection & Testing: ${booking.hasInspectionTesting ?? "-"}` +
+      (booking.notes ? `\n\nNotes: ${booking.notes}` : ""),
     location: MEETING.location,
     organizerName: "EWA Tracker Ltd",
     organizerEmail: ORGANIZER_EMAIL,
@@ -74,6 +80,13 @@ export async function sendBookingEmails(booking: CallBooking, tz: string): Promi
       <p><strong>Name:</strong> ${booking.name}</p>
       <p><strong>Phone:</strong> ${booking.phone}</p>
       <p><strong>Email:</strong> ${booking.email}</p>
+      ${booking.experience ? `<p><strong>Electrical experience:</strong> ${booking.experience}</p>` : ""}
+      ${booking.has18thEdition ? `<p><strong>Holds 18th Edition (BS 7671):</strong> ${booking.has18thEdition}</p>` : ""}
+      ${
+        booking.hasInspectionTesting
+          ? `<p><strong>Holds Inspection &amp; Testing:</strong> ${booking.hasInspectionTesting}</p>`
+          : ""
+      }
       ${booking.notes ? `<p><strong>Notes:</strong> ${booking.notes}</p>` : ""}
       <p>The calendar invite is attached. Opening it on your iPhone or Mac will add it to your calendar.</p>
     `,

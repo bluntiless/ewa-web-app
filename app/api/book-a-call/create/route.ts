@@ -19,11 +19,22 @@ export async function POST(request: Request) {
     const name = String(body.name ?? "").trim()
     const email = String(body.email ?? "").trim()
     const phone = String(body.phone ?? "").trim()
+    const experience = String(body.experience ?? "").trim()
     const notes = String(body.notes ?? "").trim()
     const start = String(body.start ?? "").trim()
 
+    // Normalise the Yes/No/Not sure intake answers.
+    const ALLOWED = ["Yes", "No", "Not sure"] as const
+    type YesNoUnsure = (typeof ALLOWED)[number]
+    const normalise = (v: unknown): YesNoUnsure | "" => {
+      const s = String(v ?? "").trim()
+      return (ALLOWED as readonly string[]).includes(s) ? (s as YesNoUnsure) : ""
+    }
+    const has18thEdition = normalise(body.has18thEdition)
+    const hasInspectionTesting = normalise(body.hasInspectionTesting)
+
     // Basic validation.
-    if (!name || !email || !phone || !start) {
+    if (!name || !email || !phone || !start || !experience || !has18thEdition || !hasInspectionTesting) {
       return NextResponse.json({ error: "Please complete all required fields." }, { status: 400 })
     }
     if (!isValidEmail(email)) {
@@ -62,9 +73,15 @@ export async function POST(request: Request) {
     // cancellation. Non-fatal if it fails (e.g. not yet configured).
     const microsoftEventId = await createMicrosoftEvent({
       subject: MEETING.title,
-      body: `${MEETING.description}<br/><br/>Caller: ${name}<br/>Phone: ${phone}${
-        notes ? `<br/>Notes: ${notes}` : ""
-      }`,
+      body:
+        `${MEETING.description}<br/><br/>` +
+        `Caller: ${name}<br/>` +
+        `Phone: ${phone}<br/>` +
+        `Email: ${email}<br/><br/>` +
+        `Electrical experience: ${experience}<br/>` +
+        `Holds 18th Edition (BS 7671): ${has18thEdition}<br/>` +
+        `Holds Inspection &amp; Testing: ${hasInspectionTesting}` +
+        (notes ? `<br/><br/>Notes: ${notes}` : ""),
       start: startDate,
       end: endDate,
       attendeeName: name,
@@ -77,6 +94,9 @@ export async function POST(request: Request) {
       name,
       email,
       phone,
+      experience,
+      has18thEdition,
+      hasInspectionTesting,
       notes: notes || undefined,
       start: startDate.toISOString(),
       end: endDate.toISOString(),

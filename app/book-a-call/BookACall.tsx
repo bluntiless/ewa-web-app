@@ -13,6 +13,52 @@ interface Slot {
   end: string
   label: string
 }
+
+const RADIO_OPTIONS = ["Yes", "No", "Not sure"] as const
+
+function RadioQuestion({
+  label,
+  name,
+  value,
+  onChange,
+}: {
+  label: string
+  name: string
+  value: string
+  onChange: (value: string) => void
+}) {
+  return (
+    <fieldset>
+      <legend className="text-sm font-medium text-gray-900 mb-2">{label}</legend>
+      <div className="flex flex-wrap gap-2">
+        {RADIO_OPTIONS.map((option) => {
+          const active = value === option
+          return (
+            <label
+              key={option}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg border cursor-pointer text-sm transition-colors ${
+                active
+                  ? "border-blue-600 bg-blue-50 text-blue-800 font-medium"
+                  : "border-gray-200 text-gray-700 hover:border-blue-300"
+              }`}
+            >
+              <input
+                type="radio"
+                name={name}
+                value={option}
+                required
+                checked={active}
+                onChange={() => onChange(option)}
+                className="accent-blue-600"
+              />
+              {option}
+            </label>
+          )
+        })}
+      </div>
+    </fieldset>
+  )
+}
 interface DayAvailability {
   date: string
   slots: Slot[]
@@ -45,7 +91,15 @@ export default function BookACall() {
 
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null)
-  const [form, setForm] = useState({ name: "", email: "", phone: "", notes: "" })
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    experience: "",
+    has18thEdition: "",
+    hasInspectionTesting: "",
+    notes: "",
+  })
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [confirmed, setConfirmed] = useState<{ start: string } | null>(null)
@@ -124,6 +178,22 @@ export default function BookACall() {
         <span className="flex items-center gap-2">
           <Calendar className="w-4 h-4" /> Free consultation
         </span>
+      </div>
+
+      {/* What the call covers */}
+      <div className="border-b border-gray-100 bg-gray-50 px-6 py-5 text-sm text-gray-700">
+        <p className="mb-2">
+          This call is to assess your eligibility for the EAL Level 3 Electrotechnical Experienced Worker
+          Assessment (EWA). We&apos;ll cover:
+        </p>
+        <ul className="list-disc pl-5 space-y-1">
+          <li>Your current experience and qualifications</li>
+          <li>Evidence requirements</li>
+          <li>Next steps to achieving your ECS Gold Card</li>
+        </ul>
+        <p className="mt-2">
+          Please ensure you are available at the scheduled time. Wayne Wright will call you directly.
+        </p>
       </div>
 
       <div className="p-6 md:p-8">
@@ -260,12 +330,42 @@ export default function BookACall() {
                 />
               </div>
               <div>
-                <Label htmlFor="notes">Anything you&apos;d like us to know? (optional)</Label>
+                <Label htmlFor="experience">
+                  Briefly describe your electrical experience (years, type of work, qualifications if known) *
+                </Label>
+                <Textarea
+                  id="experience"
+                  required
+                  value={form.experience}
+                  onChange={(e) => setForm({ ...form, experience: e.target.value })}
+                  placeholder="e.g. 8 years domestic and commercial installation work…"
+                  rows={3}
+                />
+              </div>
+
+              <RadioQuestion
+                label="Do you currently hold the 18th Edition (BS 7671)? *"
+                name="has18thEdition"
+                value={form.has18thEdition}
+                onChange={(v) => setForm({ ...form, has18thEdition: v })}
+              />
+
+              <RadioQuestion
+                label="Do you currently hold the Inspection & Testing Qualification? *"
+                name="hasInspectionTesting"
+                value={form.hasInspectionTesting}
+                onChange={(v) => setForm({ ...form, hasInspectionTesting: v })}
+              />
+
+              <div>
+                <Label htmlFor="notes">
+                  Please share anything else that will help us prepare for our call (optional)
+                </Label>
                 <Textarea
                   id="notes"
                   value={form.notes}
                   onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                  placeholder="e.g. your current qualifications or questions"
+                  placeholder="Anything else you'd like us to know"
                   rows={3}
                 />
               </div>
