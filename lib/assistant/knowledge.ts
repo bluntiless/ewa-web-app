@@ -29,6 +29,22 @@ From 04/09/2023, learners MUST already hold as a minimum a Level 2 qualification
 (as detailed in the TESP skills scan) to take this qualification. See Section 5
 of the qualification manual.
 
+## Legacy / older UK qualifications (equivalences)
+Older UK electrical qualifications map to the modern framework as follows. Use
+these mappings when a candidate asks whether a legacy qualification makes them
+eligible:
+- City & Guilds 236 Part 1 = equivalent to a modern LEVEL 2 qualification.
+- City & Guilds 236 Part 2 = equivalent to a modern LEVEL 3 qualification.
+- So a candidate holding BOTH 236 Part 1 AND Part 2 effectively holds the Level 2
+  AND Level 3 equivalents. Do NOT tell a candidate that Part 2 is only Level 2 —
+  Part 2 is the Level 3 equivalent.
+- The minimum entry requirement for the EWA is a Level 2 qualification, so
+  236 Part 1 alone already meets the minimum entry requirement; Part 2 adds the
+  Level 3 equivalence.
+- These are guidance equivalences only. The candidate's exact qualifications are
+  formally confirmed during the TESP skills scan, so always frame this as
+  indicative and recommend the skills scan or a consultation call to confirm.
+
 ## Overseas / non-UK qualifications (ECCTIS comparison)
 If a candidate holds electrical qualifications gained OUTSIDE the UK, those
 qualifications cannot be accepted at face value. They must first have a formal
