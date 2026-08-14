@@ -5,15 +5,20 @@ import { useEffect, useRef, useState } from "react"
 import { usePathname } from "next/navigation"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
-import { MessageCircle, X, Send, Sparkles, RotateCcw } from "lucide-react"
+import { MessageCircle, X, Send, Sparkles, RotateCcw, ClipboardCheck } from "lucide-react"
 import type { UIMessage } from "ai"
+import AssistantEligibilityWizard from "@/components/assistant-eligibility-wizard"
 
 const SUGGESTIONS = [
-  "Am I eligible for the EWA route?",
   "What does it cost?",
   "What evidence do I need?",
   "How do I get my ECS Gold Card?",
 ]
+
+// Phrases that indicate the visitor is asking about eligibility, so we can offer
+// the interactive eligibility check alongside the assistant's text answer.
+const ELIGIBILITY_INTENT =
+  /\b(eligib|qualif(y|ies|ied|ication)|am i (able|suitable|eligible)|do i qualify|can i (do|apply|join)|right route|suitable for)\b/i
 
 // Keys used to persist the conversation across page navigations. sessionStorage
 // keeps the chat alive while the visitor browses the site in the same tab, but
@@ -80,6 +85,8 @@ export default function SiteAssistant() {
   const pathname = usePathname()
   const [open, setOpen] = useState(loadPersistedOpen)
   const [input, setInput] = useState("")
+  const [wizardActive, setWizardActive] = useState(false)
+  const [offerCheck, setOfferCheck] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const { messages, sendMessage, setMessages, status, error } = useChat({
@@ -126,8 +133,16 @@ export default function SiteAssistant() {
   const submit = (text: string) => {
     const value = text.trim()
     if (!value || busy) return
+    // If the visitor is asking about eligibility, offer the interactive check
+    // alongside the assistant's normal text answer.
+    if (ELIGIBILITY_INTENT.test(value)) setOfferCheck(true)
     sendMessage({ text: value })
     setInput("")
+  }
+
+  const startWizard = () => {
+    setOfferCheck(false)
+    setWizardActive(true)
   }
 
   const onSubmit = (e: React.FormEvent) => {
@@ -177,6 +192,10 @@ export default function SiteAssistant() {
             )}
           </div>
 
+          {wizardActive ? (
+            <AssistantEligibilityWizard onExit={() => setWizardActive(false)} />
+          ) : (
+          <>
           {/* Messages */}
           <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto bg-gray-50 px-4 py-4">
             {messages.length === 0 && (
@@ -186,6 +205,14 @@ export default function SiteAssistant() {
                   requirements, your roadmap to the ECS Gold Card, and pricing. What would you like to
                   know?
                 </p>
+                <button
+                  type="button"
+                  onClick={startWizard}
+                  className="flex w-full items-center gap-2 rounded-xl border border-blue-600 bg-blue-700 px-3.5 py-2.5 text-left text-sm font-semibold text-white transition-colors hover:bg-blue-800"
+                >
+                  <ClipboardCheck className="h-4 w-4 shrink-0" />
+                  Check my eligibility (2 minutes)
+                </button>
                 <div className="flex flex-wrap gap-2">
                   {SUGGESTIONS.map((s) => (
                     <button
@@ -217,6 +244,19 @@ export default function SiteAssistant() {
                 </div>
               )
             })}
+
+            {offerCheck && !busy && (
+              <div className="flex justify-start">
+                <button
+                  type="button"
+                  onClick={startWizard}
+                  className="flex items-center gap-2 rounded-xl border border-blue-600 bg-blue-50 px-3.5 py-2.5 text-left text-sm font-semibold text-blue-800 transition-colors hover:bg-blue-100"
+                >
+                  <ClipboardCheck className="h-4 w-4 shrink-0" />
+                  Run the 2-minute eligibility check
+                </button>
+              </div>
+            )}
 
             {status === "submitted" && (
               <div className="flex justify-start">
@@ -268,6 +308,8 @@ export default function SiteAssistant() {
           <p className="bg-white px-3 pb-2 text-center text-[10px] leading-tight text-gray-400">
             Guidance only — eligibility & pricing are confirmed on a free consultation call.
           </p>
+          </>
+          )}
         </div>
       )}
     </>
