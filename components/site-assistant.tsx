@@ -5,7 +5,8 @@ import { useEffect, useRef, useState } from "react"
 import { usePathname } from "next/navigation"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
-import { MessageCircle, X, Send, Sparkles } from "lucide-react"
+import { MessageCircle, X, Send, Sparkles, RotateCcw } from "lucide-react"
+import type { UIMessage } from "ai"
 
 const SUGGESTIONS = [
   "Am I eligible for the EWA route?",
@@ -13,6 +14,29 @@ const SUGGESTIONS = [
   "What evidence do I need?",
   "How do I get my ECS Gold Card?",
 ]
+
+// Keys used to persist the conversation across page navigations. sessionStorage
+// keeps the chat alive while the visitor browses the site in the same tab, but
+// clears automatically when they close the tab so old conversations don't linger.
+const MESSAGES_KEY = "ewa-assistant-messages"
+const OPEN_KEY = "ewa-assistant-open"
+
+function loadPersistedMessages(): UIMessage[] {
+  if (typeof window === "undefined") return []
+  try {
+    const raw = window.sessionStorage.getItem(MESSAGES_KEY)
+    if (!raw) return []
+    const parsed = JSON.parse(raw)
+    return Array.isArray(parsed) ? (parsed as UIMessage[]) : []
+  } catch {
+    return []
+  }
+}
+
+function loadPersistedOpen(): boolean {
+  if (typeof window === "undefined") return false
+  return window.sessionStorage.getItem(OPEN_KEY) === "true"
+}
 
 // Render a plain-text assistant string, turning [label](url) markdown links into
 // real links. Kept dependency-free and safe: only internal paths and http(s).
@@ -54,15 +78,32 @@ function messageText(parts: { type: string; text?: string }[]): string {
 
 export default function SiteAssistant() {
   const pathname = usePathname()
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(loadPersistedOpen)
   const [input, setInput] = useState("")
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  const { messages, sendMessage, status, error } = useChat({
+  const { messages, sendMessage, setMessages, status, error } = useChat({
     transport: new DefaultChatTransport({ api: "/api/assistant" }),
+    messages: loadPersistedMessages(),
   })
 
   const busy = status === "submitted" || status === "streaming"
+
+  // Persist the conversation so it survives navigating between pages.
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    try {
+      window.sessionStorage.setItem(MESSAGES_KEY, JSON.stringify(messages))
+    } catch {
+      /* storage full or unavailable — non-critical */
+    }
+  }, [messages])
+
+  // Remember whether the panel was open so it stays open across navigation.
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    window.sessionStorage.setItem(OPEN_KEY, String(open))
+  }, [open])
 
   // Auto-scroll to the newest message.
   useEffect(() => {
@@ -70,6 +111,14 @@ export default function SiteAssistant() {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
   }, [messages, open, busy])
+
+  // Clear the conversation and its persisted copy.
+  const clearConversation = () => {
+    setMessages([])
+    if (typeof window !== "undefined") {
+      window.sessionStorage.removeItem(MESSAGES_KEY)
+    }
+  }
 
   // Never show the assistant inside the admin area.
   if (pathname?.startsWith("/admin")) return null
@@ -111,10 +160,21 @@ export default function SiteAssistant() {
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15">
               <Sparkles className="h-5 w-5" />
             </div>
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold">EWA Assistant</p>
               <p className="truncate text-xs text-blue-100">Eligibility, evidence, pricing & more</p>
             </div>
+            {messages.length > 0 && (
+              <button
+                type="button"
+                onClick={clearConversation}
+                aria-label="Start a new conversation"
+                title="Start a new conversation"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-blue-100 transition-colors hover:bg-white/15 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+              >
+                <RotateCcw className="h-4 w-4" />
+              </button>
+            )}
           </div>
 
           {/* Messages */}
