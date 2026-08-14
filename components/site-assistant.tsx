@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react"
 import { usePathname } from "next/navigation"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
-import { MessageCircle, X, Send, Sparkles, RotateCcw, ClipboardCheck } from "lucide-react"
+import { X, Send, Sparkles, RotateCcw, ClipboardCheck } from "lucide-react"
 import type { UIMessage } from "ai"
 import AssistantEligibilityWizard from "@/components/assistant-eligibility-wizard"
 
@@ -25,6 +25,7 @@ const ELIGIBILITY_INTENT =
 // clears automatically when they close the tab so old conversations don't linger.
 const MESSAGES_KEY = "ewa-assistant-messages"
 const OPEN_KEY = "ewa-assistant-open"
+const NUDGE_KEY = "ewa-assistant-nudge"
 
 function loadPersistedMessages(): UIMessage[] {
   if (typeof window === "undefined") return []
@@ -87,6 +88,7 @@ export default function SiteAssistant() {
   const [input, setInput] = useState("")
   const [wizardActive, setWizardActive] = useState(false)
   const [offerCheck, setOfferCheck] = useState(false)
+  const [showNudge, setShowNudge] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const { messages, sendMessage, setMessages, status, error } = useChat({
@@ -118,6 +120,23 @@ export default function SiteAssistant() {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
   }, [messages, open, busy])
+
+  // Show a friendly one-time nudge shortly after load to draw attention to the
+  // assistant — but only if it hasn't been opened yet and wasn't dismissed this
+  // session (sessionStorage keeps it from re-nagging on every page).
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    if (open || window.sessionStorage.getItem(NUDGE_KEY) === "dismissed") return
+    const t = window.setTimeout(() => setShowNudge(true), 2500)
+    return () => window.clearTimeout(t)
+  }, [open])
+
+  const dismissNudge = () => {
+    setShowNudge(false)
+    if (typeof window !== "undefined") {
+      window.sessionStorage.setItem(NUDGE_KEY, "dismissed")
+    }
+  }
 
   // Clear the conversation and its persisted copy.
   const clearConversation = () => {
@@ -152,16 +171,71 @@ export default function SiteAssistant() {
 
   return (
     <>
-      {/* Launcher button */}
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-label={open ? "Close assistant" : "Open EWA assistant"}
-        aria-expanded={open}
-        className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-blue-700 text-white shadow-lg shadow-blue-900/25 transition-transform hover:scale-105 hover:bg-blue-800 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-300"
-      >
-        {open ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
-      </button>
+      {/* Launcher */}
+      <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3">
+        {/* Attention nudge tooltip */}
+        {!open && showNudge && (
+          <div className="animate-in fade-in slide-in-from-bottom-2 relative max-w-[16rem] rounded-2xl rounded-br-sm border border-blue-100 bg-white px-4 py-3 shadow-xl">
+            <button
+              type="button"
+              onClick={dismissNudge}
+              aria-label="Dismiss"
+              className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-gray-600 shadow transition-colors hover:bg-gray-300"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+            <p className="text-sm font-semibold text-gray-900">Not sure if you qualify?</p>
+            <p className="mt-0.5 text-xs leading-relaxed text-gray-600">
+              Ask our AI assistant or run a free 2-minute eligibility check.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                dismissNudge()
+                setOpen(true)
+              }}
+              className="mt-2 text-xs font-semibold text-blue-700 hover:text-blue-900"
+            >
+              Start now →
+            </button>
+          </div>
+        )}
+
+        {open ? (
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            aria-label="Close assistant"
+            aria-expanded={open}
+            className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-700 text-white shadow-lg shadow-blue-900/25 transition-transform hover:scale-105 hover:bg-blue-800 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-300"
+          >
+            <X className="h-6 w-6" />
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => {
+              dismissNudge()
+              setOpen(true)
+            }}
+            aria-label="Open EWA assistant"
+            aria-expanded={open}
+            className="group relative flex items-center gap-2.5 rounded-full bg-blue-700 py-3 pl-4 pr-5 text-white shadow-xl shadow-blue-900/30 transition-all hover:scale-105 hover:bg-blue-800 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-300"
+          >
+            {/* Pulsing attention ring */}
+            <span className="pointer-events-none absolute inset-0 animate-ping rounded-full bg-blue-500 opacity-20" />
+            <span className="relative flex h-7 w-7 items-center justify-center rounded-full bg-white/20">
+              <Sparkles className="h-4 w-4" />
+              {/* Live status dot */}
+              <span className="absolute -right-0.5 -top-0.5 flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-blue-700" />
+              </span>
+            </span>
+            <span className="relative text-sm font-semibold">Ask AI</span>
+          </button>
+        )}
+      </div>
 
       {/* Chat panel */}
       {open && (
