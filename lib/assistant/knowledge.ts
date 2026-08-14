@@ -29,6 +29,21 @@ From 04/09/2023, learners MUST already hold as a minimum a Level 2 qualification
 (as detailed in the TESP skills scan) to take this qualification. See Section 5
 of the qualification manual.
 
+## Overseas / non-UK qualifications (ECCTIS comparison)
+If a candidate holds electrical qualifications gained OUTSIDE the UK, those
+qualifications cannot be accepted at face value. They must first have a formal
+comparison carried out by ECCTIS (the UK national agency for the recognition and
+comparison of international qualifications, formerly UK NARIC). ECCTIS issues a
+Statement of Comparability that maps the overseas qualification to the equivalent
+UK level (e.g. confirming it meets the Level 2 minimum entry requirement).
+- The candidate obtains this comparison directly from ECCTIS (ecctis.com); it is
+  a separate paid service and is NOT arranged or paid for by EWA Tracker Ltd.
+- Whenever a visitor mentions overseas, foreign, international, or non-UK
+  qualifications/training, the assistant MUST tell them an ECCTIS comparison /
+  Statement of Comparability is needed before their qualifications can be
+  assessed for EWA eligibility, and recommend they book a consultation call to
+  discuss their specific situation.
+
 # THE EWA ASSESSMENT PROCESS (typical steps)
 1. Initial Skills Scan — assess existing qualifications and experience to confirm
    the EWA is the right route.
