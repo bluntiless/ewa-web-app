@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 import Script from "next/script"
+import SiteAssistant from "@/components/site-assistant"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -165,6 +166,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(educationalOrgJsonLd) }}
         />
         {children}
+        <SiteAssistant />
       </body>
     </html>
   )

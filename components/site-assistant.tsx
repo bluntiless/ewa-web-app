@@ -1,0 +1,215 @@
+"use client"
+
+import type React from "react"
+import { useEffect, useRef, useState } from "react"
+import { usePathname } from "next/navigation"
+import { useChat } from "@ai-sdk/react"
+import { DefaultChatTransport } from "ai"
+import { MessageCircle, X, Send, Sparkles } from "lucide-react"
+
+const SUGGESTIONS = [
+  "Am I eligible for the EWA route?",
+  "What does it cost?",
+  "What evidence do I need?",
+  "How do I get my ECS Gold Card?",
+]
+
+// Render a plain-text assistant string, turning [label](url) markdown links into
+// real links. Kept dependency-free and safe: only internal paths and http(s).
+function renderWithLinks(text: string): React.ReactNode[] {
+  const nodes: React.ReactNode[] = []
+  const regex = /\[([^\]]+)\]\(([^)]+)\)/g
+  let lastIndex = 0
+  let match: RegExpExecArray | null
+  let key = 0
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) nodes.push(text.slice(lastIndex, match.index))
+    const [, label, href] = match
+    const safe = href.startsWith("/") || href.startsWith("http://") || href.startsWith("https://")
+    if (safe) {
+      nodes.push(
+        <a
+          key={`lnk-${key++}`}
+          href={href}
+          className="font-medium text-blue-700 underline underline-offset-2 hover:text-blue-900"
+        >
+          {label}
+        </a>,
+      )
+    } else {
+      nodes.push(label)
+    }
+    lastIndex = regex.lastIndex
+  }
+  if (lastIndex < text.length) nodes.push(text.slice(lastIndex))
+  return nodes
+}
+
+function messageText(parts: { type: string; text?: string }[]): string {
+  return parts
+    .filter((p) => p.type === "text")
+    .map((p) => p.text ?? "")
+    .join("")
+}
+
+export default function SiteAssistant() {
+  const pathname = usePathname()
+  const [open, setOpen] = useState(false)
+  const [input, setInput] = useState("")
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  const { messages, sendMessage, status, error } = useChat({
+    transport: new DefaultChatTransport({ api: "/api/assistant" }),
+  })
+
+  const busy = status === "submitted" || status === "streaming"
+
+  // Auto-scroll to the newest message.
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+    }
+  }, [messages, open, busy])
+
+  // Never show the assistant inside the admin area.
+  if (pathname?.startsWith("/admin")) return null
+
+  const submit = (text: string) => {
+    const value = text.trim()
+    if (!value || busy) return
+    sendMessage({ text: value })
+    setInput("")
+  }
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    submit(input)
+  }
+
+  return (
+    <>
+      {/* Launcher button */}
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-label={open ? "Close assistant" : "Open EWA assistant"}
+        aria-expanded={open}
+        className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-blue-700 text-white shadow-lg shadow-blue-900/25 transition-transform hover:scale-105 hover:bg-blue-800 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-300"
+      >
+        {open ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
+      </button>
+
+      {/* Chat panel */}
+      {open && (
+        <div
+          role="dialog"
+          aria-label="EWA Assistant"
+          className="fixed bottom-24 right-5 z-50 flex h-[min(70vh,560px)] w-[min(92vw,384px)] flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl"
+        >
+          {/* Header */}
+          <div className="flex items-center gap-3 bg-blue-700 px-4 py-3 text-white">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15">
+              <Sparkles className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold">EWA Assistant</p>
+              <p className="truncate text-xs text-blue-100">Eligibility, evidence, pricing & more</p>
+            </div>
+          </div>
+
+          {/* Messages */}
+          <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto bg-gray-50 px-4 py-4">
+            {messages.length === 0 && (
+              <div className="space-y-3">
+                <p className="text-sm leading-relaxed text-gray-600">
+                  Hi! I can help with EWA eligibility, the skills scan, evidence and course
+                  requirements, your roadmap to the ECS Gold Card, and pricing. What would you like to
+                  know?
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {SUGGESTIONS.map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => submit(s)}
+                      className="rounded-full border border-blue-200 bg-white px-3 py-1.5 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-50"
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {messages.map((m) => {
+              const isUser = m.role === "user"
+              return (
+                <div key={m.id} className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+                  <div
+                    className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${
+                      isUser
+                        ? "rounded-br-sm bg-blue-700 text-white"
+                        : "rounded-bl-sm border border-gray-200 bg-white text-gray-800"
+                    }`}
+                  >
+                    {isUser ? messageText(m.parts) : renderWithLinks(messageText(m.parts))}
+                  </div>
+                </div>
+              )
+            })}
+
+            {status === "submitted" && (
+              <div className="flex justify-start">
+                <div className="flex items-center gap-1.5 rounded-2xl rounded-bl-sm border border-gray-200 bg-white px-3.5 py-3">
+                  <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:-0.3s]" />
+                  <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:-0.15s]" />
+                  <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400" />
+                </div>
+              </div>
+            )}
+
+            {error && (
+              <p className="text-center text-xs text-red-600">
+                Something went wrong. Please try again or{" "}
+                <a href="/book-a-call" className="underline">
+                  book a call
+                </a>
+                .
+              </p>
+            )}
+          </div>
+
+          {/* Input */}
+          <form onSubmit={onSubmit} className="flex items-end gap-2 border-t border-gray-200 bg-white p-3">
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing && e.keyCode !== 229) {
+                  e.preventDefault()
+                  submit(input)
+                }
+              }}
+              rows={1}
+              placeholder="Ask about the EWA route…"
+              aria-label="Message"
+              className="max-h-28 flex-1 resize-none rounded-xl border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            />
+            <button
+              type="submit"
+              disabled={busy || !input.trim()}
+              aria-label="Send message"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-700 text-white transition-colors hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Send className="h-4 w-4" />
+            </button>
+          </form>
+
+          <p className="bg-white px-3 pb-2 text-center text-[10px] leading-tight text-gray-400">
+            Guidance only — eligibility & pricing are confirmed on a free consultation call.
+          </p>
+        </div>
+      )}
+    </>
+  )
+}
