@@ -4,6 +4,35 @@ import { ASSISTANT_KNOWLEDGE } from "@/lib/assistant/knowledge"
 // Allow streaming responses up to 30 seconds.
 export const maxDuration = 30
 
+// --- Per-visitor daily message cap -----------------------------------------
+// A lightweight safeguard so the assistant's AI usage (and therefore cost) can
+// never run away. Each visitor (keyed by IP) may send at most MAX_MESSAGES_PER_DAY
+// messages in a rolling 24h window. This is an in-memory counter — no external
+// service required — which is ideal for a low/medium-traffic marketing site. The
+// authoritative spend cap is still the budget you set in the Vercel dashboard.
+const MAX_MESSAGES_PER_DAY = 20
+const DAY_MS = 24 * 60 * 60 * 1000
+const visitorHits = new Map<string, { count: number; resetAt: number }>()
+
+function getVisitorKey(req: Request): string {
+  const fwd = req.headers.get("x-forwarded-for")
+  if (fwd) return fwd.split(",")[0].trim()
+  return req.headers.get("x-real-ip") ?? "unknown"
+}
+
+// Returns true if the visitor is allowed to send another message.
+function checkRateLimit(key: string): boolean {
+  const now = Date.now()
+  const entry = visitorHits.get(key)
+  if (!entry || now > entry.resetAt) {
+    visitorHits.set(key, { count: 1, resetAt: now + DAY_MS })
+    return true
+  }
+  if (entry.count >= MAX_MESSAGES_PER_DAY) return false
+  entry.count += 1
+  return true
+}
+
 const SYSTEM_PROMPT = `You are "EWA Assistant", the friendly on-site guide for EWA Tracker Ltd,
 an EAL approved centre that delivers the Level 3 Electrotechnical Experienced Worker
 Assessment (EWA) and the route to the ECS Gold Card for experienced UK electricians.
@@ -42,6 +71,17 @@ RULES:
 
 export async function POST(req: Request) {
   try {
+    // Enforce the per-visitor daily cap before doing any paid AI work.
+    if (!checkRateLimit(getVisitorKey(req))) {
+      return new Response(
+        JSON.stringify({
+          error:
+            "You've reached today's message limit for the assistant. Please book a free call and we'll be happy to help directly.",
+        }),
+        { status: 429, headers: { "Content-Type": "application/json" } },
+      )
+    }
+
     const { messages }: { messages: UIMessage[] } = await req.json()
 
     const result = streamText({
