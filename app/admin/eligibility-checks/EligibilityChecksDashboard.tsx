@@ -17,6 +17,7 @@ import {
   ChevronDown,
   ChevronRight,
   ClipboardCheck,
+  Sparkles,
 } from "lucide-react"
 import Link from "next/link"
 import type { EligibilityCheckSubmission, EligibilityStatus } from "@/app/api/admin/eligibility-checks/list/route"
@@ -73,7 +74,8 @@ export default function EligibilityChecksDashboard() {
       return (
         sub.candidateName.toLowerCase().includes(query) ||
         sub.email.toLowerCase().includes(query) ||
-        (sub.eligibilityResult || "").toLowerCase().includes(query)
+        (sub.eligibilityResult || "").toLowerCase().includes(query) ||
+        (sub.source || "Website Form").toLowerCase().includes(query)
       )
     }
     return true
@@ -261,7 +263,23 @@ export default function EligibilityChecksDashboard() {
                         </td>
                         <td className="px-4 py-4">
                           <div>
-                            <p className="font-medium text-gray-900">{submission.candidateName}</p>
+                            <div className="flex items-center gap-2">
+                              <p className="font-medium text-gray-900">{submission.candidateName}</p>
+                              <span
+                                className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+                                  (submission.source || "Website Form") === "AI Assistant"
+                                    ? "bg-purple-100 text-purple-700"
+                                    : "bg-gray-100 text-gray-600"
+                                }`}
+                              >
+                                {(submission.source || "Website Form") === "AI Assistant" ? (
+                                  <Sparkles className="h-3 w-3" />
+                                ) : (
+                                  <FileText className="h-3 w-3" />
+                                )}
+                                {submission.source || "Website Form"}
+                              </span>
+                            </div>
                             <p className="text-sm text-gray-500">{submission.email || "No email provided"}</p>
                           </div>
                         </td>

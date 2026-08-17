@@ -25,6 +25,8 @@ export interface EligibilityCheckSubmission {
   submittedAt: string
   status?: EligibilityStatus
   reviewedAt?: string
+  /** Which flow produced this check: "AI Assistant" or "Website Form". */
+  source?: string
 }
 
 export async function GET() {
