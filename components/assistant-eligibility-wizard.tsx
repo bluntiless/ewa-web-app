@@ -74,6 +74,7 @@ export default function AssistantEligibilityWizard({ onExit }: { onExit: () => v
       workTypes: [workLabel],
       eligibilityResult: evaluated.result,
       recommendations: evaluated.nextStep,
+      source: "AI Assistant",
     }
 
     const logPayload = {
@@ -89,6 +90,7 @@ export default function AssistantEligibilityWizard({ onExit }: { onExit: () => v
       pathway: evaluated.pathway,
       eligibilityResult: evaluated.result,
       recommendations: evaluated.nextStep,
+      source: "AI Assistant",
     }
 
     setUploadStatus("saving")

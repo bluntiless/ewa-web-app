@@ -26,6 +26,9 @@ export async function POST(request: NextRequest) {
       pathway: data.pathway || "",
       eligibilityResult: data.eligibilityResult || "",
       recommendations: data.recommendations || "",
+      // Which flow produced this check. Defaults to the website form for older
+      // records / callers that don't specify a source.
+      source: (data.source || "").trim() || "Website Form",
       submittedAt: new Date().toISOString(),
       status: "pending" as const,
     }

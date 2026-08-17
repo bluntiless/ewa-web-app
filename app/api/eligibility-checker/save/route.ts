@@ -20,7 +20,8 @@ export async function POST(request: NextRequest) {
       itStatus,
       workTypes,
       eligibilityResult,
-      recommendations
+      recommendations,
+      source
     } = data
     
     // Map the qualifications - the HTML form sends level2Qualification and level3Qualification
@@ -104,6 +105,7 @@ export async function POST(request: NextRequest) {
     <h2>Candidate Details</h2>
     <div class="field"><span class="label">Name:</span> <span class="value">${candidateName}</span></div>
     <div class="field"><span class="label">Check Date:</span> <span class="value">${checkDate || new Date().toLocaleDateString("en-GB")}</span></div>
+    <div class="field"><span class="label">Submitted via:</span> <span class="value">${source || "Website Form"}</span></div>
     ${email ? `<div class="field"><span class="label">Email:</span> <span class="value">${email}</span></div>` : ""}
     ${phone ? `<div class="field"><span class="label">Phone:</span> <span class="value">${phone}</span></div>` : ""}
   </div>

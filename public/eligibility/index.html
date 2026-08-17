@@ -797,7 +797,8 @@ ${nextStep}
                 workType: document.getElementById("work").selectedOptions[0]?.text || "",
                 pathway: pathway,
                 eligibilityResult: result,
-                recommendations: nextStep
+                recommendations: nextStep,
+                source: "Website Form"
             })
         }).catch(function(){ /* non-blocking */ });
     } catch(e) { /* non-blocking */ }
@@ -836,7 +837,8 @@ function buildEligibilityPayload(){
         itStatus: document.getElementById('it').selectedOptions[0]?.text || "",
         workTypes: [document.getElementById('work').selectedOptions[0]?.text || ""],
         eligibilityResult: document.getElementById('resultText').innerText,
-        recommendations: document.getElementById('nextStep').innerText
+        recommendations: document.getElementById('nextStep').innerText,
+        source: "Website Form"
     };
 }
 
