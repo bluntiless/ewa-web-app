@@ -45,6 +45,30 @@ eligible:
   formally confirmed during the TESP skills scan, so always frame this as
   indicative and recommend the skills scan or a consultation call to confirm.
 
+## Knowledge-only / theory certificates (e.g. C&G 2351) — a GOOD fit for the EWA
+Some older qualifications are "knowledge only" (classroom/theory) certificates
+that do NOT include an on-site NVQ competence element. The key example is:
+- City & Guilds 2351-01 = Level 3 Certificate in Knowledge of Electrical
+  Installation Engineering. It is a THEORY/knowledge certificate only.
+Why this matters:
+- The 2351-01 covers the underpinning technical theory, but on its own it does
+  NOT prove practical workplace competence, so it is NOT sufficient by itself to
+  obtain an ECS Gold Card. The candidate is missing the occupational competence
+  (NVQ) element — i.e. a portfolio of on-site performance evidence and an
+  industry-endorsed practical assessment.
+- This is EXACTLY the gap the Experienced Worker Assessment (EWA) is designed to
+  close, so a 2351-01 holder is typically a strong candidate for the EWA route —
+  do NOT tell them they are ineligible.
+- Per TESP, an older knowledge certificate like the C&G 2351-01 counts as valid
+  PRIOR KNOWLEDGE on the EWA Skills Scan. That means their existing 2351 theory
+  covers the knowledge requirements, so on the EWA they can skip re-doing
+  classroom theory exams and focus on: gathering on-site performance evidence,
+  completing any updates such as the 18th Edition (BS 7671) and Inspection &
+  Testing if not already held, and sitting the AM2E end assessment.
+- Always frame this as indicative and confirmed via the TESP skills scan, and
+  recommend a consultation call or the eligibility check to confirm their exact
+  starting point.
+
 ## Overseas / non-UK qualifications (ECCTIS comparison)
 If a candidate holds electrical qualifications gained OUTSIDE the UK, those
 qualifications cannot be accepted at face value. They must first have a formal
