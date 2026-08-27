@@ -102,7 +102,9 @@ function buildHighlights(meta: EligibilityLogMetadata): string[] {
   highlights.push(needsEdition ? "18th Edition (BS 7671) not currently held" : "18th Edition (BS 7671) reported")
   highlights.push(needsIT ? "Inspection & Testing not currently held" : "Inspection & Testing reported")
   highlights.push(`Initial indication: ${friendlyResult(meta.eligibilityResult)}`)
-  highlights.push("Next step: complete the full Skills Scan and provide qualification evidence for verification")
+  highlights.push(
+    "Next steps: complete the full Skills Scan AND the Candidate Background Form, and provide qualification evidence for verification",
+  )
 
   return highlights
 }
@@ -159,11 +161,12 @@ function renderHtml(gen: GeneratedEmail, highlights: string[], cta: { label: str
               <ul style="margin:0;padding:0 0 0 18px;font-size:14px;">${highlightsHtml}</ul>
             </td></tr>
           </table>
-          <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 22px;">
+          <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 14px;">
             <tr><td style="border-radius:8px;background:#1d4ed8;">
               <a href="${cta.url}" style="display:inline-block;padding:12px 22px;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;">${esc(cta.label)} &rarr;</a>
             </td></tr>
           </table>
+          <p style="margin:0 0 18px;font-size:14px;color:#1f2937;">To help us progress your review, please also complete the <a href="${SITE_URL}/candidate-background" style="color:#1d4ed8;font-weight:600;">Candidate Background Form</a> — it captures the details we need alongside your Skills Scan.</p>
           <p style="margin:0 0 6px;font-size:13px;color:#6b7280;">Prefer to talk it through? <a href="${SITE_URL}/book-a-call" style="color:#1d4ed8;">Book a free consultation call</a> and we'll confirm your exact starting point.</p>
           <p style="margin:16px 0 0;padding-top:16px;border-top:1px solid #e5e7eb;font-size:12px;color:#9ca3af;">
             This is an automated guide based on the answers you provided and is indicative only — it is not a guarantee of eligibility, a formal assessment, or a fixed quote. Your qualifications, experience and eligibility are verified during the TESP skills scan and a consultation call. The 18th Edition, Inspection &amp; Testing and AM2E are undertaken with separate providers.
@@ -231,6 +234,9 @@ ABSOLUTE RULES — these protect the centre and must never be broken:
    candidate reported as "positive indicators" for the Experienced Worker route — but do NOT itemise
    every answer, because a separate "at a glance" summary (added automatically after your paragraphs)
    already lists them. Avoid repeating that summary.
+5a. In your closing paragraph, invite the candidate to take the TWO next steps so their review can
+   progress: completing the full TESP Skills Scan AND the Candidate Background Form. Mention both by
+   name. Do NOT paste URLs — the buttons and links are added automatically after your paragraphs.
 6. Refer to the qualification by the exact name/number provided ("Qualification to reference"). Never
    append internal suffixes or invent a different code.
 7. UK English, professional and friendly. Plain text only — no markdown, no HTML, no emojis. Do NOT
