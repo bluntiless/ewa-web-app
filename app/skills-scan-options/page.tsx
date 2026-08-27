@@ -14,7 +14,7 @@ export default function SkillsScanOptionsPage() {
             TESP Skills Scan
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            The Training &amp; Experience Skills Profile (TESP) Skills Scan helps assess your suitability 
+            The TESP (The Electrotechnical Skills Partnership) Skills Scan helps assess your suitability 
             for the Installation &amp; Maintenance Electrician Experienced Worker Assessment.
           </p>
         </div>

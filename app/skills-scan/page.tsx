@@ -121,7 +121,7 @@ export default function SkillsScanPage() {
             Official TESP Skills Scan
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Complete and submit your Training &amp; Experience Self Profile (TESP) Skills Scan for Training Provider review.
+            Complete and submit your TESP (The Electrotechnical Skills Partnership) Skills Scan for Training Provider review.
           </p>
         </div>
 

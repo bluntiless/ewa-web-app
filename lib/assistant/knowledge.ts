@@ -151,8 +151,8 @@ are delivered by other providers — they are not part of the EWA Tracker fee.
 # ON-SITE TOOLS (things the visitor can do on this website)
 - Eligibility Checker (path: /eligibility): a quick self-assessment tool to see
   whether the EWA route is likely suitable based on experience and qualifications.
-- TESP Skills Scan (path: /skills-scan): download the official fillable Training &
-  Experience Self Profile (TESP) Skills Scan PDF, complete it in Adobe Acrobat
+- TESP Skills Scan (path: /skills-scan): download the official fillable Skills
+  Scan PDF from TESP (The Electrotechnical Skills Partnership), complete it in Adobe Acrobat
   Reader on a DESKTOP/laptop (mobile browsers can corrupt fillable PDFs), then
   upload it for Training Provider review. A free initial skills scan is included.
 - Candidate Background Form (path: /candidate-background): download, complete and
