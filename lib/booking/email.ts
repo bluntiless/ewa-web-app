@@ -13,7 +13,7 @@ import { MEETING } from "./config"
 import type { CallBooking } from "./store"
 
 const FROM = process.env.RESEND_FROM_EMAIL || "EWA Tracker <bookings@ewatracker.co.uk>"
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@ewatracker.co.uk"
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "info@ewatracker.co.uk"
 const ORGANIZER_EMAIL = (FROM.match(/<(.+)>/)?.[1] || FROM).trim()
 
 async function getResend() {
