@@ -35,7 +35,7 @@ export interface EligibilityLogMetadata {
 }
 
 const FROM = process.env.RESEND_FROM_EMAIL || "EWA Tracker <bookings@ewatracker.co.uk>"
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@ewatracker.co.uk"
+  const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "info@ewatracker.co.uk"
 const SITE_URL = (process.env.NEXT_PUBLIC_MARKETING_WEBSITE_URL || "https://www.ewatracker.co.uk").replace(/\/$/, "")
 
 const QUALIFICATION_NAME = "EAL Level 3 Electrotechnical Experienced Worker Qualification"

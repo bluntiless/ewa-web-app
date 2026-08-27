@@ -62,7 +62,7 @@ export default function AdminLoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@ewatracker.co.uk"
+                placeholder="info@ewatracker.co.uk"
                 className="mt-1"
                 required
               />

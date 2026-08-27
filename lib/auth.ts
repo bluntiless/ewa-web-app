@@ -4,7 +4,7 @@ import { compare } from "bcryptjs"
 
 // In production, store this in environment variables
 const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH || ""
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@ewatracker.co.uk"
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "info@ewatracker.co.uk"
 
 export const authOptions: NextAuthOptions = {
   providers: [
