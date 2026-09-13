@@ -11,6 +11,8 @@ import {
 } from "@/lib/invoice"
 import { 
   getPricing, 
+  getPricingKey,
+  pricing,
   formatCurrency as formatPriceCurrency, 
   bankDetails,
   type PricingDetails
@@ -46,53 +48,6 @@ export interface CourseBookingData {
 
   // Section E - Digital Signature
   digitalSignature: string
-}
-
-// Pricing structure
-const pricing = {
-  standardFull: {
-    programmeFee: 2000,
-    registrationFee: 268.8,
-    discount: 0,
-    total: 2268.8,
-    description: "Standard Programme - Full Payment",
-  },
-  standardInstalments: {
-    initialPayment: 768.8,
-    remainingPayments: [
-      { amount: 500, due: "1 month after start" },
-      { amount: 500, due: "2 months after start" },
-      { amount: 500, due: "3 months after start" },
-    ],
-    total: 2268.8,
-    description: "Standard Programme - Instalments",
-  },
-  goldFull: {
-    programmeFee: 2500,
-    registrationFee: 268.8,
-    discount: 0,
-    total: 2768.8,
-    description: "Gold Service - Full Payment",
-  },
-  goldInstalments: {
-    initialPayment: 768.8,
-    remainingPayments: [
-      { amount: 500, due: "1 month after start" },
-      { amount: 500, due: "2 months after start" },
-      { amount: 500, due: "3 months after start" },
-      { amount: 500, due: "4 months after start" },
-    ],
-    total: 2768.8,
-    description: "Gold Service - Instalments",
-  },
-}
-
-function getPricingKey(serviceOption: string, paymentOption: string): keyof typeof pricing | null {
-  if (serviceOption === "standard" && paymentOption === "full") return "standardFull"
-  if (serviceOption === "standard" && paymentOption === "instalments") return "standardInstalments"
-  if (serviceOption === "gold" && paymentOption === "full") return "goldFull"
-  if (serviceOption === "gold" && paymentOption === "instalments") return "goldInstalments"
-  return null
 }
 
 function formatCurrency(amount: number): string {

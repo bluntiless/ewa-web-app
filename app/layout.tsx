@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 import Script from "next/script"
 import SiteAssistant from "@/components/site-assistant"
+import PromoBanner from "@/components/promo-banner"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -165,6 +166,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(educationalOrgJsonLd) }}
         />
+        <PromoBanner />
         {children}
         <SiteAssistant />
       </body>

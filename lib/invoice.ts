@@ -133,10 +133,12 @@ export function createInvoiceFromBooking(
     totalPayments = pricingDetails.remainingPayments.length + 1
 
     if (paymentNumber === 1) {
-      // Initial payment invoice - split into programme initial + registration fee
-      // Initial payment of £768.80 = £500 programme + £268.80 registration (inc. VAT)
-      const programmeInitial = 500
+      // Initial payment invoice - split into programme initial + registration fee.
+      // The EAL registration fee (inc. VAT) is a fixed pass-through; whatever
+      // remains of the initial payment is the first programme instalment. This
+      // stays correct when a promotion reduces the initial payment.
       const registrationFee = 268.8
+      const programmeInitial = pricingDetails.initialPayment - registrationFee
       
       lineItems.push({
         description: `${serviceOption === "gold" ? "Gold Service" : "Standard Programme"} - Initial Instalment`,

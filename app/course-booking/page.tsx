@@ -9,7 +9,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
-import { AlertCircle, Calendar, User, Building2, BookOpen, PenLine } from "lucide-react"
+import { AlertCircle, Calendar, User, Building2, BookOpen, PenLine, Tag } from "lucide-react"
+import { pricing, getPricingKey, formatCurrency, promotion, isPromotionActive } from "@/lib/pricing"
 
 interface FormData {
   // Section A - Candidate Details
@@ -64,57 +65,6 @@ const initialFormData: FormData = {
   notes: "",
   declarationAccepted: false,
   digitalSignature: "",
-}
-
-// Pricing structure
-const pricing = {
-  standardFull: {
-    programmeFee: 2000,
-    registrationFee: 268.8,
-    discount: 0,
-    total: 2268.8,
-    description: "Standard Programme - Full Payment",
-  },
-  standardInstalments: {
-    initialPayment: 768.8,
-    remainingPayments: [
-      { amount: 500, due: "1 month after start" },
-      { amount: 500, due: "2 months after start" },
-      { amount: 500, due: "3 months after start" },
-    ],
-    total: 2268.8,
-    description: "Standard Programme - Instalments",
-  },
-  goldFull: {
-    programmeFee: 2500,
-    registrationFee: 268.8,
-    discount: 0,
-    total: 2768.8,
-    description: "Gold Service - Full Payment",
-  },
-  goldInstalments: {
-    initialPayment: 768.8,
-    remainingPayments: [
-      { amount: 500, due: "1 month after start" },
-      { amount: 500, due: "2 months after start" },
-      { amount: 500, due: "3 months after start" },
-      { amount: 500, due: "4 months after start" },
-    ],
-    total: 2768.8,
-    description: "Gold Service - Instalments",
-  },
-}
-
-function getPricingKey(serviceOption: string, paymentOption: string): keyof typeof pricing | null {
-  if (serviceOption === "standard" && paymentOption === "full") return "standardFull"
-  if (serviceOption === "standard" && paymentOption === "instalments") return "standardInstalments"
-  if (serviceOption === "gold" && paymentOption === "full") return "goldFull"
-  if (serviceOption === "gold" && paymentOption === "instalments") return "goldInstalments"
-  return null
-}
-
-function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(amount)
 }
 
 export default function CourseBookingPage() {
@@ -504,6 +454,11 @@ export default function CourseBookingPage() {
                         <p className="font-semibold text-gray-900">Standard Programme</p>
                         <p className="text-sm text-gray-600 mt-1">Full EWA qualification programme with assessor support</p>
                         <p className="text-sm font-medium text-blue-600 mt-2">
+                          {isPromotionActive() && pricing.standardFull.originalTotal && (
+                            <span className="text-gray-400 line-through mr-1.5">
+                              {formatCurrency(pricing.standardFull.originalTotal)}
+                            </span>
+                          )}
                           From {formatCurrency(pricing.standardFull.total)} (full) or {formatCurrency(pricing.standardInstalments.initialPayment)} initial
                         </p>
                       </div>
@@ -530,6 +485,11 @@ export default function CourseBookingPage() {
                         <p className="font-semibold text-gray-900">Gold Service</p>
                         <p className="text-sm text-gray-600 mt-1">Premium support with additional mentoring and expedited processing</p>
                         <p className="text-sm font-medium text-amber-600 mt-2">
+                          {isPromotionActive() && pricing.goldFull.originalTotal && (
+                            <span className="text-gray-400 line-through mr-1.5">
+                              {formatCurrency(pricing.goldFull.originalTotal)}
+                            </span>
+                          )}
                           From {formatCurrency(pricing.goldFull.total)} (full) or {formatCurrency(pricing.goldInstalments.initialPayment)} initial
                         </p>
                       </div>
