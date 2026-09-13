@@ -142,7 +142,7 @@ programme fee.
 - Standard Programme — Full payment: £1,995 all-inclusive (normally £2,268.80) — save £273.80.
 - Standard Programme — Instalments: initial payment £495, then 3 monthly payments of £500 (total £1,995).
 - Gold Service — Full payment: £2,395 all-inclusive (normally £2,768.80) — save £373.80.
-- Gold Service — Instalments: initial payment £395, then 4 monthly payments of £500 (total £2,395).
+- Gold Service — Instalments: initial payment £495, then 4 monthly payments of £475 (total £2,395).
 
 ## Standard programme packages (after the offer ends — programme fee + EAL registration)
 - Standard Programme — Full payment: programme fee £2,000 + £268.80 registration = £2,268.80 total.
