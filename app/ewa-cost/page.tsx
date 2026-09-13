@@ -1,12 +1,14 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { ArrowRight, PoundSterling, CheckCircle, Info, Calculator } from "lucide-react"
+import { ArrowRight, PoundSterling, CheckCircle, Info, Tag, CalendarClock } from "lucide-react"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
+import { pricing, isPromotionActive, promotion, formatCurrency, REGISTRATION_FEE } from "@/lib/pricing"
 
 export const metadata: Metadata = {
   title: "EWA Cost | Experienced Worker Assessment Pricing",
-  description: "Find out the costs of Experienced Worker Assessment (EWA) qualifications. EAL registration fees, assessment costs, and what's included in the EWA route.",
+  description:
+    "Experienced Worker Assessment (EWA) cost explained. All-inclusive Standard and Gold packages including EAL registration, with instalment options. Clear, transparent pricing.",
   keywords: [
     "EWA cost",
     "Experienced Worker Assessment price",
@@ -20,12 +22,33 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "EWA Cost | Experienced Worker Assessment Pricing | EWA Tracker Ltd",
-    description: "Find out the costs of Experienced Worker Assessment (EWA) qualifications. EAL registration fees and assessment costs.",
+    description:
+      "Experienced Worker Assessment (EWA) cost explained. All-inclusive Standard and Gold packages including EAL registration.",
     url: "https://ewatracker.co.uk/ewa-cost",
   },
 }
 
+function CheckItem({ children }: { children: React.ReactNode }) {
+  return (
+    <li className="flex items-start gap-2 text-sm text-gray-700">
+      <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+      <span>{children}</span>
+    </li>
+  )
+}
+
 export default function EWACostPage() {
+  const promoActive = isPromotionActive()
+  const standardFull = pricing.standardFull
+  const standardInst = pricing.standardInstalments
+  const goldFull = pricing.goldFull
+  const goldInst = pricing.goldInstalments
+
+  const standardInitial = standardInst.type === "instalments" ? standardInst.initialPayment : 0
+  const standardRemaining = standardInst.type === "instalments" ? standardInst.remainingPayments : []
+  const goldInitial = goldInst.type === "instalments" ? goldInst.initialPayment : 0
+  const goldRemaining = goldInst.type === "instalments" ? goldInst.remainingPayments : []
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800">
       <SiteHeader />
@@ -34,140 +57,233 @@ export default function EWACostPage() {
       <section className="bg-gradient-to-r from-blue-700 to-blue-900 text-white py-16 md:py-20">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <PoundSterling className="w-16 h-16 mx-auto mb-6 opacity-90" />
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight text-balance">
             EWA Cost &amp; Pricing Guide
           </h1>
-          <p className="text-lg md:text-xl max-w-3xl mx-auto mb-6 opacity-90">
-            Understand the full costs involved in achieving your Experienced Worker Assessment qualification and ECS Gold Card.
+          <p className="text-lg md:text-xl max-w-3xl mx-auto mb-6 opacity-90 text-pretty">
+            Two clear, all-inclusive packages for your Experienced Worker Assessment. EAL registration is included, and instalment plans are available.
           </p>
+          {promoActive && (
+            <div className="inline-flex items-center gap-2 rounded-full bg-amber-400 px-4 py-2 text-sm font-bold text-blue-950">
+              <Tag className="w-4 h-4" />
+              {promotion.label}: prices reduced until {promotion.endDateLabel}
+            </div>
+          )}
         </div>
       </section>
 
       {/* Main Content */}
       <section className="py-12 md:py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4">
-          
+
           {/* Introduction */}
-          <div className="prose prose-lg max-w-none mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Understanding EWA Costs</h2>
+          <div className="max-w-none mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">How much does an EWA cost?</h2>
             <p className="text-gray-700 leading-relaxed mb-4">
-              The total cost of achieving your Experienced Worker Assessment qualification depends on several factors, including which qualification route you choose, what supporting qualifications you already hold, and the complexity of your assessment needs.
+              The Experienced Worker Assessment with EWA Tracker Ltd costs{" "}
+              <strong>{formatCurrency(standardFull.total)}</strong> for the Standard Programme or{" "}
+              <strong>{formatCurrency(goldFull.total)}</strong> for the Gold Service. Both prices are all-inclusive and cover your EAL registration, assessor support, workplace observations, professional discussion, internal quality assurance and certification.
             </p>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              This page provides a transparent breakdown of the costs involved so you can plan your investment effectively. All pricing is subject to change by the awarding body and should be confirmed during your initial consultation.
+            <p className="text-gray-700 leading-relaxed">
+              There are no hidden extras: the only additional costs are separate qualifications you may still need for the ECS Gold Card (see below) or observations beyond your agreed package.
             </p>
           </div>
 
-          {/* EAL Registration Fees */}
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 md:p-8 mb-8">
-            <div className="flex items-center gap-3 mb-4">
-              <Calculator className="w-8 h-8 text-blue-700" />
-              <h2 className="text-2xl font-bold text-gray-900">EAL Registration Fees</h2>
-            </div>
-            <p className="text-gray-700 mb-6">
-              EAL (Excellence, Achievement &amp; Learning) is the awarding body for the Experienced Worker qualifications. Registration fees are set by EAL and are payable directly to them through approved centres.
-            </p>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="bg-white border border-blue-100 rounded-lg p-5">
-                <h3 className="font-semibold text-gray-900 mb-2">New Registration</h3>
-                <p className="text-3xl font-bold text-blue-700 mb-2">£268.80</p>
-                <p className="text-gray-600 text-sm">For candidates registering for the first time with EAL (inc. VAT)</p>
+          {/* Packages */}
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            {/* Standard */}
+            <div className="bg-white border-2 border-gray-200 rounded-xl p-6 flex flex-col">
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">Standard Programme</h3>
+              <p className="text-sm text-gray-500 mb-4">Best for independent candidates confident gathering their own evidence</p>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-bold text-gray-900">{formatCurrency(standardFull.total)}</span>
+                {promoActive && standardFull.originalTotal && (
+                  <span className="text-lg text-gray-400 line-through">{formatCurrency(standardFull.originalTotal)}</span>
+                )}
               </div>
-              <div className="bg-white border border-blue-100 rounded-lg p-5">
-                <h3 className="font-semibold text-gray-900 mb-2">Transfer Registration</h3>
-                <p className="text-3xl font-bold text-blue-700 mb-2">£15</p>
-                <p className="text-gray-600 text-sm">For candidates transferring from another EAL approved centre</p>
+              <p className="text-xs text-gray-500 mt-0.5 mb-4">All-inclusive, inc. EAL registration</p>
+              {promoActive && standardFull.savings && (
+                <span className="mb-4 self-start rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-800">
+                  Save {formatCurrency(standardFull.savings)} &middot; ends {promotion.endDateLabel}
+                </span>
+              )}
+              <ul className="flex flex-col gap-2 mb-5">
+                <CheckItem>EAL registration included</CheckItem>
+                <CheckItem>Dedicated assessor support</CheckItem>
+                <CheckItem>Evidence review and feedback</CheckItem>
+                <CheckItem>Up to 2 workplace observations</CheckItem>
+                <CheckItem>Professional discussion and IQA</CheckItem>
+              </ul>
+              <div className="mt-auto rounded-lg bg-gray-50 border border-gray-200 p-3 text-sm text-gray-700">
+                <p className="font-medium text-gray-900 mb-1 flex items-center gap-1.5">
+                  <CalendarClock className="w-4 h-4 text-blue-600" /> Instalment option
+                </p>
+                <p>
+                  {formatCurrency(standardInitial)} initial payment, then {standardRemaining.length} monthly payments of{" "}
+                  {formatCurrency(standardRemaining[0]?.amount ?? 0)}
+                </p>
               </div>
             </div>
-            <p className="text-gray-600 text-sm mt-4 italic">
-              Registration fees are subject to change by EAL. Current pricing confirmed as of 2026.
-            </p>
-          </div>
 
-          {/* Assessment Costs */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Assessment &amp; Centre Costs</h2>
-            <p className="text-gray-700 mb-6">
-              In addition to EAL registration, centre assessment costs cover the following services:
-            </p>
-            <div className="space-y-4">
-              <div className="flex items-start gap-4 bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-gray-900">Initial Skills Scan &amp; Consultation</h3>
-                  <p className="text-gray-600 text-sm">Assessment of your eligibility and development of your qualification pathway</p>
-                </div>
+            {/* Gold */}
+            <div className="bg-white border-2 border-amber-400 rounded-xl p-6 flex flex-col relative">
+              <span className="absolute -top-3 left-6 rounded-full bg-amber-400 px-3 py-0.5 text-xs font-bold text-blue-950">
+                More assessor-led
+              </span>
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">Gold Service</h3>
+              <p className="text-sm text-gray-500 mb-4">Best for candidates who want the assessor to gather more of the evidence</p>
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-bold text-gray-900">{formatCurrency(goldFull.total)}</span>
+                {promoActive && goldFull.originalTotal && (
+                  <span className="text-lg text-gray-400 line-through">{formatCurrency(goldFull.originalTotal)}</span>
+                )}
               </div>
-              <div className="flex items-start gap-4 bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-gray-900">Portfolio Development Support</h3>
-                  <p className="text-gray-600 text-sm">Guidance on evidence requirements and portfolio building</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4 bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-gray-900">Professional Discussion Sessions</h3>
-                  <p className="text-gray-600 text-sm">Assessment of underpinning knowledge through structured discussion</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4 bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-gray-900">Practical Workplace Observation</h3>
-                  <p className="text-gray-600 text-sm">On-site assessment of your practical competence</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4 bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-gray-900">Internal Quality Assurance</h3>
-                  <p className="text-gray-600 text-sm">Review and verification of assessment decisions</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4 bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-gray-900">Certification Processing</h3>
-                  <p className="text-gray-600 text-sm">Completion and submission of certification to EAL</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6">
-              <div className="flex items-start gap-3">
-                <Info className="w-5 h-5 text-amber-700 flex-shrink-0 mt-0.5" />
-                <p className="text-amber-800 text-sm">
-                  <strong>Personalised Pricing:</strong> Centre assessment costs vary based on the complexity of your assessment needs, location, and qualification route. During your free consultation, we will provide a full breakdown of costs specific to your situation.
+              <p className="text-xs text-gray-500 mt-0.5 mb-4">All-inclusive, inc. EAL registration</p>
+              {promoActive && goldFull.savings && (
+                <span className="mb-4 self-start rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-800">
+                  Save {formatCurrency(goldFull.savings)} &middot; ends {promotion.endDateLabel}
+                </span>
+              )}
+              <ul className="flex flex-col gap-2 mb-5">
+                <CheckItem>Everything in Standard</CheckItem>
+                <CheckItem>
+                  <strong className="text-gray-900">Up to 4 workplace observations</strong> — your assessor captures more evidence directly, potentially reducing the photo/video evidence you need to upload
+                </CheckItem>
+                <CheckItem>Priority evidence review and feedback</CheckItem>
+                <CheckItem>Additional scheduled progress reviews</CheckItem>
+                <CheckItem>Enhanced assessor support throughout</CheckItem>
+              </ul>
+              <div className="mt-auto rounded-lg bg-gray-50 border border-gray-200 p-3 text-sm text-gray-700">
+                <p className="font-medium text-gray-900 mb-1 flex items-center gap-1.5">
+                  <CalendarClock className="w-4 h-4 text-blue-600" /> Instalment option
+                </p>
+                <p>
+                  {formatCurrency(goldInitial)} initial payment, then {goldRemaining.length} monthly payments of{" "}
+                  {formatCurrency(goldRemaining[0]?.amount ?? 0)}
                 </p>
               </div>
             </div>
           </div>
 
+          {/* Registration note */}
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 md:p-6 mb-12">
+            <div className="flex items-start gap-3">
+              <Info className="w-5 h-5 text-blue-700 flex-shrink-0 mt-0.5" />
+              <div className="text-sm text-gray-700 flex flex-col gap-2">
+                <p>
+                  <strong className="text-gray-900">EAL registration included.</strong> Both Standard and Gold prices include the{" "}
+                  {formatCurrency(REGISTRATION_FEE)} EAL new-candidate registration fee (inc. VAT). Transfer candidates will receive an adjusted price where the £15 EAL transfer registration fee applies.
+                </p>
+                <p>Additional observations outside your agreed package are charged at £275 each. Registration fees are set by EAL and subject to change by the awarding body.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Standard vs Gold comparison */}
+          <div className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Standard vs Gold: what&apos;s the difference?</h2>
+            <p className="text-gray-700 mb-6">
+              Both packages lead to the same qualification. The difference is how much of the evidence-gathering your assessor does for you.
+            </p>
+            <div className="overflow-x-auto rounded-xl border border-gray-200">
+              <table className="w-full text-sm text-left">
+                <thead className="bg-gray-50 text-gray-900">
+                  <tr>
+                    <th scope="col" className="px-4 py-3 font-semibold">Feature</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">Standard</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">Gold</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 text-gray-700">
+                  <tr>
+                    <th scope="row" className="px-4 py-3 font-medium text-gray-900">Price (all-inclusive)</th>
+                    <td className="px-4 py-3">{formatCurrency(standardFull.total)}</td>
+                    <td className="px-4 py-3">{formatCurrency(goldFull.total)}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row" className="px-4 py-3 font-medium text-gray-900">EAL registration</th>
+                    <td className="px-4 py-3">Included</td>
+                    <td className="px-4 py-3">Included</td>
+                  </tr>
+                  <tr>
+                    <th scope="row" className="px-4 py-3 font-medium text-gray-900">Assessor support</th>
+                    <td className="px-4 py-3">Standard</td>
+                    <td className="px-4 py-3">Enhanced</td>
+                  </tr>
+                  <tr>
+                    <th scope="row" className="px-4 py-3 font-medium text-gray-900">Evidence review and feedback</th>
+                    <td className="px-4 py-3">Standard</td>
+                    <td className="px-4 py-3">Priority</td>
+                  </tr>
+                  <tr>
+                    <th scope="row" className="px-4 py-3 font-medium text-gray-900">Workplace observations</th>
+                    <td className="px-4 py-3">Up to 2</td>
+                    <td className="px-4 py-3">Up to 4</td>
+                  </tr>
+                  <tr>
+                    <th scope="row" className="px-4 py-3 font-medium text-gray-900">Assessor gathers workplace evidence</th>
+                    <td className="px-4 py-3">Standard</td>
+                    <td className="px-4 py-3">Much more extensive</td>
+                  </tr>
+                  <tr>
+                    <th scope="row" className="px-4 py-3 font-medium text-gray-900">Candidate photo/video evidence</th>
+                    <td className="px-4 py-3">More self-gathered evidence likely</td>
+                    <td className="px-4 py-3">Potentially significantly reduced</td>
+                  </tr>
+                  <tr>
+                    <th scope="row" className="px-4 py-3 font-medium text-gray-900">Best for</th>
+                    <td className="px-4 py-3">Independent candidates</td>
+                    <td className="px-4 py-3">Candidates wanting more assessor-led evidence gathering</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* What's included */}
+          <div className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">What your package covers</h2>
+            <p className="text-gray-700 mb-6">Every package includes the full assessment service from registration to certification:</p>
+            <div className="grid md:grid-cols-2 gap-4">
+              {[
+                ["EAL registration", "Registered with the awarding body for the Level 3 Experienced Worker qualification (603/5982/1)"],
+                ["Initial skills scan and consultation", "Assessment of your eligibility and development of your qualification pathway"],
+                ["Portfolio development support", "Guidance on evidence requirements and portfolio building"],
+                ["Professional discussion", "Assessment of underpinning knowledge through structured discussion"],
+                ["Workplace observations", "On-site assessment of your practical competence"],
+                ["Internal quality assurance", "Review and verification of assessment decisions"],
+                ["Certification processing", "Completion and submission of certification to EAL"],
+                ["ECS Gold Card guidance", "Support with your application once qualified"],
+              ].map(([title, desc]) => (
+                <div key={title} className="flex items-start gap-3 bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h3 className="font-semibold text-gray-900">{title}</h3>
+                    <p className="text-gray-600 text-sm">{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Additional Qualifications */}
           <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 md:p-8 mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Additional Qualification Costs</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Other qualifications you may need</h2>
             <p className="text-gray-700 mb-6">
-              To complete the EWA route and obtain your <Link href="/ecs-gold-card-experienced-worker" className="text-blue-600 hover:underline">ECS Gold Card</Link>, you may also need to achieve the following qualifications if you don&apos;t already hold them:
+              To obtain your <Link href="/ecs-gold-card-experienced-worker" className="text-blue-600 hover:underline">ECS Gold Card</Link>, you may also need the following if you don&apos;t already hold them. These are not included in the packages above:
             </p>
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
               <div className="bg-white border border-gray-200 rounded-lg p-4">
-                <div>
-                  <h3 className="font-semibold text-gray-900">18th Edition (BS 7671)</h3>
-                  <p className="text-gray-600 text-sm">Wiring Regulations certificate - required for all candidates</p>
-                </div>
+                <h3 className="font-semibold text-gray-900">18th Edition (BS 7671)</h3>
+                <p className="text-gray-600 text-sm">Wiring Regulations certificate - required for all candidates</p>
               </div>
               <div className="bg-white border border-gray-200 rounded-lg p-4">
-                <div>
-                  <h3 className="font-semibold text-gray-900">Level 3 Inspection &amp; Testing</h3>
-                  <p className="text-gray-600 text-sm">Initial Verification and Periodic Inspection &amp; Testing qualification</p>
-                </div>
+                <h3 className="font-semibold text-gray-900">Level 3 Inspection &amp; Testing</h3>
+                <p className="text-gray-600 text-sm">Initial Verification and Periodic Inspection &amp; Testing qualification</p>
               </div>
               <div className="bg-white border border-gray-200 rounded-lg p-4">
-                <div>
-                  <h3 className="font-semibold text-gray-900">AM2 Assessment</h3>
-                  <p className="text-gray-600 text-sm">AM2E or AM2ED practical end-test (for ECS Gold Card)</p>
-                </div>
+                <h3 className="font-semibold text-gray-900">AM2 Assessment</h3>
+                <p className="text-gray-600 text-sm">AM2E or AM2ED practical end-test (for ECS Gold Card)</p>
               </div>
             </div>
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-4">
@@ -177,69 +293,25 @@ export default function EWACostPage() {
             </div>
           </div>
 
-          {/* What's Included */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">What&apos;s Included in Your EWA Journey</h2>
-            <p className="text-gray-700 mb-6">
-              When you undertake your EWA with EWA Tracker Ltd, you receive comprehensive support throughout your qualification:
-            </p>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-1" />
-                <span className="text-gray-700">Free initial skills scan assessment</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-1" />
-                <span className="text-gray-700">No-obligation consultation call</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-1" />
-                <span className="text-gray-700">Personalised assessment plan</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-1" />
-                <span className="text-gray-700">Portfolio development guidance</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-1" />
-                <span className="text-gray-700">Flexible assessment scheduling</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-1" />
-                <span className="text-gray-700">Qualified and experienced assessors</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-1" />
-                <span className="text-gray-700">Ongoing support throughout</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-1" />
-                <span className="text-gray-700">ECS Gold Card application guidance</span>
-              </div>
-            </div>
-          </div>
-
           {/* CTA Section */}
           <div className="bg-blue-700 text-white rounded-xl p-8 text-center">
-            <h2 className="text-2xl md:text-3xl font-bold mb-4">Get Your Personalised Quote</h2>
-            <p className="text-lg mb-6 opacity-90">
-              Book a free consultation to receive a full cost breakdown based on your individual circumstances.
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to get started?</h2>
+            <p className="text-lg mb-6 opacity-90 text-pretty">
+              Check your eligibility first, then book your place on the Standard or Gold programme.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link
-                href="/skills-scan"
+                href="/eligibility"
                 className="bg-white text-blue-700 px-8 py-3 rounded-full text-lg font-semibold hover:bg-gray-100 transition-colors"
               >
-                Complete Skills Scan
+                Check My Eligibility
               </Link>
-              <a
-                href="/book-a-call"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/course-booking"
                 className="border-2 border-white text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-white hover:text-blue-700 transition-colors"
               >
-                Book Free Consultation
-              </a>
+                Book Now
+              </Link>
             </div>
           </div>
 
@@ -250,7 +322,6 @@ export default function EWACostPage() {
               <Link href="/eal-5982-experienced-worker" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
                 <ArrowRight className="w-4 h-4" /> EAL 5982 Qualification
               </Link>
-              
               <Link href="/ecs-gold-card-experienced-worker" className="inline-flex items-center gap-1 text-blue-600 hover:underline">
                 <ArrowRight className="w-4 h-4" /> ECS Gold Card Route
               </Link>
