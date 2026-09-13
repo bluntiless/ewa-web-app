@@ -4,7 +4,7 @@ import Link from "next/link"
 import { Apple, Info, CheckCircle, Lightbulb, Cloud, Smartphone, Award, Globe, AlertTriangle, CalendarClock } from "lucide-react"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
-import { pricing, isPromotionActive, promotion, formatCurrency } from "@/lib/pricing"
+import { pricing, isPromotionActive, promotion, formatCurrency, REGISTRATION_FEE } from "@/lib/pricing"
 
 export const metadata: Metadata = {
   title: "EWA Assessment London & UK | ECS Gold Card Route for Electricians",
@@ -893,7 +893,9 @@ export default function HomePage() {
                   <svg className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  Up to 4 observations
+                  <span>
+                    <strong className="text-gray-800">Up to 4 observations</strong> — allowing your assessor to capture more workplace evidence directly, potentially reducing the amount of supplementary photo/video evidence you need to upload
+                  </span>
                 </li>
                 <li className="flex items-start gap-2 text-sm text-gray-600">
                   <svg className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -944,8 +946,11 @@ export default function HomePage() {
           {/* Pricing Notes */}
           <div className="mt-10 max-w-3xl mx-auto text-center">
             <div className="bg-gray-100 rounded-lg p-5 text-sm text-gray-600">
-              <p className="font-medium text-gray-700 mb-2">EAL registration fee applies separately:</p>
-              <p>£268.80 for new registrations (inc. VAT) &nbsp;•&nbsp; £15 for transfer registrations</p>
+              <p className="font-medium text-gray-700 mb-2">EAL registration included</p>
+              <p>
+                Both Standard and Gold prices include the {formatCurrency(REGISTRATION_FEE)} EAL new-candidate registration fee (inc. VAT).
+                Transfer candidates will receive an adjusted price where the £15 EAL transfer registration fee applies.
+              </p>
               <p className="mt-2">Additional observations outside the agreed package: £275 each</p>
             </div>
             <p className="mt-4 text-xs text-gray-400 max-w-2xl mx-auto">

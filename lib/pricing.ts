@@ -114,8 +114,9 @@ const regularPricing: Record<string, PricingDetails> = {
 // £2,395 (Gold). The EAL registration fee is unchanged; the reduction comes
 // off the programme fee. For full payment we keep the original programme fee
 // and express the reduction as a discount line so the maths reads clearly
-// (fee + registration − discount = promo total). For instalments the monthly
-// payments stay at £500 and the reduction comes off the initial payment.
+// (fee + registration − discount = promo total). For instalments both plans
+// share the same £495 initial payment (which covers the £268.80 EAL
+// registration), with the balance spread evenly across the monthly payments.
 // ---------------------------------------------------------------------------
 
 const promoPricing: Record<string, PricingDetails> = {
@@ -154,12 +155,12 @@ const promoPricing: Record<string, PricingDetails> = {
   },
   goldInstalments: {
     type: "instalments",
-    initialPayment: 395,
+    initialPayment: 495,
     remainingPayments: [
-      { amount: 500, due: "1 month after start", dueMonths: 1 },
-      { amount: 500, due: "2 months after start", dueMonths: 2 },
-      { amount: 500, due: "3 months after start", dueMonths: 3 },
-      { amount: 500, due: "4 months after start", dueMonths: 4 },
+      { amount: 475, due: "1 month after start", dueMonths: 1 },
+      { amount: 475, due: "2 months after start", dueMonths: 2 },
+      { amount: 475, due: "3 months after start", dueMonths: 3 },
+      { amount: 475, due: "4 months after start", dueMonths: 4 },
     ],
     total: 2395,
     originalTotal: 2768.8,
