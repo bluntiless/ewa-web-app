@@ -1,14 +1,19 @@
 import { NextRequest, NextResponse } from "next/server"
 import { uploadToSharePoint, checkFolderExists, createFolder, isSharePointConfigured } from "@/lib/sharepoint"
+import { validateContactDetails } from "@/lib/eligibility/contact-validation"
 
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
+
+    const validation = validateContactDetails(data)
+    if (!validation.ok) {
+      return NextResponse.json({ error: validation.error, missing: validation.missing }, { status: 400 })
+    }
+    const { candidateName, email, phone } = validation.contact
+
     const { 
-      candidateName, 
       checkDate, 
-      email,
-      phone,
       // Support both old field names and new field names from the HTML form
       qualificationsA,
       qualificationsB,
@@ -29,10 +34,6 @@ export async function POST(request: NextRequest) {
     const mappedQualificationsA = qualificationsA || (level2Qualification ? [level2Qualification] : [])
     const mappedQualificationsB = qualificationsB || (level3Qualification ? [level3Qualification] : [])
     const mappedQualificationsC = qualificationsC || (experience ? [experience] : [])
-
-    if (!candidateName) {
-      return NextResponse.json({ error: "Candidate name is required" }, { status: 400 })
-    }
 
     if (!isSharePointConfigured()) {
       return NextResponse.json({ error: "SharePoint is not configured" }, { status: 500 })
@@ -106,8 +107,8 @@ export async function POST(request: NextRequest) {
     <div class="field"><span class="label">Name:</span> <span class="value">${candidateName}</span></div>
     <div class="field"><span class="label">Check Date:</span> <span class="value">${checkDate || new Date().toLocaleDateString("en-GB")}</span></div>
     <div class="field"><span class="label">Submitted via:</span> <span class="value">${source || "Website Form"}</span></div>
-    ${email ? `<div class="field"><span class="label">Email:</span> <span class="value">${email}</span></div>` : ""}
-    ${phone ? `<div class="field"><span class="label">Phone:</span> <span class="value">${phone}</span></div>` : ""}
+    <div class="field"><span class="label">Email:</span> <span class="value">${email}</span></div>
+    <div class="field"><span class="label">Phone:</span> <span class="value">${phone}</span></div>
   </div>
   
   <div class="section">
