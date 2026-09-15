@@ -62,10 +62,10 @@ export default function AssistantEligibilityWizard({ onExit }: { onExit: () => v
     const workLabel = labelFor("work", full.work)
 
     const uploadPayload = {
-      candidateName: contact.name,
+      candidateName: contact.name.trim(),
       checkDate: new Date().toLocaleDateString("en-GB"),
-      email: contact.email,
-      phone: contact.phone,
+      email: contact.email.trim(),
+      phone: contact.phone.trim(),
       experience: experienceLabel,
       level2Qualification: level2Label,
       level3Qualification: level3Label,
@@ -78,9 +78,9 @@ export default function AssistantEligibilityWizard({ onExit }: { onExit: () => v
     }
 
     const logPayload = {
-      candidateName: contact.name,
-      email: contact.email,
-      phone: contact.phone,
+      candidateName: contact.name.trim(),
+      email: contact.email.trim(),
+      phone: contact.phone.trim(),
       experience: experienceLabel,
       level2Qualification: level2Label,
       level3Qualification: level3Label,
@@ -110,7 +110,10 @@ export default function AssistantEligibilityWizard({ onExit }: { onExit: () => v
       .catch(() => setUploadStatus("error"))
   }, [onResult, answers, contact])
 
-  const contactValid = contact.name.trim().length > 1 && /\S+@\S+\.\S+/.test(contact.email)
+  const nameValid = contact.name.trim().length > 1
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(contact.email.trim())
+  const phoneValid = /^(\+44\s?|0)[0-9\s\-()]{9,14}$/.test(contact.phone.trim())
+  const contactValid = nameValid && emailValid && phoneValid
 
   const chooseOption = (value: string) => {
     const q = ELIGIBILITY_QUESTIONS[step]
@@ -167,7 +170,8 @@ export default function AssistantEligibilityWizard({ onExit }: { onExit: () => v
           <div className="space-y-3">
             <p className="text-sm leading-relaxed text-gray-600">
               I&apos;ll ask a few quick questions to give you an indicative eligibility result for the
-              EWA route. First, your details so we can follow up.
+              EWA route. First, your details so we can send your result and follow up — all three are
+              required.
             </p>
             <div className="space-y-2">
               <div>
@@ -197,17 +201,30 @@ export default function AssistantEligibilityWizard({ onExit }: { onExit: () => v
               </div>
               <div>
                 <label htmlFor="ewa-elig-phone" className="mb-1 block text-xs font-medium text-gray-700">
-                  Phone (optional)
+                  Phone *
                 </label>
                 <input
                   id="ewa-elig-phone"
+                  type="tel"
+                  inputMode="tel"
+                  autoComplete="tel"
+                  required
                   value={contact.phone}
                   onChange={(e) => setContact({ ...contact, phone: e.target.value })}
                   className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
-                  placeholder="Your number"
+                  placeholder="07123 456789"
                 />
               </div>
             </div>
+            {!contactValid && (contact.name || contact.email || contact.phone) && (
+              <p className="text-xs text-amber-700">
+                {!nameValid
+                  ? "Please enter your full name."
+                  : !emailValid
+                    ? "Please enter a valid email address."
+                    : "Please enter a valid UK phone number."}
+              </p>
+            )}
             <button
               type="button"
               disabled={!contactValid}

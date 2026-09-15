@@ -1,6 +1,7 @@
 import { put } from "@vercel/blob"
 import { type NextRequest, NextResponse } from "next/server"
 import { sendEligibilityAutoResponse } from "@/lib/eligibility/auto-response"
+import { validateContactDetails } from "@/lib/eligibility/contact-validation"
 
 // Allow time for AI generation + email send in the auto-response step.
 export const maxDuration = 30
@@ -15,13 +16,18 @@ export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
 
+    const validation = validateContactDetails(data)
+    if (!validation.ok) {
+      return NextResponse.json({ error: validation.error, missing: validation.missing }, { status: 400 })
+    }
+
     const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 
     const metadata = {
       id,
-      candidateName: (data.candidateName || "").trim() || "Unnamed candidate",
-      email: (data.email || "").trim(),
-      phone: (data.phone || "").trim(),
+      candidateName: validation.contact.candidateName,
+      email: validation.contact.email,
+      phone: validation.contact.phone,
       experience: data.experience || "",
       level2Qualification: data.level2Qualification || "",
       level3Qualification: data.level3Qualification || "",
