@@ -64,8 +64,10 @@ export function isSensitivePathname(pathname: string): boolean {
   return SENSITIVE_RECORD_TYPES.some((t) => pathname.startsWith(t.prefix) && t.matches(pathname))
 }
 
+// Connecting a Blob store with prefix "PRIVATE" makes Vercel replace the
+// "BLOB" segment, producing PRIVATE_READ_WRITE_TOKEN. Accept both names.
 function privateToken(): string | undefined {
-  return process.env.PRIVATE_BLOB_READ_WRITE_TOKEN || undefined
+  return process.env.PRIVATE_BLOB_READ_WRITE_TOKEN || process.env.PRIVATE_READ_WRITE_TOKEN || undefined
 }
 
 export function isPrivateStoreConfigured(): boolean {
@@ -95,7 +97,7 @@ export async function putSensitive(
   if (!warnedFallback) {
     warnedFallback = true
     console.warn(
-      "[secure-store] PRIVATE_BLOB_READ_WRITE_TOKEN is not set — sensitive records are still being written to the PUBLIC store.",
+      "[secure-store] No private Blob token (PRIVATE_READ_WRITE_TOKEN / PRIVATE_BLOB_READ_WRITE_TOKEN) is set — sensitive records are still being written to the PUBLIC store.",
     )
   }
   await put(pathname, body, {

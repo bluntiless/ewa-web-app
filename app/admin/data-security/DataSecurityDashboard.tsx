@@ -90,7 +90,7 @@ export default function DataSecurityDashboard() {
             <p>
               The private Blob store is not connected yet. Create a <strong>private</strong> Blob store in Vercel,
               connect it to this project with the environment variable prefix <code>PRIVATE</code> (so it provides{" "}
-              <code>PRIVATE_BLOB_READ_WRITE_TOKEN</code>), then redeploy. Until then, new submissions continue to be
+              <code>PRIVATE_READ_WRITE_TOKEN</code>), then redeploy. Until then, new submissions continue to be
               saved exactly as before.
             </p>
           </div>
