@@ -442,7 +442,7 @@ export async function POST(request: Request) {
     }
 
     const encryptedData = await fetch(bookingBlob.url).then((r) => r.text())
-    const bookingData = decryptJSON(encryptedData)
+    const bookingData = decryptJSON<Record<string, any>>(encryptedData)
 
     // Get pricing details
     const pricingDetails = getPricing(
@@ -482,7 +482,7 @@ export async function POST(request: Request) {
     // Store PDF in Blob
     await put(
       `invoices/${invoice.id}/invoice.pdf`,
-      pdfBytes,
+      Buffer.from(pdfBytes),
       { access: "public", contentType: "application/pdf" }
     )
 
@@ -517,7 +517,7 @@ export async function POST(request: Request) {
     const metadataBlob = blobs.find((b) => b.pathname.endsWith("metadata.enc"))
     if (metadataBlob) {
       const metadataEncrypted = await fetch(metadataBlob.url).then((r) => r.text())
-      const metadata = decryptJSON(metadataEncrypted)
+      const metadata = decryptJSON<Record<string, any>>(metadataEncrypted)
       
       const invoiceIds = metadata.invoiceIds || []
       invoiceIds.push(invoice.id)

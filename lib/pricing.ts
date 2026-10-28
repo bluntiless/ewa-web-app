@@ -171,7 +171,14 @@ const promoPricing: Record<string, PricingDetails> = {
 
 // The effective pricing table. Reflects the promotion while it is active and
 // automatically reverts to the regular table once it ends.
-export const pricing: Record<string, PricingDetails> = isPromotionActive() ? promoPricing : regularPricing
+type PricingTable = Record<string, PricingDetails> & {
+  standardFull: FullPaymentPricing
+  standardInstalments: InstalmentPricing
+  goldFull: FullPaymentPricing
+  goldInstalments: InstalmentPricing
+}
+
+export const pricing = (isPromotionActive() ? promoPricing : regularPricing) as PricingTable
 
 // The highest saving currently available (used for banner/headline copy).
 export const maxSavings: number = Math.max(
