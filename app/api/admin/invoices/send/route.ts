@@ -239,7 +239,7 @@ export async function POST(request: Request) {
     }
 
     const metadataEncrypted = await fetch(metadataBlob.url).then((r) => r.text())
-    const metadata = decryptJSON(metadataEncrypted)
+    const metadata = decryptJSON<Record<string, any>>(metadataEncrypted)
 
     // Get the latest invoice
     const invoiceIds = metadata.invoiceIds || []
@@ -276,7 +276,7 @@ export async function POST(request: Request) {
     }
 
     // Send email via Resend
-    const resend = getResendClient()
+    const resend = await getResendClient()
     const { data, error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || "EWA Tracker <invoices@ewatracker.co.uk>",
       to: [invoice.candidateEmail],

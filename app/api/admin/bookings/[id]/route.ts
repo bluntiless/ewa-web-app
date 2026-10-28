@@ -73,7 +73,7 @@ export async function PATCH(
     }
 
     const metadataEncrypted = await fetch(metadataBlob.url).then((r) => r.text())
-    const metadata = decryptJSON(metadataEncrypted)
+    const metadata = decryptJSON<Record<string, any>>(metadataEncrypted)
 
     // Update metadata
     const updatedMetadata = {
@@ -129,7 +129,7 @@ export async function DELETE(
     }
 
     const metadataEncrypted = await fetch(metadataBlob.url).then((r) => r.text())
-    const metadata = decryptJSON(metadataEncrypted)
+    const metadata = decryptJSON<Record<string, any>>(metadataEncrypted)
 
     // Mark as archived
     const updatedMetadata = {

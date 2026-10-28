@@ -47,6 +47,13 @@ export interface SkillsScanSubmissionData {
     }
     furtherKnowledgeRequired: string
     furtherExperienceRequired: string
+    suitabilityResult?: {
+      result: "likely-suitable" | "may-need-development" | "likely-not-suitable"
+      title: string
+      summary: string
+      knowledgeScore: number
+      experienceScore: number
+    }
   }
 }
 

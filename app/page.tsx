@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
-import { Apple, Info, CheckCircle, Lightbulb, Cloud, Smartphone, Award, Globe, AlertTriangle, CalendarClock } from "lucide-react"
+import { Apple, Info, CheckCircle, Lightbulb, Cloud, Smartphone, Award, Globe, AlertTriangle, CalendarClock, Download } from "lucide-react"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 import { pricing, isPromotionActive, promotion, formatCurrency, REGISTRATION_FEE } from "@/lib/pricing"
