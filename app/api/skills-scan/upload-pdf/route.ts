@@ -1,4 +1,4 @@
-import { put } from "@vercel/blob"
+import { putSensitive } from "@/lib/blob/secure-store"
 import { type NextRequest, NextResponse } from "next/server"
 import { uploadToSharePoint, isSharePointConfigured, createFolder } from "@/lib/sharepoint"
 import { generateSubmissionId, formatSubmissionDate, sanitizeCandidateName } from "@/lib/skills-scan-submission"
@@ -66,11 +66,9 @@ export async function POST(request: NextRequest) {
     const pdfBuffer = Buffer.from(pdfBytes)
 
     // Store backup in Blob storage (using form-type-specific path)
-    await put(
-      `${config.blobPrefix}/${submissionId}/completed.pdf`,
-      pdfBuffer,
-      { access: "public", contentType: "application/pdf" }
-    )
+    await putSensitive(`${config.blobPrefix}/${submissionId}/completed.pdf`, pdfBuffer, {
+      contentType: "application/pdf",
+    })
 
     // Store metadata
     const metadata = {
@@ -82,11 +80,9 @@ export async function POST(request: NextRequest) {
       originalFileName: pdfFile.name,
     }
 
-    await put(
-      `${config.blobPrefix}/${submissionId}/metadata.json`,
-      JSON.stringify(metadata, null, 2),
-      { access: "public", contentType: "application/json" }
-    )
+    await putSensitive(`${config.blobPrefix}/${submissionId}/metadata.json`, JSON.stringify(metadata, null, 2), {
+      contentType: "application/json",
+    })
 
     // Upload to SharePoint
     let sharePointUrl: string | undefined

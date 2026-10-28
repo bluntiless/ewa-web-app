@@ -6,6 +6,7 @@ import { authOptions } from "@/lib/auth"
 export const dynamic = "force-dynamic"
 import { list, put } from "@vercel/blob"
 import { decryptJSON, encryptJSON } from "@/lib/encryption"
+import { findBlob, readBlobBuffer } from "@/lib/blob/secure-store"
 import { formatCurrency, bankDetails } from "@/lib/pricing"
 import { formatDate, type Invoice } from "@/lib/invoice"
 
@@ -255,7 +256,7 @@ export async function POST(request: Request) {
     // Fetch invoice data
     const { blobs: invoiceBlobs } = await list({ prefix: `invoices/${latestInvoiceId}/` })
     const invoiceDataBlob = invoiceBlobs.find((b) => b.pathname.endsWith("invoice.enc"))
-    const invoicePdfBlob = invoiceBlobs.find((b) => b.pathname.endsWith("invoice.pdf"))
+    const invoicePdfBlob = await findBlob(`invoices/${latestInvoiceId}/invoice.pdf`)
 
     if (!invoiceDataBlob) {
       return NextResponse.json({ error: "Invoice data not found" }, { status: 404 })
@@ -267,11 +268,12 @@ export async function POST(request: Request) {
     // Get PDF as attachment if available
     let pdfAttachment: { filename: string; content: Buffer } | undefined
     if (invoicePdfBlob) {
-      const pdfResponse = await fetch(invoicePdfBlob.url)
-      const pdfBuffer = await pdfResponse.arrayBuffer()
-      pdfAttachment = {
-        filename: `Invoice-${invoice.invoiceNumber}.pdf`,
-        content: Buffer.from(pdfBuffer),
+      const pdfBuffer = await readBlobBuffer(invoicePdfBlob)
+      if (pdfBuffer) {
+        pdfAttachment = {
+          filename: `Invoice-${invoice.invoiceNumber}.pdf`,
+          content: pdfBuffer,
+        }
       }
     }
 

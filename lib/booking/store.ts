@@ -4,8 +4,9 @@
 // background forms: each record is a JSON blob under a stable prefix, listed
 // and read back on demand.
 
-import { list, put, del } from "@vercel/blob"
+import { list, put } from "@vercel/blob"
 import { DEFAULT_SETTINGS, type BookingSettings } from "./config"
+import { deleteBlobs, findBlob, listMerged, listStore, putSensitive, readBlobJSON } from "@/lib/blob/secure-store"
 
 const BOOKINGS_PREFIX = "call-bookings/"
 const SETTINGS_PATH = "call-booking-settings/settings.json"
@@ -37,21 +38,16 @@ export interface CallBooking {
 }
 
 export async function saveBooking(booking: CallBooking): Promise<void> {
-  await put(`${BOOKINGS_PREFIX}${booking.id}.json`, JSON.stringify(booking), {
-    access: "public",
+  await putSensitive(`${BOOKINGS_PREFIX}${booking.id}.json`, JSON.stringify(booking), {
     contentType: "application/json",
-    addRandomSuffix: false,
     allowOverwrite: true,
   })
 }
 
 export async function getBooking(id: string): Promise<CallBooking | null> {
   try {
-    const { blobs } = await list({ prefix: `${BOOKINGS_PREFIX}${id}.json` })
-    if (!blobs.length) return null
-    const res = await fetch(blobs[0].url, { cache: "no-store" })
-    if (!res.ok) return null
-    return (await res.json()) as CallBooking
+    const blob = await findBlob(`${BOOKINGS_PREFIX}${id}.json`)
+    return blob ? await readBlobJSON<CallBooking>(blob) : null
   } catch (err) {
     console.error("[v0] getBooking error:", err)
     return null
@@ -60,13 +56,11 @@ export async function getBooking(id: string): Promise<CallBooking | null> {
 
 export async function listBookings(): Promise<CallBooking[]> {
   try {
-    const { blobs } = await list({ prefix: BOOKINGS_PREFIX })
+    const blobs = await listMerged(BOOKINGS_PREFIX)
     const records = await Promise.all(
       blobs.map(async (b) => {
         try {
-          const res = await fetch(b.url, { cache: "no-store" })
-          if (!res.ok) return null
-          return (await res.json()) as CallBooking
+          return await readBlobJSON<CallBooking>(b)
         } catch {
           return null
         }
@@ -111,8 +105,9 @@ export async function saveSettings(settings: BookingSettings): Promise<void> {
 
 export async function deleteBookingRecord(id: string): Promise<void> {
   try {
-    const { blobs } = await list({ prefix: `${BOOKINGS_PREFIX}${id}.json` })
-    if (blobs.length) await del(blobs[0].url)
+    const pathname = `${BOOKINGS_PREFIX}${id}.json`
+    const [priv, pub] = await Promise.all([listStore(pathname, "private"), listStore(pathname, "public")])
+    await deleteBlobs([...priv, ...pub].filter((b) => b.pathname === pathname))
   } catch (err) {
     console.error("[v0] deleteBookingRecord error:", err)
   }

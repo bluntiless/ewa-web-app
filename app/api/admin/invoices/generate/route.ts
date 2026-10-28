@@ -6,6 +6,7 @@ import { authOptions } from "@/lib/auth"
 export const dynamic = "force-dynamic"
 import { put, list } from "@vercel/blob"
 import { decryptJSON, encryptJSON } from "@/lib/encryption"
+import { putSensitive } from "@/lib/blob/secure-store"
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib"
 import { 
   createInvoiceFromBooking, 
@@ -480,11 +481,9 @@ export async function POST(request: Request) {
     )
 
     // Store PDF in Blob
-    await put(
-      `invoices/${invoice.id}/invoice.pdf`,
-      Buffer.from(pdfBytes),
-      { access: "public", contentType: "application/pdf" }
-    )
+    await putSensitive(`invoices/${invoice.id}/invoice.pdf`, Buffer.from(pdfBytes), {
+      contentType: "application/pdf",
+    })
 
     // Upload to SharePoint if configured
     let sharePointUrl: string | undefined
