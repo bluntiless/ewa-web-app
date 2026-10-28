@@ -1,7 +1,7 @@
-import { list } from "@vercel/blob"
 import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 import { authOptions } from "@/lib/auth"
+import { listMerged, readBlobJSON } from "@/lib/blob/secure-store"
 
 // Reads the per-request session; must run per-request, never prerendered.
 export const dynamic = "force-dynamic"
@@ -36,15 +36,15 @@ export async function GET() {
   }
 
   try {
-    const { blobs } = await list({ prefix: "eligibility-checks/" })
+    const blobs = await listMerged("eligibility-checks/")
     const metadataBlobs = blobs.filter((b) => b.pathname.endsWith("metadata.json"))
 
     const submissions: EligibilityCheckSubmission[] = []
 
     for (const blob of metadataBlobs) {
       try {
-        const metadata = (await fetch(blob.url).then((r) => r.json())) as EligibilityCheckSubmission
-        submissions.push({ ...metadata, status: metadata.status || "pending" })
+        const metadata = await readBlobJSON<EligibilityCheckSubmission>(blob)
+        if (metadata) submissions.push({ ...metadata, status: metadata.status || "pending" })
       } catch (error) {
         console.error(`Failed to read eligibility metadata: ${blob.pathname}`, error)
       }

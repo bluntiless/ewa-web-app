@@ -1,4 +1,4 @@
-import { put } from "@vercel/blob"
+import { putSensitive } from "@/lib/blob/secure-store"
 import { type NextRequest, NextResponse } from "next/server"
 import { sendEligibilityAutoResponse } from "@/lib/eligibility/auto-response"
 import { validateContactDetails } from "@/lib/eligibility/contact-validation"
@@ -44,8 +44,7 @@ export async function POST(request: NextRequest) {
       status: "pending" as const,
     }
 
-    await put(`eligibility-checks/${id}/metadata.json`, JSON.stringify(metadata, null, 2), {
-      access: "public",
+    await putSensitive(`eligibility-checks/${id}/metadata.json`, JSON.stringify(metadata, null, 2), {
       contentType: "application/json",
     })
 

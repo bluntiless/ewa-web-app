@@ -1,9 +1,9 @@
-import { list } from "@vercel/blob"
 import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 import { authOptions } from "@/lib/auth"
 import type { SkillsScanSubmission } from "@/lib/skills-scan-submission"
 import { decryptJSON } from "@/lib/encryption"
+import { adminFileUrl, listMerged, readBlobJSON, readBlobText } from "@/lib/blob/secure-store"
 
 // Reads the per-request session; must run per-request, never prerendered.
 export const dynamic = "force-dynamic"
@@ -17,9 +17,7 @@ export async function GET() {
 
   try {
     // List all submission folders
-    const { blobs } = await list({
-      prefix: "skills-scan-submissions/",
-    })
+    const blobs = await listMerged("skills-scan-submissions/")
 
     // Two submission formats live under this prefix:
     //  - metadata.enc  -> legacy encrypted questionnaire submissions
@@ -34,9 +32,8 @@ export async function GET() {
     // Legacy encrypted questionnaire submissions
     for (const blob of encBlobs) {
       try {
-        const response = await fetch(blob.url)
-        if (response.ok) {
-          const encryptedText = await response.text()
+        const encryptedText = await readBlobText(blob)
+        if (encryptedText) {
           const metadata = decryptJSON<SkillsScanSubmission>(encryptedText)
           byId.set(metadata.id, { ...metadata, source: "enc" })
         }
@@ -48,7 +45,7 @@ export async function GET() {
     // Current PDF-upload submissions (plaintext JSON metadata + completed.pdf)
     for (const blob of jsonBlobs) {
       try {
-        const meta = (await fetch(blob.url).then((r) => r.json())) as {
+        const meta = (await readBlobJSON(blob)) as {
           id: string
           candidateName: string
           email: string
@@ -56,7 +53,8 @@ export async function GET() {
           status?: SkillsScanSubmission["status"]
           archivedAt?: string
           originalFileName?: string
-        }
+        } | null
+        if (!meta) continue
 
         // Attach the matching completed PDF from the same submission folder
         const folder = blob.pathname.replace(/metadata\.json$/, "")
@@ -72,7 +70,7 @@ export async function GET() {
           status: meta.status || "pending",
           archivedAt: meta.archivedAt,
           originalFileName: meta.originalFileName,
-          pdfUrl: pdf?.url,
+          pdfUrl: pdf ? adminFileUrl(pdf.pathname) : undefined,
           source: "json",
         })
       } catch (err) {

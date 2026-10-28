@@ -1,4 +1,5 @@
-import { list, put } from "@vercel/blob"
+import { put } from "@vercel/blob"
+import { adminFileUrl, findBlob, listMerged, putSensitive, readBlobJSON, readBlobText } from "@/lib/blob/secure-store"
 import { getServerSession } from "next-auth"
 import { type NextRequest, NextResponse } from "next/server"
 import { authOptions } from "@/lib/auth"
@@ -8,37 +9,25 @@ export const dynamic = "force-dynamic"
 import type { SkillsScanSubmission, SkillsScanSubmissionData } from "@/lib/skills-scan-submission"
 import { decryptJSON, encryptJSON } from "@/lib/encryption"
 
-// Helper to find a blob URL by exact pathname
-async function getBlobUrl(pathname: string): Promise<string | null> {
-  const { blobs } = await list({ prefix: pathname.split("/").slice(0, -1).join("/") + "/" })
-  const blob = blobs.find((b) => b.pathname === pathname)
-  return blob?.url || null
-}
 
 // Resolve which metadata format a submission uses.
 // Current PDF uploads store plaintext "metadata.json"; legacy questionnaire
 // submissions store encrypted "metadata.enc".
 async function resolveMetadata(id: string): Promise<
-  | { format: "json"; url: string; data: SkillsScanSubmission }
-  | { format: "enc"; url: string; data: SkillsScanSubmission }
+  | { format: "json"; data: SkillsScanSubmission }
+  | { format: "enc"; data: SkillsScanSubmission }
   | null
 > {
-  const jsonUrl = await getBlobUrl(`skills-scan-submissions/${id}/metadata.json`)
-  if (jsonUrl) {
-    const res = await fetch(jsonUrl)
-    if (res.ok) {
-      const data = (await res.json()) as SkillsScanSubmission
-      return { format: "json", url: jsonUrl, data: { ...data, status: data.status || "pending" } }
-    }
+  const jsonBlob = await findBlob(`skills-scan-submissions/${id}/metadata.json`)
+  if (jsonBlob) {
+    const data = await readBlobJSON<SkillsScanSubmission>(jsonBlob)
+    if (data) return { format: "json", data: { ...data, status: data.status || "pending" } }
   }
 
-  const encUrl = await getBlobUrl(`skills-scan-submissions/${id}/metadata.enc`)
-  if (encUrl) {
-    const res = await fetch(encUrl)
-    if (res.ok) {
-      const data = decryptJSON<SkillsScanSubmission>(await res.text())
-      return { format: "enc", url: encUrl, data }
-    }
+  const encBlob = await findBlob(`skills-scan-submissions/${id}/metadata.enc`)
+  if (encBlob) {
+    const text = await readBlobText(encBlob)
+    if (text) return { format: "enc", data: decryptJSON<SkillsScanSubmission>(text) }
   }
 
   return null
@@ -46,8 +35,7 @@ async function resolveMetadata(id: string): Promise<
 
 async function writeMetadata(id: string, format: "json" | "enc", data: SkillsScanSubmission) {
   if (format === "json") {
-    await put(`skills-scan-submissions/${id}/metadata.json`, JSON.stringify(data, null, 2), {
-      access: "public",
+    await putSensitive(`skills-scan-submissions/${id}/metadata.json`, JSON.stringify(data, null, 2), {
       contentType: "application/json",
       allowOverwrite: true,
     })
@@ -71,22 +59,22 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
   try {
     // Legacy questionnaire submissions have a full encrypted response payload.
-    const responseUrl = await getBlobUrl(`skills-scan-submissions/${id}/response.enc`)
-    if (responseUrl) {
-      const response = await fetch(responseUrl)
-      if (response.ok) {
-        const data = decryptJSON<SkillsScanSubmissionData>(await response.text())
-        return NextResponse.json(data)
-      }
+    const responseBlob = await findBlob(`skills-scan-submissions/${id}/response.enc`)
+    const responseText = responseBlob ? await readBlobText(responseBlob) : null
+    if (responseText) {
+      return NextResponse.json(decryptJSON<SkillsScanSubmissionData>(responseText))
     }
 
     // PDF-upload submissions have no questionnaire payload — return metadata
     // plus the completed PDF link so the admin can download it.
     const resolved = await resolveMetadata(id)
     if (resolved) {
-      const { blobs } = await list({ prefix: `skills-scan-submissions/${id}/` })
+      const blobs = await listMerged(`skills-scan-submissions/${id}/`)
       const pdf = blobs.find((b) => b.pathname.endsWith("/completed.pdf"))
-      return NextResponse.json({ metadata: { ...resolved.data, pdfUrl: pdf?.url }, formData: null })
+      return NextResponse.json({
+        metadata: { ...resolved.data, pdfUrl: pdf ? adminFileUrl(pdf.pathname) : undefined },
+        formData: null,
+      })
     }
 
     return NextResponse.json({ error: "Submission not found" }, { status: 404 })
