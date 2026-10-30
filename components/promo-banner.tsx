@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Tag, ArrowRight } from "lucide-react"
-import { pricing, promotion, isPromotionActive, maxSavings, formatCurrency } from "@/lib/pricing"
+import { pricing, promotion, isPromotionActive, getMaxSavings, formatCurrency } from "@/lib/pricing"
+import { PromoCountdown, PromoExpiryGate } from "@/components/promo-countdown"
 
 // Site-wide announcement bar for the limited-time price reduction.
 // Renders nothing when the promotion is inactive or has ended.
@@ -11,6 +12,7 @@ export default function PromoBanner() {
   const gold = pricing.goldFull
 
   return (
+    <PromoExpiryGate endDate={promotion.endDate}>
     <div className="bg-amber-400 text-blue-950">
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:flex-row lg:py-3.5">
         <div className="flex flex-col items-center gap-2 text-center lg:flex-row lg:gap-5 lg:text-left">
@@ -19,8 +21,9 @@ export default function PromoBanner() {
             {promotion.label} &middot; ends {promotion.endDateLabel}
           </span>
           <p className="text-lg font-extrabold leading-tight sm:text-xl text-balance">
-            Save up to {formatCurrency(maxSavings)} on your EWA assessment
+            Save up to {formatCurrency(getMaxSavings())} on your EWA assessment
           </p>
+          <PromoCountdown endDate={promotion.endDate} />
         </div>
 
         <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-5">
@@ -56,5 +59,6 @@ export default function PromoBanner() {
         </div>
       </div>
     </div>
+    </PromoExpiryGate>
   )
 }
