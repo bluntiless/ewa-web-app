@@ -4,6 +4,10 @@ import { Inter } from "next/font/google"
 import Script from "next/script"
 import SiteAssistant from "@/components/site-assistant"
 import PromoBanner from "@/components/promo-banner"
+
+// Re-render cached pages every 5 minutes so promotion prices and the banner
+// switch off automatically when the offer ends, without needing a redeploy.
+export const revalidate = 300
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })

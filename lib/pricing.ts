@@ -51,16 +51,16 @@ export const promotion = {
   label: "Limited-time offer",
   // Human-readable end date shown to visitors.
   endDateLabel: "31 October",
-  // Machine end date. Promotion is active up to and including this instant
-  // (end of 31 October 2026, UK time / BST).
-  endDate: "2026-10-31T23:59:59+01:00",
+  // Machine end instant (exclusive). UK clocks return to GMT on 25 October
+  // 2026, so midnight at the end of 31 October UK time is 00:00 UTC on 1 November.
+  endDate: "2026-11-01T00:00:00Z",
   // Marketing copy for the banner.
   headline: "Autumn price reduction on EWA assessment",
 }
 
 export function isPromotionActive(now: Date = new Date()): boolean {
   if (!promotion.active) return false
-  return now.getTime() <= new Date(promotion.endDate).getTime()
+  return now.getTime() < new Date(promotion.endDate).getTime()
 }
 
 // ---------------------------------------------------------------------------
@@ -178,13 +178,31 @@ type PricingTable = Record<string, PricingDetails> & {
   goldInstalments: InstalmentPricing
 }
 
-export const pricing = (isPromotionActive() ? promoPricing : regularPricing) as PricingTable
+export function getPricingTable(now: Date = new Date()): PricingTable {
+  return (isPromotionActive(now) ? promoPricing : regularPricing) as PricingTable
+}
+
+// Each lookup re-checks the clock, so long-running servers and open browser
+// tabs switch back to regular prices the moment the promotion ends.
+export const pricing = {
+  get standardFull() {
+    return getPricingTable().standardFull
+  },
+  get standardInstalments() {
+    return getPricingTable().standardInstalments
+  },
+  get goldFull() {
+    return getPricingTable().goldFull
+  },
+  get goldInstalments() {
+    return getPricingTable().goldInstalments
+  },
+} as PricingTable
 
 // The highest saving currently available (used for banner/headline copy).
-export const maxSavings: number = Math.max(
-  0,
-  ...Object.values(pricing).map((p) => p.savings ?? 0),
-)
+export function getMaxSavings(now: Date = new Date()): number {
+  return Math.max(0, ...Object.values(getPricingTable(now)).map((p) => p.savings ?? 0))
+}
 
 export function getPricingKey(serviceOption: ServiceOption, paymentOption: PaymentOption): string | null {
   if (serviceOption === "standard" && paymentOption === "full") return "standardFull"
