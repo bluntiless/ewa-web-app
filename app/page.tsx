@@ -50,7 +50,7 @@ export default function HomePage() {
           />
           <div className="inline-flex items-center gap-2 bg-amber-400 text-blue-950 px-4 py-1.5 rounded-full text-sm font-bold mb-6">
             <CalendarClock className="w-4 h-4" />
-            Grandfather Rights End October 2026 &mdash; Act Now
+            October 2026 EAS change now in force &mdash; EWA still open
           </div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
             EWA Assessment & ECS Gold Card Route
