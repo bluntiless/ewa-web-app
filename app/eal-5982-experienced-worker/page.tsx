@@ -6,7 +6,7 @@ import SiteFooter from "@/components/site-footer"
 
 export const metadata: Metadata = {
   title: "EAL 5982 Experienced Worker Qualification | Beat the Oct 2026 Deadline",
-  description: "Grandfather rights end October 2026. Time-served electricians must now formally evidence competence to keep an ECS Gold Card. Complete your EAL 5982 Experienced Worker Qualification with EWA Tracker. Check eligibility today.",
+  description: "The October 2026 EAS change is now in force. Time-served electricians must formally evidence competence to keep an ECS Gold Card. The EAL 5982 Experienced Worker Qualification is still open. Check eligibility today.",
   keywords: [
     "EAL 5982 Experienced Worker Qualification",
     "EAL 603/5982/1",
@@ -40,7 +40,7 @@ export default function EAL5982Page() {
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 bg-amber-400 text-blue-950 px-4 py-1.5 rounded-full text-sm font-bold mb-6">
             <CalendarClock className="w-4 h-4" />
-            Grandfather Rights End October 2026 &mdash; Act Now
+            October 2026 EAS change now in force &mdash; EWA still open
           </div>
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight">
             EAL 5982 Experienced Worker Qualification (Level 3)
@@ -73,11 +73,11 @@ export default function EAL5982Page() {
           <div className="flex items-center gap-3 mb-4">
             <AlertTriangle className="w-8 h-8 text-amber-700 flex-shrink-0" />
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-balance">
-              October 2026: The End of &ldquo;Grandfather Rights&rdquo; for Electricians
+              The October 2026 EAS change is now in force
             </h2>
           </div>
           <p className="text-gray-700 leading-relaxed mb-4">
-            The <strong>October 2026 Electrotechnical Assessment Specification (EAS) update</strong> formalises a major industry shift: <strong>competence must now be formally evidenced, not assumed.</strong> The expiring &ldquo;grandfather rights&rdquo; (officially the Industry Accreditation or Conditional grading route) mean you can <strong>no longer renew an ECS Gold Card based on years of experience alone.</strong>
+            From 1 October 2026, <strong>competence for electrotechnical scheme registration has to be formally evidenced.</strong> An ECS Gold Card can <strong>no longer be renewed on years of experience alone</strong>, through the former Industry Accreditation or Conditional grading route.
           </p>
           <p className="text-gray-700 leading-relaxed mb-6">
             What you need to do depends on your individual circumstances. Here are the three most common situations:
@@ -394,10 +394,10 @@ export default function EAL5982Page() {
             <div className="space-y-4">
               <details className="bg-white border border-amber-300 rounded-lg" open>
                 <summary className="p-4 cursor-pointer font-semibold text-gray-900 hover:bg-amber-50">
-                  What is changing in October 2026 and how does it affect my ECS Gold Card?
+                  What changed in October 2026 and how does it affect my ECS Gold Card?
                 </summary>
                 <div className="px-4 pb-4 text-gray-700 text-sm">
-                  From October 2026, the Electrotechnical Assessment Specification (EAS) update ends the &ldquo;grandfather rights&rdquo; (Industry Accreditation / Conditional grading) route. This means you can no longer renew an ECS Gold Card based on experience alone &mdash; your competence must be formally evidenced with a recognised Level 3 qualification. If you are time-served without a formal NVQ Level 3, the <strong>EAL 5982 Experienced Worker Qualification</strong> is the route designed for you. We recommend starting now, as demand is expected to rise sharply ahead of the deadline.
+                  From 1 October 2026, the EAS change means an ECS Gold Card can no longer be renewed on experience alone. Competence has to be formally evidenced with a recognised Level 3 qualification. If you are time-served without a Level 3 NVQ, the <strong>EAL 5982 Experienced Worker Qualification</strong> is still open to you. The EAS changes do not set a deadline to complete the EWA, and you can start now.
                 </div>
               </details>
 

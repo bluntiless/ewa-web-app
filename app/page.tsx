@@ -50,7 +50,7 @@ export default function HomePage() {
           />
           <div className="inline-flex items-center gap-2 bg-amber-400 text-blue-950 px-4 py-1.5 rounded-full text-sm font-bold mb-6">
             <CalendarClock className="w-4 h-4" />
-            Grandfather Rights End October 2026 &mdash; Act Now
+            October 2026 EAS change now in force &mdash; EWA still open
           </div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
             EWA Assessment & ECS Gold Card Route
@@ -91,24 +91,24 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* October 2026 Deadline / Grandfather Rights Section */}
+      {/* October 2026 EAS Change Section */}
       <section className="bg-amber-50 border-y-4 border-amber-400 py-12 md:py-16">
         <div className="max-w-5xl mx-auto px-4">
           <div className="flex items-center gap-3 mb-4">
             <AlertTriangle className="w-8 h-8 text-amber-700 flex-shrink-0" />
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-balance">
-              October 2026: The End of &ldquo;Grandfather Rights&rdquo; for Electricians
+              The October 2026 EAS change is now in force
             </h2>
           </div>
           <p className="text-gray-700 leading-relaxed mb-4 max-w-3xl">
-            The <strong>October 2026 Electrotechnical Assessment Specification (EAS) update</strong> formalises a major industry shift: <strong>competence must now be formally evidenced, not assumed.</strong> The expiring &ldquo;grandfather rights&rdquo; (the Industry Accreditation route) mean you can <strong>no longer renew an ECS Gold Card based on years of experience alone.</strong>
+            From 1 October 2026, competence for electrotechnical scheme registration has to be formally evidenced. An ECS Gold Card can no longer be renewed on years of experience alone.
           </p>
           <p className="text-gray-700 leading-relaxed mb-6 max-w-3xl">
-            If you are <strong>time-served without a formal NVQ Level 3</strong>, the Experienced Worker Assessment (EWA) is the route designed for you &mdash; it recognises your real, on-site experience through a portfolio, professional discussion and workplace assessment. <strong>No classroom required.</strong>
+            If you are time-served and do not hold a Level 3 NVQ, the Experienced Worker Assessment is still open. It recognises your on-site work through a portfolio, professional discussion and workplace assessment. There is no classroom course.
           </p>
           <div className="bg-blue-700 text-white rounded-lg p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <p className="font-medium">
-              Demand is expected to rise sharply ahead of the deadline. Start your route towards an ECS Gold Card now.
+              You can start the route towards an ECS Gold Card now.
             </p>
             <Link
               href="/eligibility"
