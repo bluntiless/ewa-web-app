@@ -130,8 +130,8 @@ programme/assessment fee. All pricing is indicative and confirmed during a free
 consultation; EAL fees are set by the awarding body and subject to change.
 
 ## EAL registration fees
-- New registration: £268.80 (inc. VAT) — first-time registration with EAL.
-- Transfer registration: £15 — transferring from another EAL approved centre.
+- EAL registration: £268.80 (inc. VAT). This is already included in every
+  all-inclusive price below — never quote it as an extra charge on top.
 
 ## LIMITED-TIME OFFER (ends 31 October)
 There is currently a limited-time price reduction running until 31 October. The

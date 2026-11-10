@@ -171,8 +171,8 @@ export default function EWACostPage() {
               <Info className="w-5 h-5 text-blue-700 flex-shrink-0 mt-0.5" />
               <div className="text-sm text-gray-700 flex flex-col gap-2">
                 <p>
-                  <strong className="text-gray-900">EAL registration included.</strong> Both Standard and Gold prices include the{" "}
-                  {formatCurrency(REGISTRATION_FEE)} EAL new-candidate registration fee (inc. VAT). Transfer candidates will receive an adjusted price where the £15 EAL transfer registration fee applies.
+                  <strong className="text-gray-900">EAL registration included.</strong> The Standard and Gold prices shown above already include the{" "}
+                  {formatCurrency(REGISTRATION_FEE)} EAL registration fee (inc. VAT) &mdash; there is nothing extra to pay for registration.
                 </p>
                 <p>Additional observations outside your agreed package are charged at £275 each. Registration fees are set by EAL and subject to change by the awarding body.</p>
               </div>

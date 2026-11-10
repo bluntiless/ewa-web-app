@@ -786,28 +786,22 @@ export default function HomePage() {
             {/* Standard Plan */}
             <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
               <h3 className="text-lg font-semibold text-gray-900 mb-1">Standard EWA Service</h3>
-              {isPromotionActive() ? (
-                <div className="mb-4">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-gray-900">{formatCurrency(pricing.standardFull.total)}</span>
-                    {pricing.standardFull.originalTotal && (
-                      <span className="text-lg text-gray-400 line-through">
-                        {formatCurrency(pricing.standardFull.originalTotal)}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-gray-500 mt-0.5">All-inclusive, inc. EAL registration</p>
-                  {pricing.standardFull.savings && (
-                    <span className="mt-2 inline-block rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-800">
-                      Save {formatCurrency(pricing.standardFull.savings)} &middot; ends {promotion.endDateLabel}
+              <div className="mb-4">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-gray-900">{formatCurrency(pricing.standardFull.total)}</span>
+                  {isPromotionActive() && pricing.standardFull.originalTotal && (
+                    <span className="text-lg text-gray-400 line-through">
+                      {formatCurrency(pricing.standardFull.originalTotal)}
                     </span>
                   )}
                 </div>
-              ) : (
-                <div className="mb-4">
-                  <span className="text-3xl font-bold text-gray-900">£2,000</span>
-                </div>
-              )}
+                <p className="text-xs text-gray-500 mt-0.5">All-inclusive, inc. EAL registration</p>
+                {isPromotionActive() && pricing.standardFull.savings && (
+                  <span className="mt-2 inline-block rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-800">
+                    Save {formatCurrency(pricing.standardFull.savings)} &middot; ends {promotion.endDateLabel}
+                  </span>
+                )}
+              </div>
               <ul className="space-y-2.5 mb-6">
                 <li className="flex items-start gap-2 text-sm text-gray-600">
                   <svg className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -860,28 +854,22 @@ export default function HomePage() {
                 <span className="bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full">Recommended</span>
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-1">Gold EWA Service</h3>
-              {isPromotionActive() ? (
-                <div className="mb-4">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-gray-900">{formatCurrency(pricing.goldFull.total)}</span>
-                    {pricing.goldFull.originalTotal && (
-                      <span className="text-lg text-gray-400 line-through">
-                        {formatCurrency(pricing.goldFull.originalTotal)}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-gray-500 mt-0.5">All-inclusive, inc. EAL registration</p>
-                  {pricing.goldFull.savings && (
-                    <span className="mt-2 inline-block rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-800">
-                      Save {formatCurrency(pricing.goldFull.savings)} &middot; ends {promotion.endDateLabel}
+              <div className="mb-4">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold text-gray-900">{formatCurrency(pricing.goldFull.total)}</span>
+                  {isPromotionActive() && pricing.goldFull.originalTotal && (
+                    <span className="text-lg text-gray-400 line-through">
+                      {formatCurrency(pricing.goldFull.originalTotal)}
                     </span>
                   )}
                 </div>
-              ) : (
-                <div className="mb-4">
-                  <span className="text-3xl font-bold text-gray-900">£2,500</span>
-                </div>
-              )}
+                <p className="text-xs text-gray-500 mt-0.5">All-inclusive, inc. EAL registration</p>
+                {isPromotionActive() && pricing.goldFull.savings && (
+                  <span className="mt-2 inline-block rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-800">
+                    Save {formatCurrency(pricing.goldFull.savings)} &middot; ends {promotion.endDateLabel}
+                  </span>
+                )}
+              </div>
               <ul className="space-y-2.5 mb-6">
                 <li className="flex items-start gap-2 text-sm text-gray-600">
                   <svg className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -948,8 +936,7 @@ export default function HomePage() {
             <div className="bg-gray-100 rounded-lg p-5 text-sm text-gray-600">
               <p className="font-medium text-gray-700 mb-2">EAL registration included</p>
               <p>
-                Both Standard and Gold prices include the {formatCurrency(REGISTRATION_FEE)} EAL new-candidate registration fee (inc. VAT).
-                Transfer candidates will receive an adjusted price where the £15 EAL transfer registration fee applies.
+                The Standard and Gold prices shown above already include the {formatCurrency(REGISTRATION_FEE)} EAL registration fee (inc. VAT) &mdash; there is nothing extra to pay for registration.
               </p>
               <p className="mt-2">Additional observations outside the agreed package: £275 each</p>
             </div>
