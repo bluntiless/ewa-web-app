@@ -1,237 +1,85 @@
-import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
-import { Lightbulb, Zap, CreditCard, FilePenLine, ChevronDown, CheckCircle, BookOpen, ClipboardCheck, FileEdit } from "lucide-react"
-import SiteHeader from "@/components/site-header"
-import SiteFooter from "@/components/site-footer"
+import { Award, Lightbulb } from "lucide-react"
 
-export const metadata: Metadata = {
-  title: "Our Services",
+export const metadata = {
+  title: "Our Services - EWA Tracker Limited",
   description:
-    "EWA Tracker Ltd is an EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification (603/5982/1). ECS Gold Card route available.",
-  keywords: ["EWA", "ECS Gold Card", "electrical qualifications", "experienced worker assessment", "UK electrician", "Level 3", "EAL approved centre", "EAL 5982"],
-  alternates: {
-    canonical: "https://ewatracker.co.uk/services",
-  },
-  openGraph: {
-    title: "Our Services - EWA Tracker Ltd",
-    description:
-      "EAL approved centre delivering the Level 3 Electrotechnical Experienced Worker Qualification and ECS Gold Card route.",
-    url: "https://ewatracker.co.uk/services",
-  },
+    "Discover the Electrotechnical Experienced Worker Assessment (EWA) Level 3 and NVQ Level 3 1605 qualifications offered by EWA Tracker Limited.",
 }
 
 export default function ServicesPage() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800">
-      <SiteHeader />
+      {/* Header/Navigation */}
+      <header className="w-full bg-white shadow-sm py-4 px-6 md:px-8 lg:px-12 flex justify-between items-center">
+        <Link href="/">
+          <Image src="/ewa_logo.png" alt="EWA Tracker Logo" width={120} height={40} className="object-contain" />
+        </Link>
+        <nav className="hidden md:flex space-x-6">
+          <Link href="/" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
+            Home
+          </Link>
+          <Link href="/about" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
+            About Us
+          </Link>
+          <Link href="/services" className="text-blue-700 font-medium transition-colors">
+            Services
+          </Link>
+          <Link href="/contact" className="text-gray-700 hover:text-blue-700 font-medium transition-colors">
+            Contact
+          </Link>
+        </nav>
+      </header>
 
       <main className="max-w-6xl mx-auto px-4 py-16 md:py-24">
-        <section className="bg-white rounded-xl shadow-lg p-8 md:p-12 mb-12 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Comprehensive Electrotechnical Assessment Services
+        <section className="bg-white rounded-xl shadow-lg p-8 md:p-12 mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 text-center">
+            Our Electrotechnical Assessment Services
           </h1>
-          <p className="text-lg text-gray-700 leading-relaxed mb-8 max-w-3xl mx-auto">
-            EWA Tracker Ltd is an EAL approved centre specialising in the Experienced Worker Assessment route for experienced electricians seeking formal qualification.
+          <p className="text-lg text-gray-700 leading-relaxed mb-8 text-center max-w-3xl mx-auto">
+            EWA Tracker Limited provides comprehensive assessment services for experienced electrical workers seeking to
+            formalize their skills and achieve industry-recognized qualifications.
           </p>
-          <div className="flex justify-center mb-8 max-w-4xl mx-auto">
-            <Link href="/eal-5982-experienced-worker" className="bg-blue-50 border border-blue-200 rounded-lg p-6 max-w-md hover:border-blue-400 hover:shadow-md transition-all">
-              <p className="font-semibold text-blue-900 text-lg">Level 3 Electrotechnical Experienced Worker Qualification</p>
-              <p className="text-sm text-blue-700 mt-1">(603/5982/1) - Full scope Installation &amp; Maintenance</p>
-              <p className="text-xs text-blue-600 mt-3 font-medium">Learn more about EAL 5982 &rarr;</p>
-            </Link>
-          </div>
 
-          {/* Eligibility Requirements Dropdown */}
-          <details className="group bg-amber-50 border border-amber-200 rounded-xl max-w-4xl mx-auto mb-8 text-left">
-            <summary className="flex items-center justify-between cursor-pointer p-5 list-none">
-              <div className="flex items-center gap-3">
-                <BookOpen className="w-6 h-6 text-amber-700" />
-                <span className="text-lg font-semibold text-amber-900">Eligibility Requirements for EWA Route</span>
-              </div>
-              <ChevronDown className="w-5 h-5 text-amber-700 transition-transform group-open:rotate-180" />
-            </summary>
-            <div className="px-5 pb-5 pt-2 border-t border-amber-200">
-              <p className="text-gray-700 mb-4">
-                To be eligible for the Experienced Worker Assessment route, you should have completed relevant electrotechnical theory training, typically holding a <strong>Level 2 Diploma in Electrical Installation</strong>, followed by a minimum of <strong>5 years&apos; industry experience</strong> as a practicing electrician. This experience must be verifiable and auditable.
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <div className="bg-blue-50 rounded-xl p-8 shadow-inner">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4 flex items-center">
+                <Award className="w-8 h-8 mr-3 text-blue-700" /> EWA Level 3 Qualification
+              </h2>
+              <p className="text-gray-700 leading-relaxed mb-6">
+                The Electrotechnical Experienced Worker Assessment (EWA) Level 3 is designed for electricians with
+                significant on-site experience but without a formal Level 3 qualification. This assessment pathway
+                allows you to demonstrate your competence against the industry standard.
               </p>
-              <p className="text-gray-700 mb-4">
-                You must be able to provide sufficient evidence from site, supported where necessary by witness testimony, to demonstrate competence against the full qualification requirements.
-              </p>
-              <p className="text-gray-700 mb-4">
-                You must also have an appropriate level of English to read, write, speak, and understand technical information.
-              </p>
-              
-              <p className="text-gray-800 font-semibold mb-3">As part of the ECS Gold Card route, you will also need to achieve:</p>
-              <ul className="space-y-2 mb-4">
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">18th Edition Wiring Regulations (BS 7671)</span>
+              <ul className="list-disc list-inside text-gray-700 leading-relaxed space-y-2">
+                <li>**Recognised by EAL**: Ensuring your qualification is widely accepted and respected.</li>
+                <li>
+                  **Evidence-based Assessment**: Focuses on your practical skills and knowledge gained through
+                  experience.
                 </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">Level 3 Initial Verification and Periodic Inspection &amp; Testing of Electrical Installations</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">AM2 Assessment (AM2E or AM2ED practical end-test)</span>
+                <li>**Flexible Submission**: Utilize our iOS app or SharePoint for convenient evidence upload.</li>
+                <li>**Career Progression**: Opens doors to further professional development and opportunities.</li>
+              </ul>
+            </div>
+
+            <div className="bg-green-50 rounded-xl p-8 shadow-inner">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4 flex items-center">
+                <Award className="w-8 h-8 mr-3 text-green-700" /> NVQ Level 3 1605 Qualification
+              </h2>
+              <p className="text-gray-700 leading-relaxed mb-6">
+                In addition to the EWA, we are approved to deliver the NVQ Level 3 1605 qualification. This
+                qualification is ideal for those who require a broader vocational qualification in electrotechnical
+                services.
+              </p>
+              <ul className="list-disc list-inside text-gray-700 leading-relaxed space-y-2">
+                <li>**Comprehensive Curriculum**: Covers a wide range of electrotechnical principles and practices.</li>
+                <li>**Practical & Theoretical**: Balances hands-on assessment with essential theoretical knowledge.</li>
+                <li>**Industry Standard**: Meets the requirements for competent electrical professionals.</li>
+                <li>
+                  **Enhanced Employability**: Boosts your credentials and job prospects in the electrical industry.
                 </li>
               </ul>
-              
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
-                <p className="text-amber-800 text-sm">
-                  <strong>Please note:</strong> EWA Tracker Ltd does not deliver the 18th Edition, Inspection &amp; Testing, or AM2 assessments. These are provided by separate training providers and NET assessment centres. We can recommend approved providers during your consultation to help you complete these requirements.
-                </p>
-              </div>
-              
-              <p className="text-gray-700 italic">
-                The most appropriate route and any additional requirements will be discussed with you during a no-obligation initial consultation.
-              </p>
-            </div>
-          </details>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <Link
-              href="/ewa-assessment"
-              className="group bg-blue-50 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 flex flex-col items-center text-center"
-            >
-              <Zap className="w-12 h-12 text-blue-700 mb-4 group-hover:scale-110 transition-transform" />
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">EWA Assessment</h2>
-              <p className="text-gray-700 text-sm mb-4">
-                The direct route for experienced electricians to achieve Level 3 qualification.
-              </p>
-              <span className="text-blue-700 font-semibold group-hover:underline">Learn More &rarr;</span>
-            </Link>
-
-            <Link
-              href="/ecs-gold-card-route"
-              className="group bg-blue-50 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 flex flex-col items-center text-center"
-            >
-              <CreditCard className="w-12 h-12 text-blue-700 mb-4 group-hover:scale-110 transition-transform" />
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">ECS Gold Card Route</h2>
-              <p className="text-gray-700 text-sm mb-4">
-                Understand how our qualifications lead to your ECS Gold Card.
-              </p>
-              <span className="text-blue-700 font-semibold group-hover:underline">Learn More &rarr;</span>
-            </Link>
-          </div>
-
-          <div className="mt-12 pt-8 border-t border-gray-200">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">Start Your Assessment Journey</h2>
-            <p className="text-lg text-gray-700 leading-relaxed mb-8 max-w-3xl mx-auto">
-              Ready to take the first step? Complete your Skills Scan to help us understand your experience and guide you to the right qualification pathway.
-            </p>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-7xl mx-auto">
-              {/* Option 1: Eligibility Checker - Brown (L1 Phase) */}
-              <div className="bg-white border-2 border-amber-700 rounded-xl p-6 text-left hover:border-amber-800 hover:shadow-lg transition-all flex flex-col h-full">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="bg-amber-100 text-amber-800 text-xs font-semibold px-2 py-1 rounded">Recommended First</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Eligibility Checker</h3>
-                <p className="text-gray-600 text-sm mb-4">
-                  Quick eligibility check based on your qualifications, 18th Edition status, and experience.
-                </p>
-                <ul className="text-sm text-gray-600 mb-4 space-y-1 flex-grow">
-                  <li>• Instant pathway guidance</li>
-                  <li>• ECS Gold Card suitability</li>
-                  <li>• No document uploads</li>
-                </ul>
-                <Link
-                  href="/eligibility"
-                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-amber-700 text-white hover:bg-amber-800 transition-colors mt-auto"
-                >
-                  <FilePenLine className="w-4 h-4 mr-2" /> Check Eligibility
-                </Link>
-              </div>
-
-              {/* Option 2: EWA Entry Test Mock - Black (L2 Phase) */}
-              <div className="bg-white border-2 border-gray-900 rounded-xl p-6 text-left hover:border-black hover:shadow-lg transition-all flex flex-col h-full">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="bg-gray-900 text-white text-xs font-semibold px-2 py-1 rounded">Practice Test</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">EWA Entry Test Mock</h3>
-                <p className="text-gray-600 text-sm mb-4">
-                  Practice with our 50-question mock assessment covering key electrotechnical topics.
-                </p>
-                <ul className="text-sm text-gray-600 mb-4 space-y-1 flex-grow">
-                  <li>• 50 random questions</li>
-                  <li>• 100-minute timed test</li>
-                  <li>• Instant results &amp; feedback</li>
-                </ul>
-                <Link
-                  href="/ewa-entry-test"
-                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-gray-900 text-white hover:bg-black transition-colors mt-auto"
-                >
-                  <ClipboardCheck className="w-4 h-4 mr-2" /> Start Mock Test
-                </Link>
-              </div>
-
-              {/* Option 3: Official TESP Submission - Grey (L3 Phase) */}
-              <div className="bg-white border-2 border-gray-400 rounded-xl p-6 text-left hover:border-gray-500 hover:shadow-lg transition-all flex flex-col h-full">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="bg-gray-400 text-white text-xs font-semibold px-2 py-1 rounded">Official Submission</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Submit TESP Skills Scan</h3>
-                <p className="text-gray-600 text-sm mb-4">
-                  Download the official TESP Skills Scan PDF, complete it in Adobe Reader, and upload.
-                </p>
-                <ul className="text-sm text-gray-600 mb-4 space-y-1 flex-grow">
-                  <li>• Official EWA document</li>
-                  <li>• Fill in Adobe Reader</li>
-                  <li>• Direct submission</li>
-                </ul>
-                <Link
-                  href="/skills-scan"
-                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-gray-500 text-white hover:bg-gray-600 transition-colors mt-auto"
-                >
-                  <FilePenLine className="w-4 h-4 mr-2" /> Submit TESP
-                </Link>
-              </div>
-
-              {/* Option 4: Candidate Background Form - Blue (Neutral) */}
-              <div className="bg-white border-2 border-blue-500 rounded-xl p-6 text-left hover:border-blue-600 hover:shadow-lg transition-all flex flex-col h-full">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded">Required Document</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Candidate Background Form</h3>
-                <p className="text-gray-600 text-sm mb-4">
-                  Complete the Candidate Background form to provide your employment history and qualifications.
-                </p>
-                <ul className="text-sm text-gray-600 mb-4 space-y-1 flex-grow">
-                  <li>• Employment history</li>
-                  <li>• Qualification details</li>
-                  <li>• Required for assessment</li>
-                </ul>
-                <Link
-                  href="/candidate-background"
-                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-blue-500 text-white hover:bg-blue-600 transition-colors mt-auto"
-                >
-                  <FilePenLine className="w-4 h-4 mr-2" /> Complete Form
-                </Link>
-              </div>
-
-              {/* Option 5: Course Booking Form - Green/Yellow (CPC - Safe to proceed!) */}
-              <div className="bg-white border-2 border-green-500 rounded-xl p-6 text-left hover:border-green-600 hover:shadow-lg transition-all flex flex-col h-full">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="bg-gradient-to-r from-green-500 to-yellow-400 text-white text-xs font-semibold px-2 py-1 rounded">Course Booking</span>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Course Booking Form</h3>
-                <p className="text-gray-600 text-sm mb-4">
-                  Register your interest in the EWA qualification programme with our online booking form.
-                </p>
-                <ul className="text-sm text-gray-600 mb-4 space-y-1 flex-grow">
-                  <li>• Online registration</li>
-                  <li>• Digital signature</li>
-                  <li>• Instant submission</li>
-                </ul>
-                <Link
-                  href="/course-booking"
-                  className="inline-flex items-center px-5 py-2 rounded-full text-sm font-semibold bg-gradient-to-r from-green-500 to-yellow-400 text-white hover:from-green-600 hover:to-yellow-500 transition-colors mt-auto"
-                >
-                  <FileEdit className="w-4 h-4 mr-2" /> Book Course
-                </Link>
-              </div>
             </div>
           </div>
         </section>
@@ -239,18 +87,51 @@ export default function ServicesPage() {
         <section className="bg-blue-700 text-white rounded-xl shadow-lg p-8 md:p-12 text-center">
           <h2 className="text-3xl font-bold mb-6">Ready to Get Qualified?</h2>
           <p className="text-lg opacity-90 max-w-3xl mx-auto mb-8">
-            Take the next step in your electrical career. Start your EWA journey today and achieve your Level 3 qualification.
+            Take the next step in your electrical career. Contact us today to discuss your assessment needs and how we
+            can help you achieve your Level 3 qualification.
           </p>
           <Link
             href="/contact"
             className="inline-flex items-center px-8 py-3 rounded-full text-lg font-semibold bg-white text-blue-700 hover:bg-gray-100 transition-colors shadow-lg"
           >
-            <Lightbulb className="w-5 h-5 mr-2" /> Start Your EWA
+            <Lightbulb className="w-5 h-5 mr-2" /> Learn More
           </Link>
         </section>
       </main>
 
-      <SiteFooter />
+      {/* Footer */}
+      <footer className="bg-gray-900 text-gray-300 py-8 text-center">
+        <div className="max-w-6xl mx-auto px-4">
+          <p>&copy; {new Date().getFullYear()} EWA Tracker Limited. All rights reserved.</p>
+          <p className="mt-2 text-sm">Registered in England and Wales. Company No. 12345678.</p>
+          <div className="flex justify-center space-x-4 mt-4">
+            <a
+              href="https://linkedin.com/company/ewatracker"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              LinkedIn
+            </a>
+            <a
+              href="https://twitter.com/ewatracker"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              Twitter
+            </a>
+            <a
+              href="https://github.com/ewatracker"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              GitHub
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
